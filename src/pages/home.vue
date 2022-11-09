@@ -1,43 +1,12 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import { Container, Draggable } from "vue3-smooth-dnd";
-import { applyDrag, generateItems, generateWords } from "../utils/helpers";
+import { Container } from "vue3-smooth-dnd";
+import { applyDrag } from "../utils/helpers";
 import { getRandomEmoji } from "../utils/helpers";
 import { customBackgrounds, fixedBackgrounds } from "../shared/background";
-import KanbanItem from "../components/KanbanItem.vue";
 import Navigation from "../components/header/Navigation.vue";
-
-type ICard = {
-  id: string;
-  type: string;
-  loading: boolean;
-  icon: string;
-  data: string;
-};
-
-type IColumn = {
-  id: string;
-  type: string;
-  icon: string;
-  name: string;
-  props: {
-    orientation: string;
-  };
-  children: Array<ICard>;
-};
-
-type IScene = {
-  type: string;
-  props: {
-    orientation: string;
-  };
-  category: string;
-  name: string;
-  description: string;
-  background: string;
-  customBackground?: string;
-  children: Array<IColumn> | any;
-};
+import KanbanColumn from "../components/kanban/KanbanColumn.vue";
+import type { ICard, IColumn, IScene } from "../interface/index";
 
 const scene = ref<IScene>({
   type: "container",
@@ -150,9 +119,9 @@ const scene = ref<IScene>({
 });
 
 const getCardPayload = (columnId: string) => {
-  return (index: number) => {
+  return (index: string) => {
     return scene.value.children.filter((p: IColumn) => p.id === columnId)[0]
-      .children[index];
+      .children[Number(index)];
   };
 };
 const getCardLengthByColumnId = (columnId: string): number =>
@@ -206,12 +175,7 @@ const onCardDrop = (dropResult: any, columnId: string) => {
   }
 };
 
-const isOpenColumnSetting = ref(false);
-const openColumnSetting = () => {
-  isOpenColumnSetting.value = !isOpenColumnSetting.value;
-};
-
-const setBackground = computed(() => {
+const getBackground = computed(() => {
   if (scene.value.customBackground) {
     return `url('${scene.value.customBackground}')`;
   }
@@ -222,9 +186,9 @@ const setBackground = computed(() => {
 <template>
   <section
     class="flex flex-col w-full overflow-y-hidden bg-cover bg-center bg-no-repeat"
-    :style="`background-image: ${setBackground}`"
+    :style="`background-image: ${getBackground}`"
   >
-    <!-- <Navigation /> -->
+    <Navigation :description="scene.description" :progress="showProcess" />
 
     <Container
       class="h-full flex overflow-x-auto gap-8 p-8"
@@ -233,90 +197,13 @@ const setBackground = computed(() => {
       orientation="horizontal"
       @drop="onColumnDrop($event)"
     >
-      <Draggable
-        class="parent_column bg-gradient-to-r from-violet-200 to-pink-200 dark:bg-gray-700 rounded-lg h-full w-96 flex-shrink-0 shadow-xl"
+      <KanbanColumn
         v-for="column in scene.children"
         :key="column.id"
-      >
-        <div class="h-full flex flex-col">
-          <div
-            class="cursor-move rounded-t-lg p-4 space-x-4 bg-primary text-white flex justify-between space-x-2"
-          >
-            <div class="flex item-center">
-              <img
-                :src="`/src/assets/img/${column.icon}.svg`"
-                alt="column_icon"
-                width="20"
-                height="20"
-              />
-              <h3 class="text-base ml-2 whitespace-nowrap mt-1">
-                {{ column.name }}
-              </h3>
-            </div>
-            <div class="flex items-center gap-3">
-              <div
-                class="w-8 h-8 p-1 rounded-full bg-white/30 flex place-content-center"
-              >
-                <span>{{ column.children.length }}</span>
-              </div>
-              <!-- <div
-                class="w-8 h-8 p-1 rounded-full cursor-pointer hover:bg-white/30 flex place-content-center font-bold"
-                @click="onAddNewCard(column.id)"
-              >
-                <span>+</span>
-              </div> -->
-              <div
-                class="w-8 h-8 p-1 rounded-full cursor-pointer hover:bg-white/30 flex place-content-center font-bold relative"
-                @click="openColumnSetting"
-              >
-                <span>⋮</span>
-                <div class="absolute z-10 top-10 right-0 w-40">
-                  <Transition name="fade">
-                    <ul
-                      v-if="isOpenColumnSetting"
-                      class="bg-white text-gray-600 rounded-lg shadow-lg p-2 text-left"
-                    >
-                      <li>Edit column</li>
-                      <li>Copy column link</li>
-                      <li>Delete column</li>
-                    </ul>
-                  </Transition>
-                </div>
-              </div>
-            </div>
-          </div>
-          <Container
-            class="flex-grow overflow-y-auto overflow-x-hidden"
-            orientation="vertical"
-            group-name="col-items"
-            :shouldAcceptDrop="
-              (e:any, payload:any) => e.groupName === 'col-items' && !payload.loading
-            "
-            :get-child-payload="getCardPayload(column.id)"
-            :drop-placeholder="{
-              className: `bg-primary bg-opacity-20  
-            border-dotted border-2 
-            border-primary rounded-lg mx-4 my-2`,
-              animationDuration: '200',
-              showOnTop: true,
-            }"
-            drag-class="bg-primary dark:bg-primary 
-            border-2 border-primary-hover text-white 
-            transition duration-100 ease-in z-50
-            transform rotate-6 scale-110"
-            drop-class="transition duration-100 
-            ease-in z-50 transform 
-            -rotate-2 scale-90"
-            @drop="(e:any) => onCardDrop(e, column.id)"
-          >
-            <KanbanItem
-              v-for="item in column.children"
-              :key="item.id"
-              :item="item"
-            ></KanbanItem>
-          </Container>
-        </div>
-      </Draggable>
+        :column="column"
+        :getCardPayload="getCardPayload(column.id)"
+        :drop-card="(e:any) => onCardDrop(e, column.id)"
+      />
     </Container>
   </section>
 </template>

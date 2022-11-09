@@ -3,13 +3,13 @@ import { createRouter, createWebHistory } from "vue-router";
 const routes = [
   {
     path: "/",
-    name: "kanban",
-    component: () => import("../pages/Kanban.vue"),
+    name: "home",
+    component: () => import("../pages/home.vue"),
   },
   {
     path: "/:pathMatch(.*)*",
     name: "404",
-    component: () => import("../pages/NotFound.vue"),
+    component: () => import("../pages/404.vue"),
   },
 ];
 

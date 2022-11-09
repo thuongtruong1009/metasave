@@ -1,19 +1,8 @@
-/**
-* tailwindCSS base imports
-*
-*/
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /* @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap'); */
-
-
-/**
-* configuarations for dark mode & light
-*
-*/
 
 :root {
     color-scheme: light;
@@ -39,4 +28,5 @@ body {
     background-color: var(--bg);
     color: var(--color);
     transition: background-color 0.3s;
+    user-select: none;
 }
