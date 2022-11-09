@@ -2,8 +2,8 @@ const express = require('express');
 const cors = require('cors')
 const bodyParser = require('body-parser')
 
-const key = require('./config/main');
-const ConnectDB = require('./config/db');
+const key = require('./config');
+const ConnectDB = require('./config');
 const router = require('./routes/main')
 
 const { port, mongoURL } = key;
