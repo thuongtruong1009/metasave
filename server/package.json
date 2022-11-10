@@ -10,7 +10,7 @@
         "node",
         "metasave",
         "express",
-        "mongo",
+        "mongodb",
         "github",
         "docker",
         "javascript"
@@ -26,9 +26,11 @@
         "dev": "nodemon src/index.js"
     },
     "dependencies": {
+        "bcryptjs": "^2.4.3",
         "body-parser": "^1.20.1",
         "cors": "^2.8.5",
         "express": "^4.18.2",
+        "jsonwebtoken": "^8.5.1",
         "mongoose": "^6.7.2"
     },
     "devDependencies": {
