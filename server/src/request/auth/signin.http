@@ -1,0 +1,8 @@
+POST http://localhost:3000/api/auth/signin HTTP/1.1
+content-type: application/json
+# Authorization: token xxx
+
+{
+    "username": "user01",
+    "password": "password01"
+}
