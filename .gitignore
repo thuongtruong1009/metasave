@@ -23,4 +23,4 @@ dist-ssr
 *.sw?
 
 # Docker
-*/.docker/mongo/*
+*/.docker/mongo
