@@ -4,13 +4,16 @@ const User = db.user;
 const Role = db.role;
 
 const jwt = require("jsonwebtoken")
-const bcrypt = require("bcryptjs")
 
-exports.signup = (req, res) => {
+const { hashPassword, comparePassword } = require('../helpers/hash')
+
+exports.signup = async(req, res) => {
+    let key = await hashPassword(req.body.password)
     const user = new User({
         username: req.body.username,
         email: req.body.email,
-        password: bcrypt.hashSync(req.body.password, 8)
+        password: key.hash,
+        salt: key.salt
     })
 
     user.save((err, user) => {
@@ -72,10 +75,9 @@ exports.signin = (req, res) => {
             if (!user) {
                 return res.status(404).send({ message: "User Not found." })
             }
-            var passwordIsValid = bcrypt.compareSync(
-                req.body.password,
-                user.password
-            )
+
+            const passwordIsValid = comparePassword(req.body.password, user.password, user.salt)
+
             if (!passwordIsValid) {
                 return res.status(401).send({
                     accessToken: null,
@@ -87,7 +89,7 @@ exports.signin = (req, res) => {
             })
             var authorities = []
             for (let i = 0; i < user.roles.length; i++) {
-                authorities.push("ROLE_" + user.roles[i].name.toUpperCase())
+                authorities.push(user.roles[i].name.toUpperCase())
             }
             res.status(200).send({
                 id: user._id,

@@ -1,5 +1,6 @@
 {
 	"dependencies": {
+		"helmet": "^6.0.0",
 		"query-string": "^7.1.1"
 	}
 }
