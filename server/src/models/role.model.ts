@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
 
-const Role = mongoose.model(
+const RoleModel = mongoose.model(
   "Role",
   new mongoose.Schema({
     name: String,
   })
 );
 
-export default Role;
+export default RoleModel;

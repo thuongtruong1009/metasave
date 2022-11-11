@@ -1,15 +1,18 @@
+import { Request, Response } from "express";
+import { Error } from "mongoose";
+import { IDecoded, INext, IRole, IUser } from "../types";
 const jwt = require("jsonwebtoken");
-const config = require("../config/auth.config");
+const config = require("../config/environment.config");
 const db = require("../models");
 const User = db.user;
 const Role = db.role;
 
-const verifyToken = (req: any, res: any, next: any) => {
+const verifyToken = (req: any, res: Response, next: INext) => {
   let token = req.headers["x-access-token"];
   if (!token) {
     return res.status(403).send({ message: "No token provided!" });
   }
-  jwt.verify(token, config.secret, (err: any, decoded: any) => {
+  jwt.verify(token, config.secret, (err: Error, decoded: IDecoded) => {
     if (err) {
       return res.status(401).send({ message: "Unauthorized!" });
     }
@@ -18,8 +21,8 @@ const verifyToken = (req: any, res: any, next: any) => {
   });
 };
 
-const isAdmin = (req: any, res: any, next: any) => {
-  User.findById(req.userId).exec((err: any, user: any) => {
+const isAdmin = (req: any, res: Response, next: INext) => {
+  User.findById(req.userId).exec((err: Error, user: IUser) => {
     if (err) {
       res.status(500).send({ message: err });
       return;
@@ -28,7 +31,7 @@ const isAdmin = (req: any, res: any, next: any) => {
       {
         _id: { $in: user.roles },
       },
-      (err: any, roles: any) => {
+      (err: Error, roles: Array<IRole>) => {
         if (err) {
           res.status(500).send({ message: err });
           return;
@@ -47,8 +50,8 @@ const isAdmin = (req: any, res: any, next: any) => {
   });
 };
 
-const isModerator = (req: any, res: any, next: any) => {
-  User.findById(req.userId).exec((err: any, user: any) => {
+const isModerator = (req: any, res: Response, next: any) => {
+  User.findById(req.userId).exec((err: Error, user: IUser) => {
     if (err) {
       res.status(500).send({ message: err });
       return;
@@ -58,7 +61,7 @@ const isModerator = (req: any, res: any, next: any) => {
       {
         _id: { $in: user.roles },
       },
-      (err: any, roles: any) => {
+      (err: Error, roles: Array<IRole>) => {
         if (err) {
           res.status(500).send({ message: err });
           return;

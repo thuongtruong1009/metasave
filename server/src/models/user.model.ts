@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const User = mongoose.model(
+const UserModel = mongoose.model(
   "User",
   new mongoose.Schema({
     username: {
@@ -24,4 +24,4 @@ const User = mongoose.model(
   })
 );
 
-export default User;
+export default UserModel;

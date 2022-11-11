@@ -1,15 +1,8 @@
+import { Application } from "express";
 import verifyAuth from "../middlewares/verify_auth";
 import userController from "../controllers/user.controller";
 
-const userRouter = (app: any) => {
-  app.use(function (req: any, res: any, next: any) {
-    res.header(
-      "Access-Control-Allow-Headers",
-      "x-access-token, Origin, Content-Type, Accept"
-    );
-    next();
-  });
-
+const userRouter = (app: Application) => {
   app.get("/api/test/all", userController.allAccess);
 
   app.get("/api/test/user", [verifyAuth.verifyToken], userController.userBoard);

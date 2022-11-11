@@ -1,11 +1,22 @@
 const mongoose = require("mongoose");
 
+import UserModel from "./user.model";
+import RoleModel from "./role.model";
+
 mongoose.Promise = global.Promise;
 
-const db: any = {};
+type IDb =
+  | {
+      user: any;
+      role: any;
+      ROLES: string[];
+    }
+  | any;
 
-db.user = require("./user.model");
-db.role = require("./role.model");
+const db: IDb = {
+  user: UserModel,
+  role: RoleModel,
+};
 
 db.ROLES = ["USER", "ADMIN", "MODERATOR"];
 

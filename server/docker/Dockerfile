@@ -10,8 +10,8 @@ RUN chown -R node:node /app
 
 USER node
 
-COPY --chown=node:node ./package.json ./yarn.lock ./
+COPY --chown=node:node ./package.json ./yarn.lock ./tsconfig.json ./
 
 EXPOSE 3000
 
-CMD ["yarn", "dev"]
+CMD ["yarn", "start"]

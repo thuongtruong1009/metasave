@@ -1,13 +1,15 @@
-import config from "../config/auth.config";
+import { Request, Response } from "express";
+import { Error } from "mongoose";
+import envConfig from "../config/environment.config";
+import jwt from "jsonwebtoken";
+import { hashPassword, comparePassword } from "../helpers/hash";
+import { IRole, IUser } from "../types";
+
 import db from "../models";
 const User = db.user;
 const Role = db.role;
 
-import jwt from "jsonwebtoken";
-
-import { hashPassword, comparePassword } from "../helpers/hash";
-
-const signup = async (req: any, res: any) => {
+const signup = async (req: Request, res: Response) => {
   let key = await hashPassword(req.body.password);
   const user = new User({
     username: req.body.username,
@@ -16,7 +18,7 @@ const signup = async (req: any, res: any) => {
     salt: key.salt,
   });
 
-  user.save((err: any, user: any) => {
+  user.save((err: Error, user: IUser | any) => {
     if (err) {
       res.status(500).send({ message: err });
       return;
@@ -26,13 +28,13 @@ const signup = async (req: any, res: any) => {
         {
           name: { $in: req.body.roles },
         },
-        (err: any, roles: any) => {
+        (err: Error, roles: Array<IRole>) => {
           if (err) {
             res.status(500).send({ message: err });
             return;
           }
-          user.roles = roles.map((role: any) => role._id);
-          user.save((err: any) => {
+          user.roles = roles.map((role: IRole) => role._id);
+          user.save((err: Error) => {
             if (err) {
               res.status(500).send({ message: err });
               return;
@@ -46,7 +48,7 @@ const signup = async (req: any, res: any) => {
         {
           name: "user",
         },
-        (err: any, role: any) => {
+        (err: Error, role: IRole) => {
           if (err) {
             res.status(500).send({ message: err });
             return;
@@ -66,12 +68,12 @@ const signup = async (req: any, res: any) => {
   });
 };
 
-const signin = (req: any, res: any) => {
+const signin = (req: Request, res: Response) => {
   User.findOne({
     username: req.body.username,
   })
     .populate("roles", "-__v")
-    .exec((err: any, user: any) => {
+    .exec((err: Error, user: IUser) => {
       if (err) {
         res.status(500).send({ message: err });
         return;
@@ -92,7 +94,7 @@ const signin = (req: any, res: any) => {
           message: "Invalid Password!",
         });
       }
-      var token = jwt.sign({ id: user.id }, config.secret, {
+      var token = jwt.sign({ id: user.id }, envConfig.secret, {
         expiresIn: 86400,
       });
       var authorities: string[] = [];

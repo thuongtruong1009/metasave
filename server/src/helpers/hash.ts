@@ -1,6 +1,6 @@
 import crypto from "crypto";
 
-const hashPassword = async (password: any) => {
+const hashPassword = async (password: string) => {
   let salt = crypto.randomBytes(16).toString("hex");
   const hash = crypto
     .pbkdf2Sync(password, salt, 1000, 64, "sha512")
@@ -8,7 +8,11 @@ const hashPassword = async (password: any) => {
   return { hash, salt };
 };
 
-const comparePassword = async (password: any, hashed: any, salt: any) => {
+const comparePassword = async (
+  password: string,
+  hashed: string,
+  salt: string
+) => {
   const hash = crypto
     .pbkdf2Sync(password, salt, 1000, 64, "sha512")
     .toString("hex");

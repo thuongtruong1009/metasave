@@ -1,11 +1,18 @@
+import { Request, Response, NextFunction } from "express";
+import { Error } from "mongoose";
+import { INext, IUser } from "../types";
 import db from "../models";
 const ROLES = db.ROLES;
 const User = db.user;
 
-const checkDuplicateUsernameOrEmail = (req: any, res: any, next: any) => {
+const checkDuplicateUsernameOrEmail = (
+  req: Request,
+  res: Response,
+  next: INext
+) => {
   User.findOne({
     username: req.body.username,
-  }).exec((err: any, user: any) => {
+  }).exec((err: Error, user: IUser) => {
     if (err) {
       res.status(500).send({ message: err });
       return;
@@ -18,7 +25,7 @@ const checkDuplicateUsernameOrEmail = (req: any, res: any, next: any) => {
 
     User.findOne({
       email: req.body.email,
-    }).exec((err: any, user: any) => {
+    }).exec((err: Error, user: IUser) => {
       if (err) {
         res.status(500).send({ message: err });
         return;
@@ -34,7 +41,7 @@ const checkDuplicateUsernameOrEmail = (req: any, res: any, next: any) => {
   });
 };
 
-const checkRolesExisted = (req: any, res: any, next: any) => {
+const checkRolesExisted = (req: Request, res: Response, next: INext) => {
   if (req.body.roles) {
     for (let i = 0; i < req.body.roles.length; i++) {
       if (!ROLES.includes(req.body.roles[i])) {

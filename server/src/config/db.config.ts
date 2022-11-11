@@ -1,31 +1,29 @@
-import mongoose from "mongoose";
+import mongoose, { Error } from "mongoose";
 
-import model from "../models";
-
-const Role = model.role;
+import db from "../models";
 
 function initial() {
-  Role.estimatedDocumentCount((err: any, count: any) => {
+  db.role.estimatedDocumentCount((err: Error, count: number) => {
     if (!err && count === 0) {
-      new Role({
+      new db.role({
         name: "user",
-      }).save((err: any) => {
+      }).save((err: Error) => {
         if (err) {
           console.log("error", err);
         }
         console.log("added 'user' to roles collection");
       });
-      new Role({
+      new db.role({
         name: "moderator",
-      }).save((err: any) => {
+      }).save((err: Error) => {
         if (err) {
           console.log("error", err);
         }
         console.log("added 'moderator' to roles collection");
       });
-      new Role({
+      new db.role({
         name: "admin",
-      }).save((err: any) => {
+      }).save((err: Error) => {
         if (err) {
           console.log("error", err);
         }
@@ -46,12 +44,19 @@ const ConnectDB = async (mongoURL: string) => {
 
   try {
     mongoose.connect(mongoURL, options);
-    console.log("Database connected");
-    // void initial();
+    initial();
   } catch (error) {
-    console.log("Connect error: ", error);
+    console.log("• Connect error: ", error);
     process.exit();
   }
 };
+
+const connect = mongoose.connection;
+connect.on("error", (): void => {
+  console.error.bind(console, "MongoDB connection error:");
+});
+connect.on("open", (): void => {
+  console.log("• Database connected");
+});
 
 export default ConnectDB;

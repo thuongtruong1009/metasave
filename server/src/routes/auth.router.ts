@@ -1,14 +1,8 @@
+import { Application } from "express";
 import verifySignUp from "../middlewares/verify_signup";
 import authController from "../controllers/auth.controller";
 
-const authRouter = (app: any) => {
-  app.use((req: any, res: any, next: any) => {
-    res.header(
-      "Access-Control-Allow-Headers",
-      "x-access-token, Origin, Content-Type, Accept"
-    );
-    next();
-  });
+const authRouter = (app: Application) => {
   app.post(
     "/api/auth/signup",
     [
