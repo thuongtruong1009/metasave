@@ -1,23 +1,23 @@
-const express = require("express");
-const { Application } = require("express");
-const fs = require("fs");
-const path = require("path");
-const bodyParser = require("body-parser");
-const cookieParser = require("cookie-parser");
-const cors = require("cors");
-const helmet = require("helmet");
-const morgan = require("morgan");
+import express from "express";
+import fs from "fs";
+import path from "path";
+import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
+import cors from "cors";
+import helmet from "helmet";
+import morgan from "morgan";
+import { Application } from "express";
+import { ICorsOptions } from "./types";
+
 import ConnectDB from "./config/db.config";
 import envConfig from "./config/environment.config";
-// const { ICorsOptions } = require("./types");
 import routes from "./routes";
 
-// const app = require("./config/app.config");
-const app = express();
+const app: Application = express();
 
 ConnectDB(envConfig.mongoURL);
 
-const corsOptions = {
+const corsOptions: ICorsOptions = {
   origin: "http://localhost:3001",
 };
 app.use(cors(corsOptions));

@@ -10,9 +10,9 @@ services:
       context: .
       dockerfile: ./docker/Dockerfile
     ports:
-      - 3000:3000
+      - 3000:${APP_PORT}
     volumes:
-      - .:/app
+      - ./:/app
     command: yarn start
     networks:
       - mongo-network

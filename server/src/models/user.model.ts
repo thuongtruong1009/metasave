@@ -13,7 +13,10 @@ const UserModel = mongoose.model(
       required: true,
       unique: true,
     },
-    password: String,
+    password: {
+      type: String,
+      required: true,
+    },
     roles: [
       {
         type: mongoose.Schema.Types.ObjectId,

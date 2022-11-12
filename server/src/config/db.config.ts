@@ -33,7 +33,7 @@ function initial() {
   });
 }
 
-const ConnectDB = async (mongoURL: string) => {
+function ConnectDB(mongoURL: string) {
   const options: any = {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -49,7 +49,7 @@ const ConnectDB = async (mongoURL: string) => {
     console.log("• Connect error: ", error);
     process.exit();
   }
-};
+}
 
 const connect = mongoose.connection;
 connect.on("error", (): void => {

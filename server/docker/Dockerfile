@@ -1,4 +1,4 @@
-FROM node:18-alpine
+FROM node:18-alpine as build-stage
 
 WORKDIR /app
 
@@ -6,12 +6,20 @@ COPY . .
 
 RUN yarn
 
+RUN yarn build
+
+FROM node:18-alpine as production-stage
+
+WORKDIR /app
+
 RUN chown -R node:node /app
 
 USER node
 
-COPY --chown=node:node ./package.json ./yarn.lock ./tsconfig.json ./
+RUN mkdir dist
 
-EXPOSE 3000
+COPY --chown=node:node ./package.json ./yarn.lock ./
 
-CMD ["yarn", "start"]
+COPY --chown=node:node --from=build-stage /app/dist /app/dist
+
+RUN yarn --production

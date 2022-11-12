@@ -1,0 +1,10 @@
+POST http://localhost:3000/api/project HTTP/1.1
+content-type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzNmYwY2U4ODJlMmY4NzI5YjBkZDFjYiIsImlhdCI6MTY2ODIyMjE5NSwiZXhwIjoxNjY4MzA4NTk1fQ.BtngLC9cNT8xof1-RiC8wSnsxUNuqT5YE-7wHh0_AFU
+
+{
+    "name": "note one",
+    "description": "note one description",
+    "category": "category1",
+    "customBackground": "http://www.example.com/image.png",
+}
