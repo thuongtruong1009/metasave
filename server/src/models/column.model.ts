@@ -3,6 +3,11 @@ import mongoose from "mongoose";
 const ColumnModel = mongoose.model(
   "Column",
   new mongoose.Schema({
+    projectId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Project",
+      required: true,
+    },
     type: {
       type: String,
       default: "container",

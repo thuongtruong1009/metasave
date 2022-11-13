@@ -33,6 +33,12 @@ const ProjectModel = mongoose.model(
         default: "horizontal",
       },
     },
+    columns: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Column",
+      },
+    ],
   })
 );
 

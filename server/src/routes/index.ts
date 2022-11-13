@@ -3,6 +3,7 @@ import { INext } from "../types";
 import authRouter from "./auth.router";
 import userRouter from "./user.router";
 import projectRouter from "./project.router";
+import columnRouter from "./column.router";
 
 const prefix = "/api";
 
@@ -17,6 +18,7 @@ const routes = (app: Application) => {
   authRouter(prefix, app);
   userRouter(prefix, app);
   projectRouter(prefix, app);
+  columnRouter(prefix, app);
 };
 
 export default routes;

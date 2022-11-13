@@ -6,12 +6,15 @@ const Project = db.project;
 
 const createProject = async (req: Request, res: Response): Promise<void> => {
   try {
+    const user = await User.findById(req.body.owner);
+    if (!user) {
+      res.status(404).send({ message: "User not found" });
+      return;
+    }
+
     const project = new Project(req.body);
     const savedProject = await project.save();
-
-    const user = await User.findById(req.body.owner);
-
-    await user?.updateOne({ $push: { projects: savedProject._id } });
+    await user.updateOne({ $push: { projects: savedProject._id } });
 
     res.status(200).send(savedProject);
   } catch (error) {
