@@ -12,6 +12,8 @@ const columnRouter = (prefix: string, app: Application) => {
   app.get(`${prefix}/column/:id`, columnController.getColumnById);
 
   app.put(`${prefix}/column/:id`, columnController.updateColumn);
+
+  app.delete(`${prefix}/column/:id`, columnController.deleteColumn);
 };
 
 export default columnRouter;
