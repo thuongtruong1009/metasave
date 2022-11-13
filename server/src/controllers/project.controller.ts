@@ -61,12 +61,26 @@ const updateProject = async (req: Request, res: Response) => {
   }
 };
 
+const deleteProject = async (req: Request, res: Response) => {
+  try {
+    await User.updateMany(
+      { projects: req.params.id },
+      { $pull: { projects: req.params.id } }
+    );
+    await Project.findByIdAndDelete(req.params.id);
+    res.status(200).send("Project has been deleted!");
+  } catch (error) {
+    res.status(500).send({ message: error });
+  }
+};
+
 const projectController = {
   createProject,
   getAllProjects,
   getProjectById,
   getPublicProjects,
   updateProject,
+  deleteProject,
 };
 
 export default projectController;
