@@ -17,13 +17,19 @@ const UserModel = mongoose.model(
       type: String,
       required: true,
     },
+    salt: String,
     roles: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Role",
       },
     ],
-    salt: String,
+    projects: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Project",
+      },
+    ],
   })
 );
 

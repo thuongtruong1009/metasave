@@ -3,7 +3,7 @@ version: "3.7"
 services:
   server:
     container_name: metasave-server
-    image: metasave-server
+    # image: metasave-server
     env_file:
       - .env
     build:

@@ -2,9 +2,9 @@ import { Application } from "express";
 import verifySignUp from "../middlewares/verify_signup";
 import authController from "../controllers/auth.controller";
 
-const authRouter = (app: Application) => {
+const authRouter = (prefix: string, app: Application) => {
   app.post(
-    "/api/auth/signup",
+    `${prefix}/auth/signup`,
     [
       verifySignUp.checkDuplicateUsernameOrEmail,
       verifySignUp.checkRolesExisted,
@@ -12,7 +12,7 @@ const authRouter = (app: Application) => {
     authController.signup
   );
 
-  app.post("/api/auth/signin", authController.signin);
+  app.post(`${prefix}/auth/signin`, authController.signin);
 };
 
 export default authRouter;

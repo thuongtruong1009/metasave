@@ -11,7 +11,6 @@ const ProjectModel = mongoose.model(
     type: {
       type: String,
       default: "container",
-      required: false,
     },
     name: {
       type: String,
@@ -28,7 +27,6 @@ const ProjectModel = mongoose.model(
       orientation: {
         type: String,
         default: "horizontal",
-        required: false,
       },
     },
   })

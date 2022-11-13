@@ -1,38 +1,36 @@
-// import { Request, Response } from "express";
-// import { Error } from "mongoose";
+import { Request, Response } from "express";
 
-// import db from "../models";
-// const User = db.user;
-// const Project = db.project;
+import db from "../models";
+const User = db.user;
+const Project = db.project;
 
-// const createProject = (req: Request, res: Response) => {
-//   if (!req.body.name) {
-//     res.status(400).send({ message: "Content can not be empty!" });
-//     return;
-//   }
+const createProject = async (req: Request, res: Response) => {
+  try {
+    const project = new Project(req.body);
+    const savedProject = await project.save();
 
-//   const project = new Project({
-//     name: req.body.name,
-//     description: req.body.description,
-//     category: req.body.category,
-//     customBackground: req.body.customBackground,
-//   });
+    const user = await User.findById(req.body.owner);
 
-//   project
-//     .save(project)
-//     .then((data) => {
-//       res.send(data);
-//     })
-//     .catch((err: Error) => {
-//       res.status(500).send({
-//         message:
-//           err.message || "Some error occurred while creating the Project.",
-//       });
-//     });
-// };
+    await user?.updateOne({ $push: { projects: savedProject._id } });
 
-// const projectController = {
-//   createProject,
-// };
+    res.status(200).send(savedProject);
+  } catch (error) {
+    res.status(500).send({ message: error });
+  }
+};
 
-// export default projectController;
+const getAllProjects = async (req: Request, res: Response) => {
+  try {
+    const projects = await Project.find();
+    res.status(200).send(projects);
+  } catch (error) {
+    res.status(500).send({ message: error });
+  }
+};
+
+const projectController = {
+  createProject,
+  getAllProjects,
+};
+
+export default projectController;

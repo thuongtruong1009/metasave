@@ -1,10 +1,12 @@
 POST http://localhost:3000/api/project HTTP/1.1
 content-type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzNmYwY2U4ODJlMmY4NzI5YjBkZDFjYiIsImlhdCI6MTY2ODIyMjE5NSwiZXhwIjoxNjY4MzA4NTk1fQ.BtngLC9cNT8xof1-RiC8wSnsxUNuqT5YE-7wHh0_AFU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzNmY5MmRiZWE2Mzg5YmY4OThmOWYxYiIsImlhdCI6MTY2ODI3NDI0MCwiZXhwIjoxNjY4MzYwNjQwfQ.ozvSCOmJobfFZNTrOcErfTUWNZxQZqncNcyJciIK2ZY
 
 {
+    "owner": "636f92dbea6389bf898f9f1b",
     "name": "note one",
     "description": "note one description",
     "category": "category1",
+    "background": "background1",
     "customBackground": "http://www.example.com/image.png",
 }
