@@ -18,9 +18,10 @@ const createColumn = async (req: Request, res: Response): Promise<void> => {
       $push: { columns: newColumn._id },
     });
 
-    const columns = await Project.findById(req.body.projectId).populate(
+    const columns = await Project.findById(
+      req.body.projectId,
       "columns"
-    );
+    ).populate("columns");
 
     res.status(200).send(columns);
   } catch (error) {
@@ -51,16 +52,14 @@ const getColumnById = async (req: Request, res: Response): Promise<void> => {
 
 const updateColumn = async (req: Request, res: Response): Promise<void> => {
   try {
-    const column = await Column.findById(req.body.columnId);
+    const column = await Column.findById(req.params.id);
     if (!column) {
       res.status(404).send({ message: "Column not found" });
       return;
     }
 
-    const updated = await Column.updateOne(
-      { _id: req.params.id },
-      { $set: req.body }
-    );
+    await Column.updateOne({ _id: req.params.id }, { $set: req.body });
+    const updated = await Column.findById(req.params.id);
     res.status(200).send(updated);
   } catch (error) {
     res.status(500).send({ message: error });
