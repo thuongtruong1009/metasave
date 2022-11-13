@@ -21,8 +21,41 @@ const createProject = async (req: Request, res: Response) => {
 
 const getAllProjects = async (req: Request, res: Response) => {
   try {
+    const author = await User.findById(req.body.ownerId, "_id username");
+
     const projects = await Project.find();
+    res.status(200).send({ author: author, projects });
+  } catch (error) {
+    res.status(500).send({ message: error });
+  }
+};
+
+const getPublicProjects = async (req: Request, res: Response) => {
+  try {
+    const projects = await Project.find({ access: "public" });
     res.status(200).send(projects);
+  } catch (error) {
+    res.status(500).send({ message: error });
+  }
+};
+
+const getProjectById = async (req: Request, res: Response) => {
+  try {
+    const project = await (
+      await Project.findById(req.params.id)
+    ).populate("owner", "_id username");
+    res.status(200).send(project);
+  } catch (error) {
+    res.status(500).send({ message: error });
+  }
+};
+
+const updateProject = async (req: Request, res: Response) => {
+  try {
+    const project = await Project.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
+    res.status(200).send(project);
   } catch (error) {
     res.status(500).send({ message: error });
   }
@@ -31,6 +64,9 @@ const getAllProjects = async (req: Request, res: Response) => {
 const projectController = {
   createProject,
   getAllProjects,
+  getProjectById,
+  getPublicProjects,
+  updateProject,
 };
 
 export default projectController;

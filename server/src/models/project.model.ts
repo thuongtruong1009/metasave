@@ -16,6 +16,10 @@ const ProjectModel = mongoose.model(
       type: String,
       required: true,
     },
+    access: {
+      type: String,
+      default: "public",
+    },
     description: String,
     category: String,
     background: {
