@@ -28,8 +28,40 @@ const createColumn = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+const getAllColumns = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const columns = await Project.findById(
+      req.params.projectId,
+      "columns"
+    ).populate("columns");
+    res.status(200).send(columns);
+  } catch (error) {
+    res.status(500).send({ message: error });
+  }
+};
+
+const updateColumn = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const column = await Column.findById(req.body.columnId);
+    if (!column) {
+      res.status(404).send({ message: "Column not found" });
+      return;
+    }
+
+    const updated = await Column.updateOne(
+      { _id: req.params.id },
+      { $set: req.body }
+    );
+    res.status(200).send(updated);
+  } catch (error) {
+    res.status(500).send({ message: error });
+  }
+};
+
 const columnController = {
   createColumn,
+  getAllColumns,
+  updateColumn,
 };
 
 export default columnController;

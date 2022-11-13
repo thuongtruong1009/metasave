@@ -24,10 +24,8 @@ const createProject = async (req: Request, res: Response): Promise<void> => {
 
 const getAllProjects = async (req: Request, res: Response): Promise<void> => {
   try {
-    const author = await User.findById(req.body.ownerId, "_id username");
-
-    const projects = await Project.find();
-    res.status(200).send({ author: author, projects });
+    const projects = await Project.find().populate("owner", "_id username");
+    res.status(200).send(projects);
   } catch (error) {
     res.status(500).send({ message: error });
   }
