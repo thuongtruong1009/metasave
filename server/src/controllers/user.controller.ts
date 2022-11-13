@@ -1,26 +1,27 @@
 import { Request, Response } from "express";
 
-const allAccess = (req: Request, res: Response) => {
-  res.status(200).send("Public Content.");
-};
+import db from "../models";
+const User = db.user;
+const Project = db.project;
 
-const userBoard = (req: Request, res: Response) => {
-  res.status(200).send("User Content.");
-};
-
-const adminBoard = (req: Request, res: Response) => {
-  res.status(200).send("Admin Content.");
-};
-
-const moderatorBoard = (req: Request, res: Response) => {
-  res.status(200).send("Moderator Content.");
+const deleteUser = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const containsProjects = await Project.find({ owner: req.params.id });
+    if (containsProjects.length > 0) {
+      await Project.findByIdAndDelete({ owner: req.params.id });
+      await User.findByIdAndDelete(req.params.id);
+      res.status(200).send("User account has been deleted!");
+    } else {
+      await User.findByIdAndDelete(req.params.id);
+      res.status(200).send("User account has been deleted!");
+    }
+  } catch (error) {
+    res.status(500).send({ message: error });
+  }
 };
 
 const userController = {
-  allAccess,
-  userBoard,
-  adminBoard,
-  moderatorBoard,
+  deleteUser,
 };
 
 export default userController;

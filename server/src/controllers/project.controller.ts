@@ -4,7 +4,7 @@ import db from "../models";
 const User = db.user;
 const Project = db.project;
 
-const createProject = async (req: Request, res: Response) => {
+const createProject = async (req: Request, res: Response): Promise<void> => {
   try {
     const project = new Project(req.body);
     const savedProject = await project.save();
@@ -19,7 +19,7 @@ const createProject = async (req: Request, res: Response) => {
   }
 };
 
-const getAllProjects = async (req: Request, res: Response) => {
+const getAllProjects = async (req: Request, res: Response): Promise<void> => {
   try {
     const author = await User.findById(req.body.ownerId, "_id username");
 
@@ -30,7 +30,10 @@ const getAllProjects = async (req: Request, res: Response) => {
   }
 };
 
-const getPublicProjects = async (req: Request, res: Response) => {
+const getPublicProjects = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const projects = await Project.find({ access: "public" });
     res.status(200).send(projects);
@@ -39,7 +42,7 @@ const getPublicProjects = async (req: Request, res: Response) => {
   }
 };
 
-const getProjectById = async (req: Request, res: Response) => {
+const getProjectById = async (req: Request, res: Response): Promise<void> => {
   try {
     const project = await (
       await Project.findById(req.params.id)
@@ -50,7 +53,7 @@ const getProjectById = async (req: Request, res: Response) => {
   }
 };
 
-const updateProject = async (req: Request, res: Response) => {
+const updateProject = async (req: Request, res: Response): Promise<void> => {
   try {
     const project = await Project.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
@@ -61,7 +64,7 @@ const updateProject = async (req: Request, res: Response) => {
   }
 };
 
-const deleteProject = async (req: Request, res: Response) => {
+const deleteProject = async (req: Request, res: Response): Promise<void> => {
   try {
     await User.updateMany(
       { projects: req.params.id },
