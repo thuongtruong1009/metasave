@@ -40,6 +40,15 @@ const getAllColumns = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+const getColumnById = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const column = await Column.findById(req.params.id);
+    res.status(200).send(column);
+  } catch (error) {
+    res.status(500).send({ message: error });
+  }
+};
+
 const updateColumn = async (req: Request, res: Response): Promise<void> => {
   try {
     const column = await Column.findById(req.body.columnId);
@@ -61,6 +70,7 @@ const updateColumn = async (req: Request, res: Response): Promise<void> => {
 const columnController = {
   createColumn,
   getAllColumns,
+  getColumnById,
   updateColumn,
 };
 

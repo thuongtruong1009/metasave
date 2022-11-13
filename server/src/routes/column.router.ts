@@ -9,6 +9,8 @@ const columnRouter = (prefix: string, app: Application) => {
     columnController.getAllColumns
   );
 
+  app.get(`${prefix}/column/:id`, columnController.getColumnById);
+
   app.put(`${prefix}/column/:id`, columnController.updateColumn);
 };
 
