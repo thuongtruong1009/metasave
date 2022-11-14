@@ -66,6 +66,24 @@ const updateColumn = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+const createCard = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const existed = await Column.findById(req.params.id);
+    if (!existed) {
+      res.status(404).send({ message: "Column not found" });
+    }
+
+    const updated = await Column.findByIdAndUpdate(
+      req.params.id,
+      { $push: { cards: req.body } },
+      { new: true }
+    ).select("cards");
+    res.status(200).send(updated);
+  } catch (error) {
+    res.status(500).send({ message: error });
+  }
+};
+
 const deleteColumn = async (req: Request, res: Response): Promise<void> => {
   try {
     await Project.updateMany(
@@ -84,6 +102,7 @@ const columnController = {
   getAllColumns,
   getColumnById,
   updateColumn,
+  createCard,
   deleteColumn,
 };
 

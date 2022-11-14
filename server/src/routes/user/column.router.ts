@@ -13,6 +13,8 @@ const columnRouter = (prefix: string, app: Application) => {
 
   app.put(`${prefix}/column/:id`, columnController.updateColumn);
 
+  app.post(`${prefix}/column/:id/card`, columnController.createCard);
+
   app.delete(`${prefix}/column/:id`, columnController.deleteColumn);
 };
 

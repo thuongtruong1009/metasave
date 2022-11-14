@@ -8,6 +8,8 @@ const TagRouter = (prefix: string, app: Application) => {
   app.get(`${prefix}/tag`, TagController.getAllTags);
 
   app.put(`${prefix}/tag/:id`, TagController.updateTag);
+
+  app.delete(`${prefix}/tag/:id`, TagController.deleteTag);
 };
 
 export default TagRouter;

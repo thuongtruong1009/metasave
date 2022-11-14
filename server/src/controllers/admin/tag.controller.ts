@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 
 import db from "../../models";
+const Column = db.column;
 const Tag = db.tag;
 
 const createTag = async (req: Request, res: Response): Promise<void> => {
@@ -35,10 +36,24 @@ const updateTag = async (req: Request, res: Response) => {
   }
 };
 
+const deleteTag = async (req: Request, res: Response): Promise<void> => {
+  try {
+    await Column.updateMany(
+      { cards: { tags: req.params.id } },
+      { $set: { cards: { tags: null } } }
+    );
+    await Tag.findByIdAndDelete(req.params.id);
+    res.status(200).send({ message: "Tag deleted" });
+  } catch (error) {
+    res.status(500).send({ message: error });
+  }
+};
+
 const TagController = {
   createTag,
   getAllTags,
   updateTag,
+  deleteTag,
 };
 
 export default TagController;

@@ -36,13 +36,12 @@ const ColumnModel = mongoose.model(
           type: String,
           default: "fas fa-clipboard-list",
         },
-        data: {
+        text: {
           type: String,
           required: true,
         },
-        tag: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Tag",
+        tagId: {
+          type: String,
         },
       },
     ],
