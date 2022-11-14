@@ -5,6 +5,7 @@ import UserModel from "./user.model";
 import TagModel from "./tag.model";
 import ProjectModel from "./project.model";
 import ColumnModel from "./column.model";
+import CardModel from "./card.model";
 
 import { EROLE, ETAG, ECATEGORY } from "../constant";
 
@@ -20,6 +21,7 @@ const db = {
   project: ProjectModel,
   tag: TagModel,
   column: ColumnModel,
+  card: CardModel,
 };
 
 export default db;

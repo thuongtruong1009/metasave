@@ -28,21 +28,8 @@ const ColumnModel = mongoose.model(
     },
     cards: [
       {
-        type: {
-          type: String,
-          default: "card",
-        },
-        icon: {
-          type: String,
-          default: "fas fa-clipboard-list",
-        },
-        text: {
-          type: String,
-          required: true,
-        },
-        tagId: {
-          type: String,
-        },
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Card",
       },
     ],
   })
