@@ -22,9 +22,23 @@ const getAllTags = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+const updateTag = async (req: Request, res: Response) => {
+  try {
+    const updated = await Tag.findByIdAndUpdate(
+      req.params.id,
+      { $set: { name: req.body.name } },
+      { new: true }
+    );
+    res.status(200).send(updated);
+  } catch (error) {
+    res.json(500).send({ message: error });
+  }
+};
+
 const TagController = {
   createTag,
   getAllTags,
+  updateTag,
 };
 
 export default TagController;
