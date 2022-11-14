@@ -1,5 +1,5 @@
 import { Application } from "express";
-import columnController from "../controllers/column.controller";
+import columnController from "../../controllers/user/column.controller";
 
 const columnRouter = (prefix: string, app: Application) => {
   app.post(`${prefix}/column`, columnController.createColumn);

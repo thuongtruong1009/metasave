@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
 import { Error } from "mongoose";
-import envConfig from "../config/environment.config";
+import envConfig from "../../config/environment.config";
 import jwt from "jsonwebtoken";
-import { hashPassword, comparePassword } from "../helpers/hash";
-import { IRole, IUser } from "../types";
+import { hashPassword, comparePassword } from "../../helpers/hash";
+import { IRole, IUser } from "../../types";
 
-import db from "../models";
+const db = require("../../models");
 const User = db.user;
 const Role = db.role;
 
@@ -73,7 +73,7 @@ const signin = (req: Request, res: Response) => {
     username: req.body.username,
   })
     .populate("roles", "-__v")
-    .exec((err: Error, user: IUser) => {
+    .exec((err: Error, user: IUser | any) => {
       if (err) {
         res.status(500).send({ message: err });
         return;

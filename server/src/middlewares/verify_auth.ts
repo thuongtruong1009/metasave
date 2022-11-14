@@ -1,14 +1,15 @@
-import { Request, Response } from "express";
+import { Response, NextFunction } from "express";
 import { Error } from "mongoose";
-import { IDecoded, INext, IRole, IUser } from "../types";
-const jwt = require("jsonwebtoken");
-const config = require("../config/environment.config");
+import { IDecoded, IRole, IUser } from "../types";
+import jwt from "jsonwebtoken";
+import config from "../config/environment.config";
+
 const db = require("../models");
 const User = db.user;
 const Role = db.role;
 
-const verifyToken = (req: any, res: Response, next: INext) => {
-  let token = req.headers["x-access-token"];
+const verifyToken = (req: any, res: Response, next: NextFunction) => {
+  let token = req.headers["authorization"];
   if (!token) {
     return res.status(403).send({ message: "No token provided!" });
   }
@@ -21,7 +22,7 @@ const verifyToken = (req: any, res: Response, next: INext) => {
   });
 };
 
-const isAdmin = (req: any, res: Response, next: INext) => {
+const isAdmin = (req: any, res: Response, next: NextFunction) => {
   User.findById(req.userId).exec((err: Error, user: IUser) => {
     if (err) {
       res.status(500).send({ message: err });

@@ -28,8 +28,22 @@ const ColumnModel = mongoose.model(
     },
     cards: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Card",
+        type: {
+          type: String,
+          default: "card",
+        },
+        icon: {
+          type: String,
+          default: "fas fa-clipboard-list",
+        },
+        data: {
+          type: String,
+          required: true,
+        },
+        tag: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Tag",
+        },
       },
     ],
   })

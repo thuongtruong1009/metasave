@@ -1,5 +1,4 @@
-import { Request, Response, Application } from "express";
-import { INext } from "../types";
+import { Request, Response, Application, NextFunction } from "express";
 import authRouter from "./auth.router";
 import userRouter from "./user.router";
 import projectRouter from "./project.router";
@@ -7,8 +6,8 @@ import columnRouter from "./column.router";
 
 const prefix = "/api";
 
-const routes = (app: Application) => {
-  app.use(function (req: Request, res: Response, next: INext) {
+const userRoutes = (app: Application) => {
+  app.use(function (req: Request, res: Response, next: NextFunction) {
     res.header(
       "Access-Control-Allow-Headers",
       "x-access-token, Origin, Content-Type, Accept"
@@ -21,4 +20,4 @@ const routes = (app: Application) => {
   columnRouter(prefix, app);
 };
 
-export default routes;
+export default userRoutes;

@@ -1,37 +1,5 @@
 import mongoose, { Error } from "mongoose";
-
-import db from "../models";
-
-function initial() {
-  db.role.estimatedDocumentCount((err: Error, count: number) => {
-    if (!err && count === 0) {
-      new db.role({
-        name: "user",
-      }).save((err: Error) => {
-        if (err) {
-          console.log("error", err);
-        }
-        console.log("added 'user' to roles collection");
-      });
-      new db.role({
-        name: "moderator",
-      }).save((err: Error) => {
-        if (err) {
-          console.log("error", err);
-        }
-        console.log("added 'moderator' to roles collection");
-      });
-      new db.role({
-        name: "admin",
-      }).save((err: Error) => {
-        if (err) {
-          console.log("error", err);
-        }
-        console.log("added 'admin' to roles collection");
-      });
-    }
-  });
-}
+import seedInitialData from "../helpers/seed";
 
 function ConnectDB(mongoURL: string) {
   const options: any = {
@@ -44,7 +12,7 @@ function ConnectDB(mongoURL: string) {
 
   try {
     mongoose.connect(mongoURL, options);
-    initial();
+    seedInitialData;
   } catch (error) {
     console.log("• Connect error: ", error);
     process.exit();

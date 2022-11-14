@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-import db from "../models";
+import db from "../../models";
 const User = db.user;
 const Project = db.project;
 

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import ColumnModel from "src/models/column.model";
 
-import db from "../models";
+import db from "../../models";
 const User = db.user;
 const Project = db.project;
 const Column = db.column;

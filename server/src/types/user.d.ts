@@ -8,4 +8,5 @@ export type IUser = {
   password: string;
   salt: string;
   roles: IRole[];
+  projects: string[];
 };

@@ -11,7 +11,8 @@ import { ICorsOptions } from "../types";
 
 import ConnectDB from "../config/db.config";
 import envConfig from "../config/environment.config";
-import routes from "../routes";
+import userRoutes from "../routes/user";
+import adminRoutes from "../routes/admin";
 
 const app: Application = express();
 
@@ -19,6 +20,7 @@ ConnectDB(envConfig.mongoURL);
 
 const corsOptions: ICorsOptions = {
   origin: "http://localhost:3001",
+  credentials: true,
 };
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
@@ -30,6 +32,7 @@ const accessLogStream = fs.createWriteStream(
 );
 app.use(morgan("combined", { stream: accessLogStream }));
 
-routes(app);
+userRoutes(app);
+adminRoutes(app);
 
 export default app;

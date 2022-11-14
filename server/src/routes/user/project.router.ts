@@ -1,5 +1,5 @@
 import { Application } from "express";
-import projectController from "../controllers/project.controller";
+import projectController from "../../controllers/user/project.controller";
 
 const authRouter = (prefix: string, app: Application) => {
   app.post(`${prefix}/project`, projectController.createProject);
