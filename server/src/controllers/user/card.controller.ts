@@ -59,9 +59,14 @@ const updateCard = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-const deleteCard = (req: Request, res: Response): void => {
+const deleteCard = async (req: Request, res: Response): Promise<void> => {
   try {
-    res.status(200).send({ message: "delete card" });
+    await Column.updateMany(
+      { cards: req.params.id },
+      { $pull: { cards: req.params.id } }
+    );
+    await Card.findByIdAndDelete(req.params.id);
+    res.status(200).send({ message: "Card has been deleted!" });
   } catch (error) {
     res.status(500).send({ message: error });
   }

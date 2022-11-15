@@ -4,6 +4,7 @@ import db from "../../models";
 
 const Project = db.project;
 const Column = db.column;
+const Card = db.card;
 
 const createColumn = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -73,6 +74,9 @@ const deleteColumn = async (req: Request, res: Response): Promise<void> => {
       { $pull: { columns: req.params.id } }
     );
     await Column.deleteOne({ _id: req.params.id });
+
+    await Card.deleteMany({ columnId: req.params.id });
+
     res.status(200).send({ message: "Column has been deleted!" });
   } catch (error) {
     res.status(500).send({ message: error });
