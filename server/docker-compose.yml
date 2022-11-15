@@ -3,17 +3,17 @@ version: "3.7"
 services:
   server:
     container_name: metasave-server
-    image: metasave-server
+    # image: metasave-server
     env_file:
       - .env
     build:
       context: .
-      dockerfile: ./.docker/Dockerfile
+      dockerfile: ./docker/Dockerfile
     ports:
-      - 3000:3000
+      - 3000:${APP_PORT}
     volumes:
-      - .:/app
-    command: yarn dev
+      - ./:/app
+    command: yarn start
     networks:
       - mongo-network
     depends_on:
@@ -26,7 +26,7 @@ services:
     ports:
       - 27017:27017
     volumes:
-      - ./.docker/mongo/data:/data/db
+      - ./docker/mongo/data:/data/db
     networks:
       - mongo-network
     restart: unless-stopped
