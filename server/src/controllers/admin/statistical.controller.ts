@@ -78,8 +78,8 @@ const getOverview = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-const cardController = {
+const statisticalController = {
   getOverview,
 };
 
-export default cardController;
+export default statisticalController;

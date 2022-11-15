@@ -4,12 +4,7 @@ import projectController from "../../controllers/user/project.controller";
 const authRouter = (prefix: string, app: Application) => {
   app.post(`${prefix}/project`, projectController.createProject);
 
-  app.get(`${prefix}/project`, projectController.getAllProjects);
-
-  // app.get(
-  //   `${prefix}/project/public`,
-  //   projectController.getPublicProjects
-  // );
+  app.get(`${prefix}/user/:userId/project`, projectController.getAllProjects);
 
   app.get(`${prefix}/project/:id`, projectController.getProjectById);
 

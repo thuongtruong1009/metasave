@@ -73,9 +73,9 @@ const deleteColumn = async (req: Request, res: Response): Promise<void> => {
       { columns: req.params.id },
       { $pull: { columns: req.params.id } }
     );
-    await Column.deleteOne({ _id: req.params.id });
-
     await Card.deleteMany({ columnId: req.params.id });
+
+    await Column.deleteOne({ _id: req.params.id });
 
     res.status(200).send({ message: "Column has been deleted!" });
   } catch (error) {

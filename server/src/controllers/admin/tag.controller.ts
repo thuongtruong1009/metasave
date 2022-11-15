@@ -49,11 +49,11 @@ const deleteTag = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-const TagController = {
+const tagController = {
   createTag,
   getAllTags,
   updateTag,
   deleteTag,
 };
 
-export default TagController;
+export default tagController;

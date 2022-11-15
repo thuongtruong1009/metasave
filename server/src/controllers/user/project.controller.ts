@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import ColumnModel from "src/models/column.model";
 
 import db from "../../models";
 const User = db.user;
@@ -26,20 +25,23 @@ const createProject = async (req: Request, res: Response): Promise<void> => {
 
 const getAllProjects = async (req: Request, res: Response): Promise<void> => {
   try {
-    const projects = await Project.find().populate("owner", "_id username");
-    res.status(200).send(projects);
-  } catch (error) {
-    res.status(500).send({ message: error });
-  }
-};
-
-const getPublicProjects = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
-  try {
-    const projects = await Project.find({ access: "public" });
-    res.status(200).send(projects);
+    if (req.query.access === "public") {
+      const totalProjects = await Project.countDocuments({ access: "public" });
+      const projects = await Project.find({ access: "public" });
+      res.status(200).send({ total: totalProjects, projects: projects });
+    } else if (req.query.access === "private") {
+      const totalProjects = await Project.countDocuments({ access: "private" });
+      const projects = await Project.find({ access: "private" });
+      res.status(200).send({ total: totalProjects, projects: projects });
+    } else {
+      const totalProjects = await Project.countDocuments();
+      const projects = await (
+        await User.findById(req.params.userId, "projects")
+      ).populate("projects");
+      res
+        .status(200)
+        .send({ total: totalProjects, projects: projects.projects });
+    }
   } catch (error) {
     res.status(500).send({ message: error });
   }
@@ -85,7 +87,6 @@ const projectController = {
   createProject,
   getAllProjects,
   getProjectById,
-  getPublicProjects,
   updateProject,
   deleteProject,
 };

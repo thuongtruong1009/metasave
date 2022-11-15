@@ -1,15 +1,15 @@
 import { Application } from "express";
 
-import TagController from "../../controllers/admin/tag.controller";
+import tagController from "../../controllers/admin/tag.controller";
 
 const TagRouter = (prefix: string, app: Application) => {
-  app.post(`${prefix}/tag`, TagController.createTag);
+  app.post(`${prefix}/tag`, tagController.createTag);
 
-  app.get(`${prefix}/tag`, TagController.getAllTags);
+  app.get(`${prefix}/tag`, tagController.getAllTags);
 
-  app.put(`${prefix}/tag/:id`, TagController.updateTag);
+  app.put(`${prefix}/tag/:id`, tagController.updateTag);
 
-  app.delete(`${prefix}/tag/:id`, TagController.deleteTag);
+  app.delete(`${prefix}/tag/:id`, tagController.deleteTag);
 };
 
 export default TagRouter;
