@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction, Application } from "express";
+import CardRouter from "./statistical.router";
 import TagRouter from "./tag.router";
 
 const prefix = "/api/admin";
@@ -13,6 +14,7 @@ const adminRoutes = (app: Application) => {
   });
 
   TagRouter(prefix, app);
+  CardRouter(prefix, app);
 };
 
 export default adminRoutes;
