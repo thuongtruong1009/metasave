@@ -21,20 +21,20 @@ async function seedDB() {
   try {
     await client.connect();
 
-    // console.log("-> Seeding role");
-    // await cls.collection("role").insertMany(seedRole);
+    console.log("-> Seeding role");
+    await cls.collection("role").insertMany(seedRole);
 
-    // console.log("-> Seeding tag");
-    // await cls.collection("tag").insertMany(seedTag);
+    console.log("-> Seeding tag");
+    await cls.collection("tag").insertMany(seedTag);
 
-    // console.log("-> Seeding user");
-    // await cls.collection("user").insertMany(seedUser);
+    console.log("-> Seeding user");
+    await cls.collection("user").insertMany(seedUser);
 
-    // console.log("-> Seeding project");
-    // await cls.collection("project").insertMany(seedProject);
+    console.log("-> Seeding project");
+    await cls.collection("project").insertMany(seedProject);
 
-    // console.log("-> Seeding column");
-    // await cls.collection("column").insertMany(seedColumn);
+    console.log("-> Seeding column");
+    await cls.collection("column").insertMany(seedColumn);
 
     console.log("-> Seeding card");
     await cls.collection("card").insertMany(seedCard);

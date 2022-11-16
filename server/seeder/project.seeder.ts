@@ -12,6 +12,7 @@ const seedProject = [
     props: {
       orientation: "horizontal",
     },
+    columns: ["6374f19a24b6613904102178", "6374f19a24b6613904102179"],
   },
   {
     _id: "6374ea9fcca01dc1d80c9ae8",
@@ -25,6 +26,7 @@ const seedProject = [
     props: {
       orientation: "horizontal",
     },
+    columns: ["6374f19a24b661390410217a", "6374f19a24b661390410217b"],
   },
   {
     _id: "6374ea9fcca01dc1d80c9ae9",
@@ -38,6 +40,7 @@ const seedProject = [
     props: {
       orientation: "horizontal",
     },
+    columns: ["6374f19a24b661390410217c", "6374f19a24b661390410217d"],
   },
   {
     _id: "6374ea9fcca01dc1d80c9aea",
@@ -51,6 +54,7 @@ const seedProject = [
     props: {
       orientation: "horizontal",
     },
+    columns: ["6374f19a24b661390410217e", "6374f19a24b661390410217f"],
   },
 ];
 
