@@ -5,6 +5,8 @@ import seedRole from "./role.seeder";
 import seedTag from "./tag.seeder";
 import seedUser from "./user.seeder";
 import seedProject from "./project.seeder";
+import seedColumn from "./column.seeder";
+import seedCard from "./card.seeder";
 
 async function seedDB() {
   const uri = process.env.MONGO_URL;
@@ -28,8 +30,14 @@ async function seedDB() {
     // console.log("-> Seeding user");
     // await cls.collection("user").insertMany(seedUser);
 
-    console.log("-> Seeding project");
-    await cls.collection("project").insertMany(seedProject);
+    // console.log("-> Seeding project");
+    // await cls.collection("project").insertMany(seedProject);
+
+    // console.log("-> Seeding column");
+    // await cls.collection("column").insertMany(seedColumn);
+
+    console.log("-> Seeding card");
+    await cls.collection("card").insertMany(seedCard);
 
     console.log("Database seeded!");
     await client.close();
