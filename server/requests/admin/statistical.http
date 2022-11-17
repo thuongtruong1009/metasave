@@ -1,0 +1,4 @@
+GET http://localhost:3000/api/admin/overview?scope=role HTTP/1.1
+content-type: application/json
+
+# scrope=[all, tag, role, user, project, column, card]

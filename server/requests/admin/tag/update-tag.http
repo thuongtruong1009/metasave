@@ -1,0 +1,6 @@
+PUT http://localhost:3000/api/admin/tag/637200a0216c0862923eda6d HTTP/1.1
+content-type: application/json
+
+{
+    "name": "friend"
+}

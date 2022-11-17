@@ -1,11 +1,10 @@
 import { Request, Response } from "express";
 import { Error } from "mongoose";
-import envConfig from "../../config/environment.config";
 import jwt from "jsonwebtoken";
 import { hashPassword, comparePassword } from "../../helpers/hash";
 import { IRole, IUser } from "../../types";
 
-const db = require("../../models");
+import db from "../../models";
 const User = db.user;
 const Role = db.role;
 
@@ -94,7 +93,7 @@ const signin = (req: Request, res: Response) => {
           message: "Invalid Password!",
         });
       }
-      var token = jwt.sign({ id: user.id }, envConfig.secret, {
+      var token = jwt.sign({ id: user.id }, process.env.SECRET_KEY, {
         expiresIn: 86400,
       });
       var authorities: string[] = [];

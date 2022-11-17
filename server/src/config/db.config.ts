@@ -1,5 +1,5 @@
-import mongoose, { Error } from "mongoose";
-import seedInitialData from "../helpers/seed";
+import mongoose from "mongoose";
+import { initRole, initTag } from "../helpers/wakeup";
 
 function ConnectDB(mongoURL: string) {
   const options: any = {
@@ -12,7 +12,8 @@ function ConnectDB(mongoURL: string) {
 
   try {
     mongoose.connect(mongoURL, options);
-    seedInitialData;
+    // initRole();
+    // initTag();
   } catch (error) {
     console.log("• Connect error: ", error);
     process.exit();

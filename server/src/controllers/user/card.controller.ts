@@ -33,7 +33,10 @@ const createCard = async (req: Request, res: Response): Promise<void> => {
     const card = new Card(req.body);
     const savedCard = await card.save();
 
-    await Column.updateOne({ $push: { cards: savedCard._id } });
+    await Column.updateMany(
+      { _id: req.body.columnId },
+      { $push: { cards: savedCard._id } }
+    );
 
     const updated = await Column.findById(savedCard.columnId, "cards").populate(
       "cards"

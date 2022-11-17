@@ -1,0 +1,2 @@
+DELETE http://localhost:3000/api/admin/tag/63720ababac96cd4afd8af88 HTTP/1.1
+content-type: application/json

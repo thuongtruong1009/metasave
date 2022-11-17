@@ -1,11 +1,12 @@
 import { Request, Response, NextFunction } from "express";
 import { Error } from "mongoose";
 import { IUser } from "../types";
+import { EROLE } from "../constant";
 
-const db = require("../models");
+import db from "../models";
 
-const ROLES = db.ROLES;
 const User = db.user;
+const ROLES = EROLE;
 
 const checkDuplicateUsernameOrEmail = (
   req: Request,
@@ -14,7 +15,7 @@ const checkDuplicateUsernameOrEmail = (
 ) => {
   User.findOne({
     username: req.body.username,
-  }).exec((err: Error, user: IUser) => {
+  }).exec((err: Error, user: IUser | any) => {
     if (err) {
       res.status(500).send({ message: err });
       return;
@@ -27,7 +28,7 @@ const checkDuplicateUsernameOrEmail = (
 
     User.findOne({
       email: req.body.email,
-    }).exec((err: Error, user: IUser) => {
+    }).exec((err: Error, user: IUser | any) => {
       if (err) {
         res.status(500).send({ message: err });
         return;

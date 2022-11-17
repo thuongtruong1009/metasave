@@ -1,10 +1,12 @@
 import { Response, NextFunction } from "express";
 import { Error } from "mongoose";
+import * as dotenv from "dotenv";
+dotenv.config();
+
 import { IDecoded, IRole, IUser } from "../types";
 import jwt from "jsonwebtoken";
-import config from "../config/environment.config";
 
-const db = require("../models");
+import db from "../models";
 const User = db.user;
 const Role = db.role;
 
@@ -13,7 +15,7 @@ const verifyToken = (req: any, res: Response, next: NextFunction) => {
   if (!token) {
     return res.status(403).send({ message: "No token provided!" });
   }
-  jwt.verify(token, config.secret, (err: Error, decoded: IDecoded) => {
+  jwt.verify(token, process.env.SECRET_KEY, (err: Error, decoded: IDecoded) => {
     if (err) {
       return res.status(401).send({ message: "Unauthorized!" });
     }
@@ -23,7 +25,7 @@ const verifyToken = (req: any, res: Response, next: NextFunction) => {
 };
 
 const isAdmin = (req: any, res: Response, next: NextFunction) => {
-  User.findById(req.userId).exec((err: Error, user: IUser) => {
+  User.findById(req.userId).exec((err: Error, user: IUser | any) => {
     if (err) {
       res.status(500).send({ message: err });
       return;
@@ -52,7 +54,7 @@ const isAdmin = (req: any, res: Response, next: NextFunction) => {
 };
 
 const isModerator = (req: any, res: Response, next: any) => {
-  User.findById(req.userId).exec((err: Error, user: IUser) => {
+  User.findById(req.userId).exec((err: Error, user: IUser | any) => {
     if (err) {
       res.status(500).send({ message: err });
       return;

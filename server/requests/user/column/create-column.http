@@ -1,0 +1,9 @@
+POST http://localhost:3000/api/column HTTP/1.1
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzNmY5MmRiZWE2Mzg5YmY4OThmOWYxYiIsImlhdCI6MTY2ODI3NDI0MCwiZXhwIjoxNjY4MzYwNjQwfQ.ozvSCOmJobfFZNTrOcErfTUWNZxQZqncNcyJciIK2ZY
+
+{
+    "projectId": "637609acab5e6028e5e3699a",
+    "icon": "ProgressIcon",
+    "name": "Column 2"
+}
