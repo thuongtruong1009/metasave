@@ -1,4 +1,4 @@
-const seedTag = [
+const seedTags = [
   {
     _id: "6374c85493955f2c0f60184a",
     name: "family",
@@ -25,4 +25,4 @@ const seedTag = [
   },
 ];
 
-export default seedTag;
+export default seedTags;

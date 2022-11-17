@@ -1,8 +1,10 @@
 import { Response, NextFunction } from "express";
 import { Error } from "mongoose";
+import * as dotenv from "dotenv";
+dotenv.config();
+
 import { IDecoded, IRole, IUser } from "../types";
 import jwt from "jsonwebtoken";
-import config from "../config/environment.config";
 
 const db = require("../models");
 const User = db.user;
@@ -13,7 +15,7 @@ const verifyToken = (req: any, res: Response, next: NextFunction) => {
   if (!token) {
     return res.status(403).send({ message: "No token provided!" });
   }
-  jwt.verify(token, config.secret, (err: Error, decoded: IDecoded) => {
+  jwt.verify(token, process.env.SECRET_KEY, (err: Error, decoded: IDecoded) => {
     if (err) {
       return res.status(401).send({ message: "Unauthorized!" });
     }

@@ -1,4 +1,4 @@
-const seedRole = [
+const seedRoles = [
   {
     _id: "63746f20e2f7763ae05f26c5",
     name: "admin",
@@ -13,4 +13,4 @@ const seedRole = [
   },
 ];
 
-export default seedRole;
+export default seedRoles;

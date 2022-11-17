@@ -1,4 +1,4 @@
-const seedProject = [
+const seedProjects = [
   {
     _id: "6374ea9fcca01dc1d80c9ae7",
     owner: "6374c3a074233b8d253a5333",
@@ -58,4 +58,4 @@ const seedProject = [
   },
 ];
 
-export default seedProject;
+export default seedProjects;

@@ -7,16 +7,17 @@ import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 import { Application } from "express";
-import { ICorsOptions } from "../types";
+import * as dotenv from "dotenv";
+dotenv.config();
 
+import { ICorsOptions } from "../types";
 import ConnectDB from "../config/db.config";
-import envConfig from "../config/environment.config";
 import userRoutes from "../routes/user";
 import adminRoutes from "../routes/admin";
 
 const app: Application = express();
 
-ConnectDB(envConfig.mongoURL);
+ConnectDB(process.env.MONGO_URL);
 
 const corsOptions: ICorsOptions = {
   origin: "http://localhost:3001",

@@ -1,4 +1,4 @@
-import mongoose, { Error } from "mongoose";
+import mongoose from "mongoose";
 import seedInitialData from "../helpers/seed";
 
 function ConnectDB(mongoURL: string) {

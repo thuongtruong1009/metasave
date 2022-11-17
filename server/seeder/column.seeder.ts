@@ -1,4 +1,4 @@
-const seedColumn = [
+const seedColumns = [
   {
     _id: "6374f19a24b6613904102178",
     projectId: "6374ea9fcca01dc1d80c9ae7",
@@ -81,4 +81,4 @@ const seedColumn = [
   },
 ];
 
-export default seedColumn;
+export default seedColumns;

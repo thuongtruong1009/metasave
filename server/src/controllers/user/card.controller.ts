@@ -34,6 +34,7 @@ const createCard = async (req: Request, res: Response): Promise<void> => {
     const savedCard = await card.save();
 
     await Column.updateOne({ $push: { cards: savedCard._id } });
+    console.log("added card to column");
 
     const updated = await Column.findById(savedCard.columnId, "cards").populate(
       "cards"

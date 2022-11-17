@@ -1,12 +1,12 @@
 const MongoClient = require("mongodb").MongoClient;
 require("dotenv").config();
 
-import seedRole from "./role.seeder";
-import seedTag from "./tag.seeder";
-import seedUser from "./user.seeder";
-import seedProject from "./project.seeder";
-import seedColumn from "./column.seeder";
-import seedCard from "./card.seeder";
+import seedRoles from "./role.seeder";
+import seedTags from "./tag.seeder";
+import seedUsers from "./user.seeder";
+import seedProjects from "./project.seeder";
+import seedColumns from "./column.seeder";
+import seedCards from "./card.seeder";
 
 async function seedDB() {
   const uri = process.env.MONGO_URL;
@@ -22,22 +22,22 @@ async function seedDB() {
     await client.connect();
 
     console.log("-> Seeding role");
-    await cls.collection("role").insertMany(seedRole);
+    await cls.collection("roles").insertMany(seedRoles);
 
     console.log("-> Seeding tag");
-    await cls.collection("tag").insertMany(seedTag);
+    await cls.collection("tags").insertMany(seedTags);
 
     console.log("-> Seeding user");
-    await cls.collection("user").insertMany(seedUser);
+    await cls.collection("users").insertMany(seedUsers);
 
     console.log("-> Seeding project");
-    await cls.collection("project").insertMany(seedProject);
+    await cls.collection("projects").insertMany(seedProjects);
 
     console.log("-> Seeding column");
-    await cls.collection("column").insertMany(seedColumn);
+    await cls.collection("columns").insertMany(seedColumns);
 
     console.log("-> Seeding card");
-    await cls.collection("card").insertMany(seedCard);
+    await cls.collection("cards").insertMany(seedCards);
 
     console.log("Database seeded!");
     await client.close();

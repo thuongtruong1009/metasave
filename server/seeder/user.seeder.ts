@@ -1,4 +1,4 @@
-const seedUser = [
+const seedUsers = [
   {
     _id: "6374c3a074233b8d253a5332",
     username: "admin",
@@ -24,4 +24,4 @@ const seedUser = [
   },
 ];
 
-export default seedUser;
+export default seedUsers;

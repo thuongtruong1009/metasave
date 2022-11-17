@@ -1,4 +1,4 @@
-const seedCard = [
+const seedCards = [
   {
     columnId: "6374f19a24b6613904102178",
     type: "card",
@@ -170,4 +170,4 @@ const seedCard = [
   },
 ];
 
-export default seedCard;
+export default seedCards;
