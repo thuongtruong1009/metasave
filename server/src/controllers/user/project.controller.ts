@@ -76,11 +76,6 @@ const updateProject = async (req: Request, res: Response): Promise<void> => {
 
 const deleteProject = async (req: Request, res: Response): Promise<void> => {
   try {
-    await User.updateMany(
-      { projects: req.params.id },
-      { $pull: { projects: req.params.id } }
-    );
-
     const findColumns = await Column.find({ projectId: req.params.id });
     if (findColumns.length > 0) {
       findColumns.forEach(async (column) => {
@@ -88,7 +83,13 @@ const deleteProject = async (req: Request, res: Response): Promise<void> => {
       });
       await Column.deleteMany({ projectId: req.params.id });
     }
+
     await Project.findByIdAndDelete(req.params.id);
+
+    await User.updateMany(
+      { projects: req.params.id },
+      { $pull: { projects: req.params.id } }
+    );
     res.status(200).send("Project has been deleted!");
   } catch (error) {
     res.status(500).send({ message: error });
