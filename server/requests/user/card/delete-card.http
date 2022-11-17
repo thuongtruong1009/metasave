@@ -1,0 +1,3 @@
+DELETE http://localhost:3000/api/card/6375f7b64865aa799359a23a HTTP/1.1
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzNmY5MmRiZWE2Mzg5YmY4OThmOWYxYiIsImlhdCI6MTY2ODI3NDI0MCwiZXhwIjoxNjY4MzYwNjQwfQ.ozvSCOmJobfFZNTrOcErfTUWNZxQZqncNcyJciIK2ZY

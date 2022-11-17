@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { initRole, initTag } from "../helpers/wakeup";
 
 function ConnectDB(mongoURL: string) {
   const options: any = {
@@ -11,7 +12,8 @@ function ConnectDB(mongoURL: string) {
 
   try {
     mongoose.connect(mongoURL, options);
-    // seed somethings before starting the server;
+    // initRole();
+    // initTag();
   } catch (error) {
     console.log("• Connect error: ", error);
     process.exit();

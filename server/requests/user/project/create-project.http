@@ -6,6 +6,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzNmY5MmRiZ
     "owner": "636f92dbea6389bf898f9f1b",
     "name": "note one",
     "description": "note one description",
+    "access": "public",
+    "isFavorite": true,
     "category": "category1",
     "background": "background1",
     "customBackground": "http://www.example.com/image.png",

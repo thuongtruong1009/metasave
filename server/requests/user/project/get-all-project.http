@@ -1,0 +1,5 @@
+GET http://localhost:3000/api/user/6374c3a074233b8d253a5333/project?access=all HTTP/1.1
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzNmY5MmRiZWE2Mzg5YmY4OThmOWYxYiIsImlhdCI6MTY2ODI3NDI0MCwiZXhwIjoxNjY4MzYwNjQwfQ.ozvSCOmJobfFZNTrOcErfTUWNZxQZqncNcyJciIK2ZY
+
+# access=[all,public,private]
