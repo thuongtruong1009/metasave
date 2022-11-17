@@ -1,5 +1,5 @@
 import { Application } from "express";
-import verifySignUp from "../../middlewares/verify_signup";
+import verifySignUp from "../../middlewares/signup.middleware";
 import authController from "../../controllers/user/auth.controller";
 
 const authRouter = (prefix: string, app: Application) => {

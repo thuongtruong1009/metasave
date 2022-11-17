@@ -15,9 +15,12 @@ const createColumn = async (req: Request, res: Response): Promise<void> => {
     }
     const newColumn = new Column(req.body);
     await newColumn.save();
-    await Project.updateOne({
-      $push: { columns: newColumn._id },
-    });
+    await Project.updateMany(
+      { _id: req.body.projectId },
+      {
+        $push: { columns: newColumn._id },
+      }
+    );
 
     const columns = await Project.findById(
       req.body.projectId,

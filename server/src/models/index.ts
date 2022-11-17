@@ -7,15 +7,9 @@ import ProjectModel from "./project.model";
 import ColumnModel from "./column.model";
 import CardModel from "./card.model";
 
-import { EROLE, ETAG, ECATEGORY } from "../constant";
-
 mongoose.Promise = global.Promise;
 
 const db = {
-  ROLES: EROLE,
-  TAGS: ETAG,
-  CATEGORIES: ECATEGORY,
-
   user: UserModel,
   role: RoleModel,
   project: ProjectModel,

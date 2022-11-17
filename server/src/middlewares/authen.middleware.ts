@@ -6,7 +6,7 @@ dotenv.config();
 import { IDecoded, IRole, IUser } from "../types";
 import jwt from "jsonwebtoken";
 
-const db = require("../models");
+import db from "../models";
 const User = db.user;
 const Role = db.role;
 
@@ -25,7 +25,7 @@ const verifyToken = (req: any, res: Response, next: NextFunction) => {
 };
 
 const isAdmin = (req: any, res: Response, next: NextFunction) => {
-  User.findById(req.userId).exec((err: Error, user: IUser) => {
+  User.findById(req.userId).exec((err: Error, user: IUser | any) => {
     if (err) {
       res.status(500).send({ message: err });
       return;
@@ -54,7 +54,7 @@ const isAdmin = (req: any, res: Response, next: NextFunction) => {
 };
 
 const isModerator = (req: any, res: Response, next: any) => {
-  User.findById(req.userId).exec((err: Error, user: IUser) => {
+  User.findById(req.userId).exec((err: Error, user: IUser | any) => {
     if (err) {
       res.status(500).send({ message: err });
       return;

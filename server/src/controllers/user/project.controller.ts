@@ -15,7 +15,10 @@ const createProject = async (req: Request, res: Response): Promise<void> => {
 
     const project = new Project(req.body);
     const savedProject = await project.save();
-    await user.updateOne({ $push: { projects: savedProject._id } });
+    await User.updateMany(
+      { _id: req.body.owner },
+      { $push: { projects: savedProject._id } }
+    );
 
     res.status(200).send(savedProject);
   } catch (error) {

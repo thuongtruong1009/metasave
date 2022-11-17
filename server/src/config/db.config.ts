@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import seedInitialData from "../helpers/seed";
 
 function ConnectDB(mongoURL: string) {
   const options: any = {
@@ -12,7 +11,7 @@ function ConnectDB(mongoURL: string) {
 
   try {
     mongoose.connect(mongoURL, options);
-    seedInitialData;
+    // seed somethings before starting the server;
   } catch (error) {
     console.log("• Connect error: ", error);
     process.exit();

@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import { hashPassword, comparePassword } from "../../helpers/hash";
 import { IRole, IUser } from "../../types";
 
-const db = require("../../models");
+import db from "../../models";
 const User = db.user;
 const Role = db.role;
 
