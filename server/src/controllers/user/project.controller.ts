@@ -1,9 +1,11 @@
 import { Request, Response } from "express";
+import CardModel from "src/models/card.model";
 
 import db from "../../models";
 const User = db.user;
 const Project = db.project;
 const Column = db.column;
+const Card = db.card;
 
 const createProject = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -78,7 +80,14 @@ const deleteProject = async (req: Request, res: Response): Promise<void> => {
       { projects: req.params.id },
       { $pull: { projects: req.params.id } }
     );
-    await Column.deleteMany({ projectId: req.params.id });
+
+    const findColumns = await Column.find({ projectId: req.params.id });
+    if (findColumns.length > 0) {
+      findColumns.forEach(async (column) => {
+        await Card.deleteMany({ columnId: column._id });
+      });
+      await Column.deleteMany({ projectId: req.params.id });
+    }
     await Project.findByIdAndDelete(req.params.id);
     res.status(200).send("Project has been deleted!");
   } catch (error) {
