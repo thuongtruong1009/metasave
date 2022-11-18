@@ -30,3 +30,14 @@ body {
     transition: background-color 0.3s;
     user-select: none;
 }
+
+a {
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+button,
+input,
+textarea {
+    outline: none;
+}

@@ -7,6 +7,16 @@ const routes = [
     component: () => import("../pages/home.vue"),
   },
   {
+    path: "/signup",
+    name: "signup",
+    component: () => import("../pages/auth/signup.vue"),
+  },
+  {
+    path: "/signin",
+    name: "signin",
+    component: () => import("../pages/auth/signin.vue"),
+  },
+  {
     path: "/:pathMatch(.*)*",
     name: "404",
     component: () => import("../pages/404.vue"),
