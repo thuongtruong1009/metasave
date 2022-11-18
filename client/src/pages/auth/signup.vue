@@ -15,54 +15,74 @@ const payload = reactive({
 const isValidate = ref(false);
 const checkElement = reactive({
   checkUsername: "",
+  validUsername: false,
   checkEmail: "",
+  validEmail: false,
   checkPassword: "",
+  validPassword: false,
 });
 
-const handleValidate = () => {
-  if (payload.username || payload.email || payload.password) {
-    (checkElement.checkUsername = ""),
-      (checkElement.checkEmail = ""),
-      (checkElement.checkPassword = ""),
-      (isValidate.value = true);
+const validateUsername = () => {
+  if (payload.username.split("").length < 3) {
+    checkElement.checkUsername = "Username must be at least 3 characters";
+    checkElement.validUsername = false;
   }
-  isValidate.value = false;
-
   if (payload.username === "") {
     checkElement.checkUsername = "Username is required";
-    isValidate.value = false;
-  }
-  if (payload.email === "") {
-    checkElement.checkEmail = "Email is required";
-    isValidate.value = false;
-  }
-  if (payload.password === "") {
-    checkElement.checkPassword = "Password is required";
-    isValidate.value = false;
+    checkElement.validUsername = false;
+  } else {
+    checkElement.checkUsername = "";
+    checkElement.validUsername = true;
   }
 };
 
+const validateEmail = () => {
+  if (payload.email === "") {
+    checkElement.checkEmail = "Email is required";
+    checkElement.validEmail = false;
+  } else {
+    checkElement.checkEmail = "";
+    checkElement.validEmail = true;
+  }
+};
+
+const validatePassword = () => {
+  if (payload.password.length < 6) {
+    checkElement.checkPassword = "Password must be at least 6 characters";
+    checkElement.validPassword = false;
+  }
+  if (payload.password === "") {
+    checkElement.checkPassword = "Password is required";
+    checkElement.validPassword = false;
+  } else {
+    checkElement.checkPassword = "";
+    checkElement.validPassword = true;
+  }
+};
+
+watchEffect(() => {
+  if (
+    checkElement.validUsername &&
+    checkElement.validEmail &&
+    checkElement.validPassword
+  ) {
+    isValidate.value = true;
+  } else {
+    isValidate.value = false;
+  }
+});
+
 const handleSignup = async () => {
-  await AuthService.signup(payload);
-  router.push({ name: "signin" });
+  if (isValidate.value) {
+    console.log(isValidate.value);
+    await AuthService.signup(payload);
+    router.push({ name: "signin" });
+  }
 };
 </script>
 
 <template>
   <div class="signup">
-    <!-- <h1>Sign Up</h1> -->
-    <!-- <form @submit.prevent="handleSignup">
-      <input type="text" placeholder="Username" v-model="payload.username" />
-      <input type="email" placeholder="Email" v-model="payload.email" />
-      <input
-        type="password"
-        placeholder="Password"
-        v-model="payload.password"
-      />
-      <button type="submit">Create now</button>
-
-      
-    </form> -->
     <form @submit.prevent="handleSignup">
       <div class="mb-6">
         <label
@@ -72,12 +92,24 @@ const handleSignup = async () => {
         >
         <input
           type="text"
-          class="bg-green-50 border border-green-500 text-green-900 dark:text-green-400 placeholder-green-700 dark:placeholder-green-500 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-1/2 p-2.5 dark:bg-gray-700 dark:border-green-500"
+          class="border text-sm rounded-lg block w-1/2 p-2.5 dark:bg-gray-700"
+          :class="
+            checkElement.validUsername
+              ? 'bg-green-50 border-green-500 text-green-900 dark:text-green-400 placeholder-green-700 dark:placeholder-green-500 focus:ring-green-500 focus:border-green-500 dark:border-green-500'
+              : 'bg-red-50 border-green-500 border-red-500 text-red-900 placeholder-red-700 focus:ring-red-500 focus:border-red-500 dark:text-red-500 dark:placeholder-red-500 dark:border-red-500'
+          "
           placeholder="Success input"
           v-model="payload.username"
-          @input="handleValidate"
+          @input="validateUsername"
         />
-        <p class="mt-2 text-sm text-green-600 dark:text-green-500">
+        <p
+          class="mt-2 text-sm"
+          :class="
+            checkElement.validUsername
+              ? 'text-green-600 dark:text-green-500'
+              : 'text-red-600 dark:text-red-500'
+          "
+        >
           {{ checkElement.checkUsername }}
         </p>
       </div>
@@ -86,37 +118,62 @@ const handleSignup = async () => {
         <label
           for="success"
           class="block mb-2 text-sm font-medium text-green-700 dark:text-green-500"
-          >Your email</label
+          >Your name</label
         >
         <input
           type="text"
-          class="bg-green-50 border border-green-500 text-green-900 dark:text-green-400 placeholder-green-700 dark:placeholder-green-500 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-1/2 p-2.5 dark:bg-gray-700 dark:border-green-500"
+          class="border text-sm rounded-lg block w-1/2 p-2.5 dark:bg-gray-700"
+          :class="
+            checkElement.validEmail
+              ? 'bg-green-50 border-green-500 text-green-900 dark:text-green-400 placeholder-green-700 dark:placeholder-green-500 focus:ring-green-500 focus:border-green-500 dark:border-green-500'
+              : 'bg-red-50 border-green-500 border-red-500 text-red-900 placeholder-red-700 focus:ring-red-500 focus:border-red-500 dark:text-red-500 dark:placeholder-red-500 dark:border-red-500'
+          "
           placeholder="Success input"
           v-model="payload.email"
-          @input="handleValidate"
+          @input="validateEmail"
         />
-        <p class="mt-2 text-sm text-green-600 dark:text-green-500">
+        <p
+          class="mt-2 text-sm"
+          :class="
+            checkElement.validEmail
+              ? 'text-green-600 dark:text-green-500'
+              : 'text-red-600 dark:text-red-500'
+          "
+        >
           {{ checkElement.checkEmail }}
         </p>
       </div>
 
-      <div>
+      <div class="mb-6">
         <label
-          for="error"
-          class="block mb-2 text-sm font-medium text-red-700 dark:text-red-500"
-          >Your password</label
+          for="success"
+          class="block mb-2 text-sm font-medium text-green-700 dark:text-green-500"
+          >Your name</label
         >
         <input
           type="text"
-          class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 dark:bg-gray-700 focus:border-red-500 block w-full p-2.5 dark:text-red-500 dark:placeholder-red-500 dark:border-red-500"
-          placeholder="Error input"
+          class="border text-sm rounded-lg block w-1/2 p-2.5 dark:bg-gray-700"
+          :class="
+            checkElement.validPassword
+              ? 'bg-green-50 border-green-500 text-green-900 dark:text-green-400 placeholder-green-700 dark:placeholder-green-500 focus:ring-green-500 focus:border-green-500 dark:border-green-500'
+              : 'bg-red-50 border-green-500 border-red-500 text-red-900 placeholder-red-700 focus:ring-red-500 focus:border-red-500 dark:text-red-500 dark:placeholder-red-500 dark:border-red-500'
+          "
+          placeholder="Success input"
           v-model="payload.password"
-          @input="handleValidate"
+          @input="validatePassword"
         />
-        <p class="mt-2 text-sm text-red-600 dark:text-red-500">
+        <p
+          class="mt-2 text-sm"
+          :class="
+            checkElement.validPassword
+              ? 'text-green-600 dark:text-green-500'
+              : 'text-red-600 dark:text-red-500'
+          "
+        >
           {{ checkElement.checkPassword }}
         </p>
       </div>
+
       <button
         type="button"
         class="text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 shadow-lg shadow-purple-500/50 dark:shadow-lg dark:shadow-purple-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
