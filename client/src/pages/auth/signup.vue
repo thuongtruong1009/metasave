@@ -1,8 +1,9 @@
 <script setup>
-import { ref, reactive, watchEffect } from "vue";
+import { reactive, computed } from "vue";
 import { useRouter } from "vue-router";
 
 import AuthService from "@/services/auth.service";
+import { testEmail, testPassword } from "@/utils/regrex";
 
 const router = useRouter();
 
@@ -12,65 +13,68 @@ const payload = reactive({
   password: "",
 });
 
-const isValidate = ref(false);
 const checkElement = reactive({
   checkUsername: "",
-  validUsername: false,
   checkEmail: "",
-  validEmail: false,
   checkPassword: "",
-  validPassword: false,
 });
 
-const validateUsername = () => {
-  if (payload.username.split("").length < 3) {
-    checkElement.checkUsername = "Username must be at least 3 characters";
-    checkElement.validUsername = false;
-  }
-  if (payload.username === "") {
+const validateUsername = computed(() => {
+  if (payload.username.split("").length > 0) {
+    if (payload.username !== payload.username.toLowerCase()) {
+      checkElement.checkUsername = "Username must be lowercase";
+      return false;
+    }
+    if (
+      payload.username.split("").length > 0 &&
+      payload.username.split("").length <= 3
+    ) {
+      checkElement.checkUsername = "Username must be at least 3 characters";
+      return false;
+    } else {
+      checkElement.checkUsername = "";
+      return true;
+    }
+  } else {
     checkElement.checkUsername = "Username is required";
-    checkElement.validUsername = false;
-  } else {
-    checkElement.checkUsername = "";
-    checkElement.validUsername = true;
-  }
-};
-
-const validateEmail = () => {
-  if (payload.email === "") {
-    checkElement.checkEmail = "Email is required";
-    checkElement.validEmail = false;
-  } else {
-    checkElement.checkEmail = "";
-    checkElement.validEmail = true;
-  }
-};
-
-const validatePassword = () => {
-  if (payload.password.length < 6) {
-    checkElement.checkPassword = "Password must be at least 6 characters";
-    checkElement.validPassword = false;
-  }
-  if (payload.password === "") {
-    checkElement.checkPassword = "Password is required";
-    checkElement.validPassword = false;
-  } else {
-    checkElement.checkPassword = "";
-    checkElement.validPassword = true;
-  }
-};
-
-watchEffect(() => {
-  if (
-    checkElement.validUsername &&
-    checkElement.validEmail &&
-    checkElement.validPassword
-  ) {
-    isValidate.value = true;
-  } else {
-    isValidate.value = false;
+    return false;
   }
 });
+
+const validateEmail = computed(() => {
+  if (payload.email.length > 0) {
+    if (!testEmail(payload.email)) {
+      checkElement.checkEmail = "Email is invalid!";
+      return false;
+    } else {
+      checkElement.checkEmail = "";
+      return true;
+    }
+  } else {
+    checkElement.checkEmail = "Email is required";
+    return false;
+  }
+});
+
+const validatePassword = computed(() => {
+  if (payload.password.length > 0) {
+    if (!testPassword(payload.password)) {
+      checkElement.checkPassword =
+        "Password must be 8-20 characters, conclude (uppercase - lowercase - number - special) characters!";
+      return false;
+    } else {
+      checkElement.checkPassword = "";
+      return true;
+    }
+  } else {
+    checkElement.checkPassword = "Password is required";
+    return false;
+  }
+});
+
+const isValidate = computed(
+  () => validateUsername.value && validateEmail.value && validatePassword.value
+);
 
 const handleSignup = async () => {
   if (isValidate.value) {
@@ -94,7 +98,7 @@ const handleSignup = async () => {
           type="text"
           class="border text-sm rounded-lg block w-1/2 p-2.5 dark:bg-gray-700"
           :class="
-            checkElement.validUsername
+            validateUsername
               ? 'bg-green-50 border-green-500 text-green-900 dark:text-green-400 placeholder-green-700 dark:placeholder-green-500 focus:ring-green-500 focus:border-green-500 dark:border-green-500'
               : 'bg-red-50 border-green-500 border-red-500 text-red-900 placeholder-red-700 focus:ring-red-500 focus:border-red-500 dark:text-red-500 dark:placeholder-red-500 dark:border-red-500'
           "
@@ -105,7 +109,7 @@ const handleSignup = async () => {
         <p
           class="mt-2 text-sm"
           :class="
-            checkElement.validUsername
+            validateUsername
               ? 'text-green-600 dark:text-green-500'
               : 'text-red-600 dark:text-red-500'
           "
@@ -124,7 +128,7 @@ const handleSignup = async () => {
           type="text"
           class="border text-sm rounded-lg block w-1/2 p-2.5 dark:bg-gray-700"
           :class="
-            checkElement.validEmail
+            validateEmail
               ? 'bg-green-50 border-green-500 text-green-900 dark:text-green-400 placeholder-green-700 dark:placeholder-green-500 focus:ring-green-500 focus:border-green-500 dark:border-green-500'
               : 'bg-red-50 border-green-500 border-red-500 text-red-900 placeholder-red-700 focus:ring-red-500 focus:border-red-500 dark:text-red-500 dark:placeholder-red-500 dark:border-red-500'
           "
@@ -135,7 +139,7 @@ const handleSignup = async () => {
         <p
           class="mt-2 text-sm"
           :class="
-            checkElement.validEmail
+            validateEmail
               ? 'text-green-600 dark:text-green-500'
               : 'text-red-600 dark:text-red-500'
           "
@@ -154,7 +158,7 @@ const handleSignup = async () => {
           type="text"
           class="border text-sm rounded-lg block w-1/2 p-2.5 dark:bg-gray-700"
           :class="
-            checkElement.validPassword
+            validatePassword
               ? 'bg-green-50 border-green-500 text-green-900 dark:text-green-400 placeholder-green-700 dark:placeholder-green-500 focus:ring-green-500 focus:border-green-500 dark:border-green-500'
               : 'bg-red-50 border-green-500 border-red-500 text-red-900 placeholder-red-700 focus:ring-red-500 focus:border-red-500 dark:text-red-500 dark:placeholder-red-500 dark:border-red-500'
           "
@@ -165,7 +169,7 @@ const handleSignup = async () => {
         <p
           class="mt-2 text-sm"
           :class="
-            checkElement.validPassword
+            validatePassword
               ? 'text-green-600 dark:text-green-500'
               : 'text-red-600 dark:text-red-500'
           "
