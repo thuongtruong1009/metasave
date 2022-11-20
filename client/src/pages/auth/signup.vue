@@ -93,7 +93,7 @@ const handleSignup = async () => {
 
 <template>
   <section
-    class="signup_container bg-white rounded-3xl shadow-lg m-7 grid grid-cols-2"
+    class="signup_container bg-white rounded-3xl shadow-lg m-10 grid grid-cols-2"
   >
     <div class="signup_left p-10">
       <h1 class="text-4xl font-bold text-purple-800 text-center">Sign Up</h1>
