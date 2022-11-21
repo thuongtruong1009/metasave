@@ -4,12 +4,26 @@ const routes = [
   {
     path: "/",
     name: "home",
-    component: () => import("../pages/home.vue"),
+    component: () => import("../layouts/main.vue"),
+    children: [
+      {
+        path: "home",
+        component: () => import("../pages/home.vue"),
+      },
+      {
+        path: "calendar",
+        component: () => import("../pages/calendar.vue"),
+      },
+      {
+        path: "about",
+        component: () => import("../pages/about.vue"),
+      },
+    ],
   },
   {
-    path: "/project",
+    path: "/project/:projectId",
     name: "project",
-    component: () => import("../pages/project.vue"),
+    component: () => import("../pages/project/index.vue"),
   },
   {
     path: "/signup",

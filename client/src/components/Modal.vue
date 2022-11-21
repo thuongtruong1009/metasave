@@ -1,16 +1,38 @@
+<script setup lang="ts">
+import { ref } from "vue";
+import { Icon } from "@iconify/vue";
+import {
+  TransitionRoot,
+  TransitionChild,
+  Dialog,
+  DialogPanel,
+  DialogTitle,
+} from "@headlessui/vue";
+import Create from "./project/Create.vue";
+
+const isOpen = ref<boolean>(false);
+
+function closeModal(): void {
+  isOpen.value = false;
+}
+function openModal(): void {
+  isOpen.value = true;
+}
+</script>
+
 <template>
   <div>
-    <div class="fixed inset-0 flex items-center justify-center">
-      <button
-        type="button"
-        @click="openModal"
-        class="rounded-md bg-black bg-opacity-20 px-4 py-2 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
+    <button
+      type="button"
+      @click="openModal"
+      class="flex items-center rounded-md bg-black bg-opacity-20 px-4 py-2 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
+    >
+      <Icon icon="material-symbols:add" width="20" class="w-8" /><span
+        >New</span
       >
-        Open dialog
-      </button>
-    </div>
+    </button>
     <TransitionRoot appear :show="isOpen" as="template">
-      <Dialog as="div" @close="closeModal" class="relative z-10">
+      <Dialog as="div" @close="closeModal" class="relative">
         <TransitionChild
           as="template"
           enter="duration-300 ease-out"
@@ -63,24 +85,3 @@
     </TransitionRoot>
   </div>
 </template>
-
-<script setup>
-import { ref } from "vue";
-import {
-  TransitionRoot,
-  TransitionChild,
-  Dialog,
-  DialogPanel,
-  DialogTitle,
-} from "@headlessui/vue";
-import Create from "./project/Create.vue";
-
-const isOpen = ref(true);
-
-function closeModal() {
-  isOpen.value = false;
-}
-function openModal() {
-  isOpen.value = true;
-}
-</script>
