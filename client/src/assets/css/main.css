@@ -30,3 +30,28 @@ body {
     transition: background-color 0.3s;
     user-select: none;
 }
+
+a {
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+button,
+input,
+textarea {
+    outline: none;
+}
+
+::-webkit-scrollbar {
+    width: 0.5rem;
+    height: 0.5rem;
+}
+
+::-webkit-scrollbar,
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--color-primary);
+}

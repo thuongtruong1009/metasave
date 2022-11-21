@@ -2,6 +2,7 @@
 import ProjectMenu from "./ProjectMenu.vue";
 import BackgroundMenu from "./BackgroundMenu.vue";
 import { ChatBubbleBottomCenterTextIcon } from "@heroicons/vue/20/solid";
+import Combobox from "@/components/header/Combobox.vue";
 
 const props = defineProps<{
   description: string;
@@ -12,7 +13,8 @@ const props = defineProps<{
 <template>
   <div class="flex justify-between items-center">
     <div class="flex">
-      <ProjectMenu />
+      <!-- <ProjectMenu /> -->
+      <Combobox />
       <div class="w-60 bg-white/90 rounded-lg p-2 mx-5">
         <div
           class="flex justify-between mb-1 text-sm font-medium text-purple-500 dark:text-white"

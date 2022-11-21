@@ -1,0 +1,55 @@
+<script setup lang="ts">
+import { computed } from "vue";
+import { useRouter } from "vue-router";
+import { Icon } from "@iconify/vue";
+import { INav } from "@/types";
+
+const router = useRouter();
+const matchRoute = (query: string): boolean =>
+  router.currentRoute.value.path === query ? true : false;
+
+const toggles: Array<INav> = [
+  {
+    path: "/home",
+    icon: "material-symbols:home-outline-rounded",
+    width: 42,
+  },
+  {
+    path: "/calendar",
+    icon: "material-symbols:calendar-today-outline",
+    width: 42,
+  },
+  {
+    path: "/settings",
+    icon: "ep:setting",
+    width: 42,
+  },
+  {
+    path: "/about",
+    icon: "mdi:about-circle-outline",
+    width: 42,
+  },
+  {
+    path: "/signin",
+    icon: "ri:logout-circle-r-line",
+    width: 40,
+  },
+];
+</script>
+
+<template>
+  <nav class="left_nav grid justify-around h-80">
+    <router-link :to="toggle.path" v-for="(toggle, i) in toggles" :key="i">
+      <Icon
+        :icon="toggle.icon"
+        :width="toggle.width"
+        class="rounded-full p-2 cursor-pointer"
+        :class="
+          matchRoute(toggle.path)
+            ? 'bg-black text-white dark:bg-gray-700'
+            : 'hover:bg-[#c3cff4] '
+        "
+      />
+    </router-link>
+  </nav>
+</template>
