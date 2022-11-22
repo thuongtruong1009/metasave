@@ -1,46 +1,15 @@
 import VueRouter, { createRouter, createWebHistory } from "vue-router";
 import NProgress from "nprogress";
+import CommonRouter from "./common.router";
+import AuthRouter from "./auth.router";
+import Mainrouter from "./main.router";
+import ProjectRouter from "./project.router";
 
 const routes = [
-  {
-    path: "/",
-    name: "home",
-    component: () => import("../layouts/main.vue"),
-    children: [
-      {
-        path: "home",
-        component: () => import("../pages/home.vue"),
-      },
-      {
-        path: "calendar",
-        component: () => import("../pages/calendar.vue"),
-      },
-      {
-        path: "about",
-        component: () => import("../pages/about.vue"),
-      },
-    ],
-  },
-  {
-    path: "/project/:projectId",
-    name: "project",
-    component: () => import("../pages/project/index.vue"),
-  },
-  {
-    path: "/signup",
-    name: "signup",
-    component: () => import("../layouts/auth.vue"),
-  },
-  {
-    path: "/signin",
-    name: "signin",
-    component: () => import("../pages/auth/signin.vue"),
-  },
-  {
-    path: "/:pathMatch(.*)*",
-    name: "404",
-    component: () => import("../pages/404.vue"),
-  },
+  ...CommonRouter,
+  ...AuthRouter,
+  ...Mainrouter,
+  ...ProjectRouter,
 ];
 
 const router = createRouter({

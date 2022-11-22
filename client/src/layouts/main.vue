@@ -1,12 +1,12 @@
 <script setup>
 import { useRouter } from "vue-router";
-import Logo from "@/components/Logo.vue";
+import Logo from "@/components/header/Logo.vue";
 import LeftNavigation from "@/components/LeftNavigation.vue";
-import DarkMode from "@/components/DarkMode.vue";
-import Notification from "@/components/Notification.vue";
-import Search from "@/components/project/Search.vue";
-import Avatar from "@/components/Avatar.vue";
-import CreateProject from "@/components/CreateProject.vue";
+import DarkMode from "@/components/header/DarkMode.vue";
+import Notification from "@/components/header/Notification.vue";
+import Search from "@/components/header/Search.vue";
+import Avatar from "@/components/header/Avatar.vue";
+import CreateProject from "@/components/header/CreateProject.vue";
 
 const router = useRouter();
 const backHome = () => router.push({ name: "home" });

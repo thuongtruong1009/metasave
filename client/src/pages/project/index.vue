@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import { Container } from "vue3-smooth-dnd";
+import { Container, Draggable } from "vue3-smooth-dnd";
 import { applyDrag, getRandomEmoji } from "@/utils/helpers";
-import {} from "@/utils/helpers";
 import { customBackgrounds, fixedBackgrounds } from "@/shared/background";
-import Navigation from "@/components/header/Navigation.vue";
-import KanbanColumn from "@/components/kanban/KanbanColumn.vue";
+import Navigation from "@/components/project/Navigation.vue";
+import KanbanItem from "@/components/project/KanbanItem.vue";
 import type { ICard, IColumn, IScene } from "@/interface/index";
 
 const scene = ref<IScene>({
@@ -181,6 +180,11 @@ const getBackground = computed(() => {
   }
   return scene.value.background;
 });
+
+const isOpenColumnSetting = ref(false);
+const openColumnSetting = () => {
+  isOpenColumnSetting.value = !isOpenColumnSetting.value;
+};
 </script>
 
 <template>
@@ -197,13 +201,98 @@ const getBackground = computed(() => {
       orientation="horizontal"
       @drop="onColumnDrop($event)"
     >
-      <KanbanColumn
+      <!-- <KanbanColumn
         v-for="column in scene.children"
         :key="column.id"
         :column="column"
         :getCardPayload="getCardPayload(column.id)"
         :drop-card="(e:any) => onCardDrop(e, column.id)"
-      />
+      />-->
+      <!-- thay thế cho phần dưới -->
+      <Draggable
+        class="parent_column bg-gradient-to-r from-violet-200 to-pink-200 dark:bg-gray-700 rounded-lg h-full w-96 flex-shrink-0 shadow-xl"
+        v-for="column in scene.children"
+        :key="column.id"
+      >
+        <div class="h-full flex flex-col">
+          <div
+            class="cursor-move rounded-t-lg p-4 space-x-4 bg-primary text-white flex justify-between space-x-2"
+          >
+            <div class="flex item-center">
+              <img
+                :src="`/src/assets/img/${column.icon}.svg`"
+                alt="column_icon"
+                width="20"
+                height="20"
+              />
+              <h3 class="text-base ml-2 whitespace-nowrap mt-1">
+                {{ column.name }}
+              </h3>
+            </div>
+            <div class="flex items-center gap-3">
+              <div
+                class="w-8 h-8 p-1 rounded-full bg-white/30 flex place-content-center"
+              >
+                <span>{{ column.children.length }}</span>
+              </div>
+              <!-- <div
+                class="w-8 h-8 p-1 rounded-full cursor-pointer hover:bg-white/30 flex place-content-center font-bold"
+                @click="onAddNewCard(column.id)"
+              >
+                <span>+</span>
+              </div> -->
+              <div
+                class="w-8 h-8 p-1 rounded-full cursor-pointer hover:bg-white/30 flex place-content-center font-bold relative"
+                @click="openColumnSetting"
+              >
+                <span>⋮</span>
+                <div class="absolute z-10 top-10 right-0 w-40">
+                  <Transition name="fade">
+                    <ul
+                      v-if="isOpenColumnSetting"
+                      class="bg-white text-gray-600 rounded-lg shadow-lg p-2 text-left"
+                    >
+                      <li>Edit column</li>
+                      <li>Copy column link</li>
+                      <li>Delete column</li>
+                    </ul>
+                  </Transition>
+                </div>
+              </div>
+            </div>
+          </div>
+          <Container
+            class="flex-grow overflow-y-auto overflow-x-hidden"
+            orientation="vertical"
+            group-name="col-items"
+            :shouldAcceptDrop="
+              (e:any, payload:any) => e.groupName === 'col-items' && !payload.loading
+            "
+            :get-child-payload="getCardPayload(column.id)"
+            :drop-placeholder="{
+              className: `bg-primary bg-opacity-20  
+            border-dotted border-2 
+            border-primary rounded-lg mx-4 my-2`,
+              animationDuration: '200',
+              showOnTop: true,
+            }"
+            drag-class="bg-primary dark:bg-primary 
+            border-2 border-primary-hover text-white 
+            transition duration-100 ease-in z-50
+            transform rotate-6 scale-110"
+            drop-class="transition duration-100 
+            ease-in z-50 transform 
+            -rotate-2 scale-90"
+            @drop="(e:any) => onCardDrop(e, column.id)"
+          >
+            <KanbanItem
+              v-for="item in column.children"
+              :key="item.id"
+              :item="item"
+            ></KanbanItem>
+          </Container>
+        </div>
+      </Draggable>
     </Container>
   </section>
 </template>

@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import ProjectMenu from "./ProjectMenu.vue";
+import { Icon } from "@iconify/vue";
 import BackgroundMenu from "./BackgroundMenu.vue";
-import { ChatBubbleBottomCenterTextIcon } from "@heroicons/vue/20/solid";
-import Combobox from "@/components/header/Combobox.vue";
+import Combobox from "@/components/project/Combobox.vue";
 
 const props = defineProps<{
   description: string;
@@ -13,7 +12,6 @@ const props = defineProps<{
 <template>
   <div class="flex justify-between items-center">
     <div class="flex">
-      <!-- <ProjectMenu /> -->
       <Combobox />
       <div class="w-60 bg-white/90 rounded-lg p-2 mx-5">
         <div
@@ -22,9 +20,9 @@ const props = defineProps<{
           <span>Process</span>
           <span>{{ props.progress }}%</span>
         </div>
-        <div class="w-full bg-white rounded-full h-2 dark:bg-gray-700">
+        <div class="w-full bg-white rounded-full h-1.5 dark:bg-gray-700">
           <div
-            class="bg-purple-500 h-2 rounded-full"
+            class="bg-purple-500 h-1.5 rounded-full"
             :style="`width: ${props.progress}%`"
           ></div>
         </div>
@@ -32,7 +30,7 @@ const props = defineProps<{
     </div>
     <div class="flex items-center text-white">
       <div class="flex items-center mx-5 text-white text-sm italic">
-        <ChatBubbleBottomCenterTextIcon class="h-5 w-4" aria-hidden="true" />
+        <Icon icon="material-symbols:text-snippet-outline" />
         <quote class="ml-2">{{ props.description }}</quote>
       </div>
       <BackgroundMenu />

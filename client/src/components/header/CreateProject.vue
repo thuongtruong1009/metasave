@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { Icon } from "@iconify/vue";
-import Modal from "./Modal.vue";
+import Modal from "@/components/Modal.vue";
 
 const isOpen = ref<boolean>(false);
 

@@ -1,8 +1,8 @@
 <script setup>
 import { onMounted } from "vue";
 import { Icon } from "@iconify/vue";
-import Moon from "./icons/Moon.vue";
-import Sun from "./icons/Sun.vue";
+import Moon from "@/components/icons/Moon.vue";
+import Sun from "@/components/icons/Sun.vue";
 
 onMounted(() => {
   var themeToggleDarkIcon = document.getElementById("theme-toggle-dark-icon");
