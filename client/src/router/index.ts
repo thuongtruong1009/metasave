@@ -1,4 +1,5 @@
-import { createRouter, createWebHistory } from "vue-router";
+import VueRouter, { createRouter, createWebHistory } from "vue-router";
+import NProgress from "nprogress";
 
 const routes = [
   {
@@ -45,6 +46,23 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
+});
+
+router.beforeResolve(
+  (
+    to: VueRouter.RouteLocationNormalized,
+    from: VueRouter.RouteLocationNormalized,
+    next: VueRouter.NavigationGuardNext
+  ) => {
+    if (to.name) {
+      NProgress.start();
+    }
+    next();
+  }
+);
+
+router.afterEach(() => {
+  NProgress.done();
 });
 
 export default router;

@@ -6,7 +6,7 @@ import DarkMode from "@/components/DarkMode.vue";
 import Notification from "@/components/Notification.vue";
 import Search from "@/components/project/Search.vue";
 import Avatar from "@/components/Avatar.vue";
-import Modal from "@/components/Modal.vue";
+import CreateProject from "@/components/CreateProject.vue";
 
 const router = useRouter();
 const backHome = () => router.push({ name: "home" });
@@ -27,7 +27,7 @@ const backHome = () => router.push({ name: "home" });
         <Search />
       </div>
       <div class="flex items-end gap-5">
-        <Modal />
+        <CreateProject />
         <DarkMode />
         <Notification />
         <Avatar />

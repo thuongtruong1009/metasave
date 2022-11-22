@@ -5,11 +5,13 @@ specifiers:
   '@heroicons/vue': ^2.0.12
   '@iconify/vue': ^4.0.0
   '@types/node': ^18.11.3
+  '@types/nprogress': ^0.2.0
   '@vitejs/plugin-vue': ^3.1.0
   '@vueuse/core': ^9.3.1
   autoprefixer: ^10.4.12
   axios: ^1.1.3
   node-sass: ^8.0.0
+  nprogress: ^0.2.0
   pinia: ^2.0.23
   postcss: ^8.4.18
   sass: ^1.56.1
@@ -29,6 +31,7 @@ dependencies:
   '@iconify/vue': 4.0.0_vue@3.2.41
   '@vueuse/core': 9.3.1_vue@3.2.41
   axios: 1.1.3
+  nprogress: 0.2.0
   pinia: 2.0.23_l7r24p6nevbtlimqmqcwa3ouhu
   vue: 3.2.41
   vue-router: 4.1.5_vue@3.2.41
@@ -36,6 +39,7 @@ dependencies:
 
 devDependencies:
   '@types/node': 18.11.3
+  '@types/nprogress': 0.2.0
   '@vitejs/plugin-vue': 3.1.2_vite@3.1.8+vue@3.2.41
   autoprefixer: 10.4.12_postcss@8.4.18
   node-sass: 8.0.0
@@ -241,6 +245,10 @@ packages:
 
   /@types/normalize-package-data/2.4.1:
     resolution: {integrity: sha512-Gj7cI7z+98M282Tqmp2K5EIsoouUEzbBJhQQzDE3jSIRk6r9gsz0oUokqIUR4u1R3dMHo0pDHM7sNOHyhulypw==}
+    dev: true
+
+  /@types/nprogress/0.2.0:
+    resolution: {integrity: sha512-1cYJrqq9GezNFPsWTZpFut/d4CjpZqA0vhqDUPFWYKF1oIyBz5qnoYMzR+0C/T96t3ebLAC1SSnwrVOm5/j74A==}
     dev: true
 
   /@types/web-bluetooth/0.0.16:
@@ -1845,6 +1853,10 @@ packages:
       gauge: 4.0.4
       set-blocking: 2.0.0
     dev: true
+
+  /nprogress/0.2.0:
+    resolution: {integrity: sha512-I19aIingLgR1fmhftnbWWO3dXc0hSxqHQHQb3H8m+K3TnEn/iSeTZZOyvKXWqQESMwuUVnatlCnZdLBZZt2VSA==}
+    dev: false
 
   /object-hash/3.0.0:
     resolution: {integrity: sha512-RSn9F68PjH9HqtltsSnqYC1XXoWe9Bju5+213R98cNGttag9q9yAOTzdbsqvIa7aNm5WffBZFpWYr2aWrklWAw==}
