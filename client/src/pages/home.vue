@@ -3,6 +3,7 @@ import OverView from "@/components/home/OverView.vue";
 import ModeView from "@/components/home/ModeView.vue";
 import ProjectBox from "@/components/home/ProjectBox.vue";
 import { projectBoxColors } from "@/shared/color";
+import Sort from "@/components/Sort.vue";
 </script>
 
 <template>
@@ -13,7 +14,10 @@ import { projectBoxColors } from "@/shared/color";
     </div>
     <div class="flex justify-between items-center">
       <OverView />
-      <ModeView />
+      <div class="flex gap-10 items-end">
+        <Sort />
+        <ModeView />
+      </div>
     </div>
     <div class="grid grid-cols-3 gap-3">
       <ProjectBox
