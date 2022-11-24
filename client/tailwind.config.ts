@@ -26,6 +26,9 @@ module.exports = {
       colors: {
         primary: colors.purple[500],
       },
+      spacing: {
+        "128": "32rem",
+      },
     },
   },
 };

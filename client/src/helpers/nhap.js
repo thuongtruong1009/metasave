@@ -47,8 +47,8 @@ const getCurrentWeekNumber = (d) => {
 // }
 // console.log(getDateOfISOWeek(getCurrentWeekNumber(new Date()), 2022));
 
-export const getDate = () => {
-    let date = new Date();
+export const getDate = (date) => {
+    let hour = date.getHours();
     let day = Number(String(date.getDate()).padStart(2, "0"));
     let dayName = daysOfWeek[date.getDay()];
     let totalDaysInMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
@@ -60,5 +60,7 @@ export const getDate = () => {
     let startDayInWeek = Number(String(startWeek.getDate()).padStart(2, "0")) + 1;
     let endDayInWeek = Number(String(endWeek.getDate()).padStart(2, "0")) + 1;
 
-    return { day, month, year, totalDaysInMonth, dayName, monthName, startDayInWeek, endDayInWeek };
+    return { hour, day, month, year, totalDaysInMonth, dayName, monthName, startDayInWeek, endDayInWeek };
 };
+
+console.log(getDate(new Date()));

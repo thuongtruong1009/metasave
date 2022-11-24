@@ -15,17 +15,17 @@ onMounted(() => {
   ) {
     themeToggleLightIcon.classList.remove("hidden");
   } else {
-    themeToggleDarkIcon.classList.remove("hidden");
+    themeToggleDarkIcon?.classList.remove("hidden");
   }
 
   var themeToggleBtn = document.getElementById("theme-toggle");
 
-  themeToggleBtn.addEventListener("click", function () {
+  themeToggleBtn?.addEventListener("click", function () {
     themeToggleDarkIcon.classList.toggle("hidden");
     themeToggleLightIcon.classList.toggle("hidden");
     if (localStorage.getItem("color-theme")) {
       if (localStorage.getItem("color-theme") === "light") {
-        document.documentElement.classList.add("dark");
+        document.documentElement?.classList.add("dark");
         localStorage.setItem("color-theme", "dark");
       } else {
         document.documentElement.classList.remove("dark");

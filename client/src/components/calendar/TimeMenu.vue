@@ -11,7 +11,9 @@ const categories = reactive([
 
 <template>
   <TabGroup class="w-full max-w-md">
-    <TabList class="flex space-x-1 rounded-xl bg-[#F6F5F8] p-1.5">
+    <TabList
+      class="flex space-x-1 rounded-xl bg-[#E6F5DD] dark:bg-gray-600 p-1.5"
+    >
       <Tab
         v-for="(category, i) in categories"
         as="template"
@@ -23,7 +25,7 @@ const categories = reactive([
             'w-full rounded-lg py-1.5 text-sm font-medium leading-5 text-gray-400',
             'ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400',
             selected
-              ? 'bg-white shadow-md text-blue-700 font-semibold'
+              ? 'bg-[#BBE6A8] dark:bg-gray-500 text-blue-700 dark:text-gray-200 font-semibold'
               : 'hover:bg-white/[0.12]',
           ]"
         >

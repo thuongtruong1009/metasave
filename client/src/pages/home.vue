@@ -7,7 +7,9 @@ import Sort from "@/components/Sort.vue";
 </script>
 
 <template>
-  <section class="text-gray-600">
+  <section
+    class="text-gray-600 ml-5 p-5 bg-white dark:bg-gray-700 rounded-2xl w-2/3"
+  >
     <div class="flex justify-between">
       <h1 class="text-2xl font-semibold">Overview</h1>
       <h5 class="text-sm font-medium italic">Last active: 2022 December, 12</h5>

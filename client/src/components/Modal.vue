@@ -20,7 +20,7 @@ defineEmits<{
   <div>
     <slot name="openBtn"></slot>
     <TransitionRoot appear :show="status" as="template">
-      <Dialog as="div" @close="$emit('close')" class="relative">
+      <Dialog as="div" @close="$emit('close')" class="relative z-20">
         <TransitionChild
           as="template"
           enter="duration-300 ease-out"

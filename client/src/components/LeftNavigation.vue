@@ -17,7 +17,7 @@ const toggles: Array<INav> = [
   {
     path: "/calendar",
     icon: "material-symbols:calendar-today-outline",
-    width: 42,
+    width: 40,
   },
   {
     path: "/settings",
