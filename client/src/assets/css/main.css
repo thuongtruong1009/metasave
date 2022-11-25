@@ -24,6 +24,10 @@
     --border-color: #0d2538;
 }
 
+* {
+    box-sizing: border-box;
+}
+
 body {
     background-color: var(--bg);
     color: var(--color);

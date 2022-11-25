@@ -24,7 +24,9 @@ const getHourIndex = (hour: string) =>
 
 const getPositionTimebar = (parentHeight: number) => {
   const index = (
-    (parentHeight * getHourIndex(getCurrentDate(new Date()).hour)) /
+    ((parentHeight - 15) *
+      (getHourIndex(getCurrentDate(new Date()).hour) +
+        getCurrentDate(new Date()).minute / 60)) /
     personalHours.length
   ).toFixed(2);
   return index;
@@ -43,6 +45,13 @@ const listEvents: Array<IEvent> = reactive([
     title: "Meeting with client",
     start: "2022-11-24T08:00:00",
     end: "2022-11-24T10:00:00",
+    color: "green-100",
+  },
+  {
+    id: 2,
+    title: "Meeting with client",
+    start: "2022-11-27T08:00:00",
+    end: "2022-11-27T10:00:00",
     color: "green-100",
   },
 ]);
@@ -92,7 +101,14 @@ const listEvents: Array<IEvent> = reactive([
                 <h3 class="text-xl font-semibold">
                   {{ getCurrentDate(new Date()).startDayInWeek + i }}
                 </h3>
-                <span>{{ sliceString(day, 3) }}</span>
+                <span
+                  :class="{
+                    'text-gray-400':
+                      getCurrentDate(new Date()).day !==
+                      getCurrentDate(new Date()).startDayInWeek + i,
+                  }"
+                  >{{ sliceString(day, 3) }}</span
+                >
               </div>
             </th>
           </tr>
