@@ -1,19 +1,9 @@
 import { daysOfWeek, monthsOfYear } from "@/shared/time";
+import { IGetCurrentDate } from "@/types/calendar";
 
-type IGetDate = {
-  hour: string;
-  day: number;
-  month: number;
-  year: number;
-  totalDaysInMonth: number;
-  dayName: string;
-  monthName: string;
-  startDayInWeek: number;
-  endDayInWeek: number;
-};
-
-export const getCurrentDate = (time: any): IGetDate => {
+export const getCurrentDate = (time: Date | string): IGetCurrentDate => {
   let date = time ? new Date(time) : new Date();
+  let minute = date.getMinutes();
   let hour = String(date.getHours()) + ":00";
   let day = Number(String(date.getDate()).padStart(2, "0"));
   let dayName = daysOfWeek[date.getDay()];
@@ -39,6 +29,7 @@ export const getCurrentDate = (time: any): IGetDate => {
   let endDayInWeek = Number(String(endWeek.getDate()).padStart(2, "0")) + 1;
 
   return {
+    minute,
     hour,
     day,
     month,
@@ -52,12 +43,12 @@ export const getCurrentDate = (time: any): IGetDate => {
 };
 
 export const getDiffPeriod = (
-  start: Date,
-  end: Date
-): Record<string, string> => {
+  start: string,
+  end: string
+): Record<"diffHours" | "diffDays", number> => {
   let startDate = start ? new Date(start) : new Date();
   let endDate = end ? new Date(end) : new Date();
-  let diffHours = String(Math.abs(endDate.getHours() - startDate.getHours()));
-  let diffDays = String(Math.abs(endDate.getDate() - startDate.getDate()));
+  let diffHours = Number(Math.abs(endDate.getHours() - startDate.getHours()));
+  let diffDays = Number(Math.abs(endDate.getDate() - startDate.getDate()));
   return { diffHours, diffDays };
 };

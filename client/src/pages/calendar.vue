@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { reactive, ref, computed, onMounted } from "vue";
 import { useElementSize } from "@vueuse/core";
 import { Icon } from "@iconify/vue";
@@ -6,6 +6,8 @@ import TimeMenu from "@/components/calendar/TimeMenu.vue";
 import { personalHours, daysOfWeek } from "@/shared/time";
 import { getCurrentDate, getDiffPeriod } from "@/helpers/date";
 import { truncateString, sliceString } from "@/utils/string";
+import TimeBar from "@/components/calendar/TimeBar.vue";
+import { IEvent } from "@/types/calendar";
 
 const headSize = ref(null);
 const bodySize = ref(null);
@@ -17,27 +19,31 @@ const getCalendarSize = reactive({
   bodyHeight: useElementSize(bodySize).height,
 });
 
-const getHourIndex = (hour) => personalHours.findIndex((h) => h === hour);
+const getHourIndex = (hour: string) =>
+  personalHours.findIndex((h: string) => h === hour);
 
-const getWeekendRemainDays = (day) => {
-  const weekend = ["Sat", "Sun"];
-  return weekend.includes(day);
+const getPositionTimebar = (parentHeight: number) => {
+  const index = (
+    (parentHeight * getHourIndex(getCurrentDate(new Date()).hour)) /
+    personalHours.length
+  ).toFixed(2);
+  return index;
 };
 
-const listEvents = reactive([
+const listEvents: Array<IEvent> = reactive([
   {
     id: 1,
     title: "Meeting with client",
     start: "2022-11-21T11:00:00",
     end: "2022-11-21T13:00:00",
-    color: "bg-blue-500",
+    color: "blue-100",
   },
   {
     id: 2,
     title: "Meeting with client",
     start: "2022-11-24T08:00:00",
     end: "2022-11-24T10:00:00",
-    color: "bg-blue-500",
+    color: "green-100",
   },
 ]);
 </script>
@@ -92,6 +98,12 @@ const listEvents = reactive([
           </tr>
         </thead>
         <tbody class="relative" ref="bodySize">
+          <TimeBar
+            class="absolute w-full left-0"
+            :style="{
+              top: getPositionTimebar(getCalendarSize.bodyHeight) + 'px',
+            }"
+          />
           <tr v-for="(hour, index) in personalHours" :key="index">
             <td
               class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white w-20"
@@ -114,7 +126,7 @@ const listEvents = reactive([
               top:
                 (getCalendarSize.bodyHeight *
                   getHourIndex(getCurrentDate(event.start).hour)) /
-                  18 +
+                  personalHours.length +
                 'px',
               width:
                 (getCalendarSize.bodyWidth - getCalendarSize.headWidth) /
@@ -128,10 +140,12 @@ const listEvents = reactive([
             }"
           >
             <div
-              class="w-full h-full rounded-lg bg-[#EFE9FF] break-words whitespace-pre-wrap p-1.5 text-sm cursor-pointer hover:shadow-lg"
+              class="w-full h-full rounded-lg break-words whitespace-pre-wrap p-1.5 text-sm cursor-pointer hover:shadow-lg"
+              :class="`bg-${event.color}`"
             >
               <h1 class="font-semibold">
-                {{ event.title }}
+                {{ event.title
+                }}{{ getPositionTimebar(getCalendarSize.bodyHeight) }}
               </h1>
               <p class="text-xs">
                 {{ getCurrentDate(event.start).hour }}:
