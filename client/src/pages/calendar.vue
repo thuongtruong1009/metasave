@@ -94,7 +94,7 @@ const listEvents: Array<IEvent> = reactive([
                 :class="[
                   getCurrentDate(new Date()).day ===
                   getCurrentDate(new Date()).startDayInWeek + i
-                    ? 'bg-purple-500 text-white'
+                    ? 'bg-purple-500 text-white shadow-lg shadow-gray-400/50 dark:shadow-gray-600'
                     : 'text-black',
                 ]"
               >
