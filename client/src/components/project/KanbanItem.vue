@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Draggable } from "vue3-smooth-dnd";
-import { TagIcon } from "@heroicons/vue/20/solid";
+import { Icon } from "@iconify/vue";
 
 defineProps<{
   item: {
@@ -30,7 +30,7 @@ defineProps<{
             <p>{{ item.icon }}</p>
           </div>
 
-          <TagIcon class="h-5 w-5" aria-hidden="true" />
+          <Icon icon="mdi:tag-multiple" />
 
           <span
             class="card_item_option--icon cursor-pointer hidden w-7 h-7 flex text-center rounded-full hover:bg-gray-300"

@@ -14,7 +14,7 @@ const changeToggleView = (index: number): void => {
 </script>
 
 <template>
-  <div class="flex">
+  <div class="flex h-min">
     <button
       type="button"
       @click="changeToggleView(1)"
@@ -23,7 +23,7 @@ const changeToggleView = (index: number): void => {
         isGridView ? 'hover:bg-[#E9E7FD] text-black' : 'bg-black text-white'
       "
     >
-      <Icon icon="ic:baseline-format-list-bulleted" width="26" />
+      <Icon icon="ic:baseline-format-list-bulleted" width="24" />
     </button>
     <button
       type="button"
@@ -33,7 +33,7 @@ const changeToggleView = (index: number): void => {
         isGridView ? 'bg-black text-white' : 'hover:bg-[#E9E7FD] text-black'
       "
     >
-      <Icon icon="material-symbols:grid-view-outline-rounded" width="26" />
+      <Icon icon="material-symbols:grid-view-outline-rounded" width="24" />
     </button>
   </div>
 </template>

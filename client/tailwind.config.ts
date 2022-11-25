@@ -26,6 +26,13 @@ module.exports = {
       colors: {
         primary: colors.purple[500],
       },
+      spacing: {
+        "128": "32rem",
+      },
+      boxShadow: {
+        input:
+          "0 4px 11px -2px rgb(37 44 97 / 15%), 0 1px 3px 0 rgb(93 100 148 / 20%)",
+      },
     },
   },
 };

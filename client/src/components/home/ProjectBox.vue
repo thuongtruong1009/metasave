@@ -1,4 +1,5 @@
 <script setup>
+import { ref } from "vue";
 import { Icon } from "@iconify/vue";
 
 defineProps({
@@ -11,6 +12,11 @@ defineProps({
     required: true,
   },
 });
+
+const isStared = ref(false);
+const onStar = () => {
+  isStared.value = !isStared.value;
+};
 </script>
 
 <template>
@@ -62,6 +68,15 @@ defineProps({
       >
         2 Days Left
       </p>
+      <div @click="onStar">
+        <Icon
+          icon="material-symbols:star-rate-rounded"
+          width="24"
+          v-if="isStared"
+          class="text-yellow-500"
+        />
+        <Icon icon="ic:round-star-border" width="24" v-else />
+      </div>
     </div>
   </div>
 </template>

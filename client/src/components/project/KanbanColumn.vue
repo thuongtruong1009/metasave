@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import { Container, Draggable } from "vue3-smooth-dnd";
-import KanbanItem from "./KanbanItem.vue";
-import type { IColumn } from "../../interface";
+import KanbanItem from "@/components/project/KanbanItem.vue";
+import type { IColumn } from "@/interface";
 
 defineProps<{
   column: IColumn;
