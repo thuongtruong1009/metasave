@@ -47,16 +47,17 @@ defineEmits<{
               leave-to="opacity-0 scale-95"
             >
               <DialogPanel
-                class="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
+                class="w-max transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
               >
                 <DialogTitle
                   as="h3"
-                  class="text-lg font-medium leading-6 text-gray-900"
+                  class="text-lg font-medium leading-6 text-gray-900 flex justify-between items-center"
                 >
                   <slot name="title"></slot>
+                  <slot name="closeBtn"></slot>
                 </DialogTitle>
                 <slot name="content"></slot>
-                <slot name="closeBtn"></slot>
+                <slot name="doneBtn"></slot>
               </DialogPanel>
             </TransitionChild>
           </div>
