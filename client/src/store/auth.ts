@@ -17,6 +17,9 @@ export const useAuthStore = defineStore({
 
   getters: {
     isLogin: (state) => !!state.id,
+    getUser() {
+      return JSON.parse(localStorage.getItem("user") || "{}");
+    },
   },
 
   actions: {
@@ -32,6 +35,10 @@ export const useAuthStore = defineStore({
       localStorage.setItem("token", token);
     },
 
+    async setUser(user: IResponseUser) {
+      localStorage.setItem("user", JSON.stringify(user));
+    },
+
     async login(
       userData: IResponseUser & { accessToken: string }
     ): Promise<void> {
@@ -41,6 +48,7 @@ export const useAuthStore = defineStore({
         email: userData.email,
       });
       this.setToken(userData.accessToken);
+      this.setUser(userData);
     },
   },
 });

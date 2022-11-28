@@ -15,8 +15,7 @@
     "allowJs": true,
     "paths": {
       "@/*": ["./src/*", "./dist/*"]
-    },
-    "experimentalSuppressInvalidJsxElementTypeErrors": true
+    }
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
   "references": [{ "path": "./tsconfig.node.json" }]

@@ -10,6 +10,11 @@ import db from "../models";
 const User = db.user;
 const Role = db.role;
 
+const getUserId = (req: any) => {
+  let token = req.headers["authorization"];
+  return JSON.parse(Buffer.from(token.split(".")[1], "base64").toString()).id;
+};
+
 const verifyToken = (req: any, res: Response, next: NextFunction) => {
   let token = req.headers["authorization"];
   if (!token) {
@@ -83,6 +88,7 @@ const isModerator = (req: any, res: Response, next: any) => {
 };
 
 const verifyAuth = {
+  getUserId,
   verifyToken,
   isAdmin,
   isModerator,

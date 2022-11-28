@@ -11,6 +11,10 @@ defineProps({
     type: String,
     required: true,
   },
+  project: {
+    type: Object,
+    required: true,
+  },
 });
 
 const isStared = ref(false);
@@ -35,7 +39,9 @@ const onStar = () => {
         </button>
       </div>
       <div>
-        <h5 class="text-base font-semibold text-center my-3">Web Designing</h5>
+        <h5 class="text-base font-semibold text-center my-3">
+          {{ project.name }}
+        </h5>
       </div>
       <div class="text-sm font-semibold dark:text-white">Progress</div>
       <div class="w-full bg-white rounded-full h-1 my-1">

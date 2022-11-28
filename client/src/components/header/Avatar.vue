@@ -14,6 +14,6 @@ const authStore = useAuthStore();
       src="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
       alt="avatar_img"
     />
-    <p>{{ authStore.$state.username }}</p>
+    <p>{{ authStore.getUser.username }}</p>
   </router-link>
 </template>

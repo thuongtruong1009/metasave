@@ -1,10 +1,11 @@
 import { Application } from "express";
 import projectController from "../../controllers/user/project.controller";
+import verifyAuth from "../../middlewares/authen.middleware";
 
 const authRouter = (prefix: string, app: Application) => {
   app.post(`${prefix}/project`, projectController.createProject);
 
-  app.get(`${prefix}/user/:userId/project`, projectController.getAllProjects);
+  app.get(`${prefix}/project`, projectController.getAllProjects);
 
   app.get(`${prefix}/project/:id`, projectController.getProjectById);
 

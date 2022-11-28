@@ -1,7 +1,7 @@
 export default [
   {
     path: "/",
-    name: "home",
+    name: "main",
     component: () => import("../layouts/main.vue"),
     children: [
       {
