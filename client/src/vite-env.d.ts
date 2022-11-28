@@ -8,3 +8,5 @@ declare module "*.vue" {
 declare module "@heroicons/*";
 
 declare module "vue3-smooth-dnd";
+
+declare module "*.d.ts";

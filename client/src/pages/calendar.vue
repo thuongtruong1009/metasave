@@ -7,7 +7,7 @@ import { personalHours, daysOfWeek } from "@/shared/time";
 import { getCurrentDate, getDiffPeriod } from "@/helpers/date";
 import { truncateString, sliceString } from "@/utils/string";
 import TimeBar from "@/components/calendar/TimeBar.vue";
-import { IEvent } from "@/types/calendar";
+import { IEvent } from "@/types";
 
 const headSize = ref(null);
 const bodySize = ref(null);
@@ -61,7 +61,8 @@ const listEvents: Array<IEvent> = reactive([
   <section class="ml-5 p-5 bg-white dark:bg-gray-700 rounded-2xl w-full">
     <div class="flex justify-between items-center mb-5">
       <h1 class="text-2xl font-semibold">
-        {{ getCurrentDate().monthName }} {{ getCurrentDate().year }}
+        {{ getCurrentDate(new Date()).monthName }}
+        {{ getCurrentDate(new Date()).year }}
       </h1>
       <TimeMenu />
     </div>

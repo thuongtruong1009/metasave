@@ -1,3 +1,9 @@
+<script setup>
+import { useAuthStore } from "@/store/auth";
+
+const authStore = useAuthStore();
+</script>
+
 <template>
   <router-link
     to="/profile"
@@ -6,8 +12,8 @@
     <img
       class="w-10 h-10 rounded-full ring-2 ring-gray-300 dark:ring-gray-500 p-0.5"
       src="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
-      alt=""
+      alt="avatar_img"
     />
-    <p>username</p>
+    <p>{{ authStore.$state.username }}</p>
   </router-link>
 </template>

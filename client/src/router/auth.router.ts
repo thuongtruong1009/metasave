@@ -1,12 +1,17 @@
 export default [
   {
-    path: "/signup",
-    name: "signup",
+    path: "/auth",
+    name: "auth",
     component: () => import("../layouts/auth.vue"),
-  },
-  {
-    path: "/signin",
-    name: "signin",
-    component: () => import("../pages/auth/signin.vue"),
+    children: [
+      {
+        path: "signup",
+        component: () => import("../pages/auth/signup.vue"),
+      },
+      {
+        path: "signin",
+        component: () => import("../pages/auth/signin.vue"),
+      },
+    ],
   },
 ];
