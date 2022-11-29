@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import CardModel from "src/models/card.model";
+import verifyAuth from "../../middlewares/authen.middleware";
 
 import db from "../../models";
 const User = db.user;
@@ -9,20 +10,25 @@ const Card = db.card;
 
 const createProject = async (req: Request, res: Response): Promise<void> => {
   try {
-    const user = await User.findById(req.body.owner);
+    const user = await User.findById(verifyAuth.getUserId(req));
     if (!user) {
       res.status(404).send({ message: "User not found" });
+      return;
+    }
+    if (verifyAuth.getUserId(req) !== req.body.owner) {
+      res.status(403).send({ message: "Forbiden" });
       return;
     }
 
     const project = new Project(req.body);
     const savedProject = await project.save();
+
     await User.updateMany(
-      { _id: req.body.owner },
+      { _id: verifyAuth.getUserId(req) },
       { $push: { projects: savedProject._id } }
     );
 
-    res.status(200).send(savedProject);
+    res.status(201).send(savedProject);
   } catch (error) {
     res.status(500).send({ message: error });
   }
@@ -31,17 +37,31 @@ const createProject = async (req: Request, res: Response): Promise<void> => {
 const getAllProjects = async (req: Request, res: Response): Promise<void> => {
   try {
     if (req.query.access === "public") {
-      const totalProjects = await Project.countDocuments({ access: "public" });
-      const projects = await Project.find({ access: "public" });
+      const totalProjects = await Project.countDocuments({
+        owner: verifyAuth.getUserId(req),
+        access: "public",
+      });
+      const projects = await Project.find({
+        owner: verifyAuth.getUserId(req),
+        access: "public",
+      });
       res.status(200).send({ total: totalProjects, projects: projects });
     } else if (req.query.access === "private") {
-      const totalProjects = await Project.countDocuments({ access: "private" });
-      const projects = await Project.find({ access: "private" });
+      const totalProjects = await Project.countDocuments({
+        owner: verifyAuth.getUserId(req),
+        access: "private",
+      });
+      const projects = await Project.find({
+        owner: verifyAuth.getUserId(req),
+        access: "private",
+      });
       res.status(200).send({ total: totalProjects, projects: projects });
     } else {
-      const totalProjects = await Project.countDocuments();
+      const totalProjects = await Project.countDocuments({
+        owner: verifyAuth.getUserId(req),
+      });
       const projects = await (
-        await User.findById(req.params.userId, "projects")
+        await User.findById(verifyAuth.getUserId(req))
       ).populate("projects");
       res
         .status(200)

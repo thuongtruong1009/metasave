@@ -29,12 +29,13 @@ const toggles: Array<INav> = [
     icon: "mdi:about-circle-outline",
     width: 42,
   },
-  {
-    path: "/signin",
-    icon: "ri:logout-circle-r-line",
-    width: 40,
-  },
 ];
+
+const logout = () => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("user");
+  router.push("/signin");
+};
 </script>
 
 <template>
@@ -47,9 +48,16 @@ const toggles: Array<INav> = [
         :class="
           matchRoute(toggle.path)
             ? 'bg-black text-white dark:bg-gray-700'
-            : 'hover:bg-[#c3cff4] '
+            : 'hover:bg-[#c3cff4]'
         "
       />
     </router-link>
+
+    <Icon
+      icon="ri:logout-circle-r-line"
+      width="40"
+      class="rounded-full p-2 cursor-pointer hover:bg-[#c3cff4] text-purple-500"
+      @click="logout"
+    />
   </nav>
 </template>

@@ -84,7 +84,6 @@ const isValidate = computed(
 
 const handleSignup = async () => {
   if (isValidate.value) {
-    console.log(isValidate.value);
     await AuthService.signup(payload);
     router.push({ name: "signin" });
   }

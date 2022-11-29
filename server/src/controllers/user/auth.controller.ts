@@ -13,6 +13,7 @@ const signup = async (req: Request, res: Response) => {
   const user = new User({
     username: req.body.username,
     email: req.body.email,
+    avatar: req.body.avatar,
     password: key.hash,
     salt: key.salt,
   });
@@ -104,6 +105,7 @@ const signin = (req: Request, res: Response) => {
         id: user._id,
         username: user.username,
         email: user.email,
+        avatar: user.avatar,
         roles: authorities,
         accessToken: token,
       });
