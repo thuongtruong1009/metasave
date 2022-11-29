@@ -6,7 +6,7 @@ import ProjectBox from "@/components/home/ProjectBox.vue";
 import { projectBoxColors } from "@/shared/color";
 import Sort from "@/components/Sort.vue";
 import ProjectService from "@/services/project.service";
-import { useAuthStore } from "@/store/auth";
+import useAuthStore from "@/store/auth";
 import { getIndex } from "@/utils/array";
 
 const authStore = useAuthStore();

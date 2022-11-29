@@ -6,14 +6,17 @@ export default [
     children: [
       {
         path: "home",
+        name: "home",
         component: () => import("../pages/home.vue"),
       },
       {
         path: "calendar",
+        name: "calendar",
         component: () => import("../pages/calendar.vue"),
       },
       {
         path: "about",
+        name: "about",
         component: () => import("../pages/about.vue"),
       },
     ],

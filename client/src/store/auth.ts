@@ -1,4 +1,3 @@
-// @ts-check
 import { defineStore, acceptHMRUpdate } from "pinia";
 
 type IResponseUser = {
@@ -7,7 +6,7 @@ type IResponseUser = {
   email: string;
 };
 
-export const useAuthStore = defineStore({
+const useAuthStore = defineStore({
   id: "auth",
   state: (): IResponseUser => ({
     id: "",
@@ -16,7 +15,7 @@ export const useAuthStore = defineStore({
   }),
 
   getters: {
-    isLogin: (state) => !!state.id,
+    isAuthenticated: (state) => !state.id,
     getUser() {
       return JSON.parse(localStorage.getItem("user") || "{}");
     },
@@ -56,3 +55,5 @@ export const useAuthStore = defineStore({
 if (import.meta.hot) {
   import.meta.hot.accept(acceptHMRUpdate(useAuthStore, import.meta.hot));
 }
+
+export default useAuthStore;

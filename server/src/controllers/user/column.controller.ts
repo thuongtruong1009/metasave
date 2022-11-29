@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-
 import db from "../../models";
 
 const Project = db.project;

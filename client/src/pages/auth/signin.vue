@@ -5,7 +5,7 @@ import { Icon } from "@iconify/vue";
 
 import AuthService from "@/services/auth.service";
 import { testEmail, testPassword } from "@/utils/regrex";
-import { useAuthStore } from "@/store/auth";
+import useAuthStore from "@/store/auth";
 
 const router = useRouter();
 const authStore = useAuthStore();
