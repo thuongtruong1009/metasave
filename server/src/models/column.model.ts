@@ -32,7 +32,7 @@ const ColumnModel = mongoose.model(
         ref: "Card",
       },
     ],
-  })
+  }).set("timestamps", true)
 );
 
 export default ColumnModel;

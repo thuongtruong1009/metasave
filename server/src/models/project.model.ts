@@ -39,7 +39,13 @@ const ProjectModel = mongoose.model(
         ref: "Column",
       },
     ],
-  })
+    startDate: {
+      type: Date,
+    },
+    endDate: {
+      type: Date,
+    },
+  }).set("timestamps", true)
 );
 
 export default ProjectModel;

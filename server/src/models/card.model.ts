@@ -23,7 +23,7 @@ const CardModel = mongoose.model(
     tagId: {
       type: String,
     },
-  })
+  }).set("timestamps", true)
 );
 
 export default CardModel;

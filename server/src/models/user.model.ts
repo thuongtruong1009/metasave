@@ -17,6 +17,7 @@ const UserModel = mongoose.model(
       type: String,
       required: true,
     },
+    avatar: String,
     salt: String,
     roles: [
       {
@@ -30,7 +31,7 @@ const UserModel = mongoose.model(
         ref: "Project",
       },
     ],
-  })
+  }).set("timestamps", true)
 );
 
 export default UserModel;
