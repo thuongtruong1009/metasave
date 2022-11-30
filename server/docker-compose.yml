@@ -18,18 +18,32 @@ services:
       - mongo-network
     depends_on:
       - mongo
+      - ngrok
     restart: unless-stopped
 
   mongo:
     container_name: mongo
     image: mongo
-    ports:
-      - 27017:27017
+    # ports:
+    #   - 27017:27017
     volumes:
       - ./docker/mongo/data:/data/db
     networks:
       - mongo-network
     restart: unless-stopped
 
+  ngrok:
+    container_name: ngrok
+    image: wernight/ngrok
+    ports:
+      - 4040:4040
+    volumes:
+      - ./docker/ngrok.yml:/home/ngrok/.ngrok2/ngrok.yml
+    command: ["ngrok", "http", "8080"]
+    networks:
+      - ngrok-network
+    restart: unless-stopped
+
 networks:
   mongo-network:
+  ngrok-network:
