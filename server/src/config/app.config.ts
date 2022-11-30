@@ -17,10 +17,10 @@ import adminRoutes from "../routes/admin";
 
 const app: Application = express();
 
-ConnectDB(process.env.MONGO_URL);
+ConnectDB();
 
 const corsOptions: ICorsOptions = {
-  origin: "http://localhost:3001",
+  origin: process.env.ORIGIN,
   credentials: true,
 };
 app.use(cors(corsOptions));

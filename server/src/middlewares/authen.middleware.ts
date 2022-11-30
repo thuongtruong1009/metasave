@@ -18,7 +18,9 @@ const getUserId = (req: any) => {
 const verifyToken = (req: any, res: Response, next: NextFunction) => {
   let token = req.headers["authorization"];
   if (!token) {
-    return res.status(403).send({ message: "No token provided!" });
+    return res
+      .status(403)
+      .send({ status: false, message: "No token provided!" });
   }
   jwt.verify(token, process.env.SECRET_KEY, (err: Error, decoded: IDecoded) => {
     if (err) {
@@ -58,7 +60,7 @@ const isAdmin = (req: any, res: Response, next: NextFunction) => {
   });
 };
 
-const isModerator = (req: any, res: Response, next: any) => {
+const isModerator = (req: any, res: Response, next: NextFunction) => {
   User.findById(req.userId).exec((err: Error, user: IUser | any) => {
     if (err) {
       res.status(500).send({ message: err });

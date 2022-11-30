@@ -6,6 +6,8 @@ services:
     image: mongo
     volumes:
       - ./docker/mongo/data:/data/db
+    ports:
+      - 27017:27017
     networks:
       - mongo-network
     restart: unless-stopped
@@ -14,12 +16,12 @@ services:
     container_name: metasave
     # image: metasave
     env_file:
-      - .env
+      - .env.production
     build:
       context: .
       dockerfile: ./docker/Dockerfile
     ports:
-      - "3000:3000"
+      - 3000:3000
     volumes:
       - ./:/app
     command: yarn start
@@ -29,19 +31,19 @@ services:
       - mongo
     restart: unless-stopped
 
-  # ngrok:
-  #   container_name: ngrok
-  #   image: ngrok/ngrok
-  #   ports:
-  #     - 4040:4040
-  #   volumes:
-  #     - ./docker/ngrok/data:/home/ngrok/.ngrok2/
-  #   command: ["http", "--region=us", "metasave:3000"]
-  #   networks:
-  #     - ngrok-network
-  #   depends_on:
-  #     - metasave
-  #   restart: unless-stopped
+  ngrok:
+    container_name: ngrok
+    image: ngrok/ngrok
+    ports:
+      - 4040:4040
+    volumes:
+      - ./docker/ngrok/data:/home/ngrok/.ngrok2/
+    command: ["http", "metasave:3000"]
+    networks:
+      - ngrok-network
+    depends_on:
+      - metasave
+    restart: unless-stopped
 
 networks:
   mongo-network:

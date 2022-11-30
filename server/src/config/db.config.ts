@@ -1,17 +1,17 @@
 import mongoose from "mongoose";
+import * as dotenv from "dotenv";
+dotenv.config();
+
 import { initRole, initTag } from "../helpers/wakeup";
 
-function ConnectDB(mongoURL: string) {
+function ConnectDB() {
   const options: any = {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    // useCreateIndex: true,
-    // useFindAndModify: false,
-    // poolSize: parseInt(process.env.POOL_SIZE!),
   };
 
   try {
-    mongoose.connect(mongoURL, options);
+    mongoose.connect(process.env.MONGO_URL, options);
     // initRole();
     // initTag();
   } catch (error) {
