@@ -23,3 +23,4 @@ COPY --chown=node:node ./package.json ./yarn.lock ./
 COPY --chown=node:node --from=build-stage /app/dist /app/dist
 
 RUN yarn --production
+

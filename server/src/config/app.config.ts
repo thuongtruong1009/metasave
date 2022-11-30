@@ -33,6 +33,10 @@ const accessLogStream = fs.createWriteStream(
 );
 app.use(morgan("combined", { stream: accessLogStream }));
 
+app.get("", (req, res) => {
+  res.send("Hello World");
+});
+
 userRoutes(app);
 adminRoutes(app);
 

@@ -26,9 +26,7 @@
         "dev": "nodemon src/app.ts",
         "prod": "node dist/app.js",
         "build": "tsc --build",
-        "ngrok": "ngrok http 8080",
-        "seed": "ts-node seeder/index.ts",
-        "rome": "npx rome check . && npx rome format ."
+        "seed": "ts-node seeder/index.ts"
     },
     "dependencies": {
         "body-parser": "^1.20.1",
