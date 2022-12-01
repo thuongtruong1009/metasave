@@ -2,11 +2,11 @@
 import { reactive, ref, computed, onMounted } from "vue";
 import { useElementSize } from "@vueuse/core";
 import { Icon } from "@iconify/vue";
-import TimeMenu from "@/components/calendar/TimeMenu.vue";
 import { personalHours, daysOfWeek } from "@/shared/time";
 import { getCurrentDate, getDiffPeriod } from "@/helpers/date";
 import { truncateString, sliceString } from "@/utils/string";
 import TimeBar from "@/components/calendar/TimeBar.vue";
+import DatePicker from "@/components/calendar/DatePicker.vue";
 import { IEvent } from "@/types";
 
 const headSize = ref(null);
@@ -64,7 +64,7 @@ const listEvents: Array<IEvent> = reactive([
         {{ getCurrentDate(new Date()).monthName }}
         {{ getCurrentDate(new Date()).year }}
       </h1>
-      <TimeMenu />
+      <DatePicker />
     </div>
 
     <div
