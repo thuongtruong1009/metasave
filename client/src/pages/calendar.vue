@@ -2,11 +2,12 @@
 import { reactive, ref, computed, onMounted } from "vue";
 import { useElementSize } from "@vueuse/core";
 import { Icon } from "@iconify/vue";
-import TimeMenu from "@/components/calendar/TimeMenu.vue";
 import { personalHours, daysOfWeek } from "@/shared/time";
 import { getCurrentDate, getDiffPeriod } from "@/helpers/date";
 import { truncateString, sliceString } from "@/utils/string";
 import TimeBar from "@/components/calendar/TimeBar.vue";
+import DatePicker from "@/components/calendar/DatePicker.vue";
+import Tooltip from "@/components/calendar/Tooltip.vue";
 import { IEvent } from "@/types";
 
 const headSize = ref(null);
@@ -36,22 +37,22 @@ const listEvents: Array<IEvent> = reactive([
   {
     id: 1,
     title: "Meeting with client",
-    start: "2022-11-21T11:00:00",
-    end: "2022-11-21T13:00:00",
+    start: "2022-12-01T11:00:00",
+    end: "2022-12-01T13:00:00",
     color: "blue-100",
   },
   {
     id: 2,
     title: "Meeting with client",
-    start: "2022-11-24T08:00:00",
-    end: "2022-11-24T10:00:00",
+    start: "2022-12-02T08:00:00",
+    end: "2022-12-02T10:00:00",
     color: "green-100",
   },
   {
-    id: 2,
+    id: 3,
     title: "Meeting with client",
-    start: "2022-11-27T08:00:00",
-    end: "2022-11-27T10:00:00",
+    start: "2022-12-03T08:00:00",
+    end: "2022-12-03T10:00:00",
     color: "green-100",
   },
 ]);
@@ -64,7 +65,7 @@ const listEvents: Array<IEvent> = reactive([
         {{ getCurrentDate(new Date()).monthName }}
         {{ getCurrentDate(new Date()).year }}
       </h1>
-      <TimeMenu />
+      <DatePicker />
     </div>
 
     <div
@@ -130,7 +131,7 @@ const listEvents: Array<IEvent> = reactive([
             <td class="py-4 px-6" v-for="i in daysOfWeek.length" :key="i"></td>
           </tr>
           <div
-            class="absolute p-1 z-0"
+            class="absolute p-1 z-1 dark:text-gray-300"
             v-for="event in listEvents"
             :key="event.id"
             :style="{
@@ -156,19 +157,26 @@ const listEvents: Array<IEvent> = reactive([
                 'px',
             }"
           >
-            <div
+            <!-- <div
               class="w-full h-full rounded-lg break-words whitespace-pre-wrap p-1.5 text-sm cursor-pointer hover:shadow-lg"
               :class="`bg-${event.color}`"
             >
               <h1 class="font-semibold">
-                {{ event.title
-                }}{{ getPositionTimebar(getCalendarSize.bodyHeight) }}
+                {{ event.title }}
               </h1>
               <p class="text-xs">
                 {{ getCurrentDate(event.start).hour }}:
                 {{ getCurrentDate(event.end).hour }}
               </p>
-            </div>
+            </div> -->
+            <Tooltip
+              :props="{
+                color: event.color,
+                title: event.title,
+                start: getCurrentDate(event.start).hour,
+                end: getCurrentDate(event.end).hour,
+              }"
+            />
           </div>
         </tbody>
       </table>

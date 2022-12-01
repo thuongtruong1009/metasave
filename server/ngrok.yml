@@ -1,0 +1,4 @@
+# docker run -it -e NGROK_AUTHTOKEN=<your_token> ngrok/ngrok http <your_ip>:3000
+authtoken: ${NGROK_AUTH_TOKEN}
+log: stdout
+web_addr: 0.0.0.0:4040

@@ -12,6 +12,8 @@ const authRouter = (prefix: string, app: Application) => {
     authController.signup
   );
 
+  app.get(`${prefix}/auth/verify/:token`, authController.verifyAccount);
+
   app.post(`${prefix}/auth/signin`, authController.signin);
 };
 

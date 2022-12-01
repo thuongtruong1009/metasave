@@ -17,10 +17,10 @@ import adminRoutes from "../routes/admin";
 
 const app: Application = express();
 
-ConnectDB(process.env.MONGO_URL);
+ConnectDB();
 
 const corsOptions: ICorsOptions = {
-  origin: "http://localhost:3001",
+  origin: process.env.ORIGIN,
   credentials: true,
 };
 app.use(cors(corsOptions));
@@ -32,6 +32,11 @@ const accessLogStream = fs.createWriteStream(
   { flags: "a" }
 );
 app.use(morgan("combined", { stream: accessLogStream }));
+app.use(express.static(path.join(__dirname, "../../public")));
+
+app.get("", (req, res) => {
+  res.send("Hello World");
+});
 
 userRoutes(app);
 adminRoutes(app);

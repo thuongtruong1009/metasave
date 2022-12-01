@@ -11,6 +11,7 @@
     "dependencies": {
         "@headlessui/vue": "^1.7.3",
         "@iconify/vue": "^4.0.0",
+        "@vuepic/vue-datepicker": "^3.5.3",
         "@vueuse/core": "^9.3.1",
         "axios": "^1.1.3",
         "nprogress": "^0.2.0",
