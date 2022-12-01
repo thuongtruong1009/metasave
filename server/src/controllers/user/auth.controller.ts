@@ -1,6 +1,10 @@
 import { Request, Response } from "express";
 import { Error } from "mongoose";
 import jwt from "jsonwebtoken";
+import nodemailer from "nodemailer";
+import * as dotenv from "dotenv";
+dotenv.config();
+
 import { hashPassword, comparePassword } from "../../helpers/hash";
 import { IRole, IUser } from "../../types";
 
@@ -41,6 +45,7 @@ const signup = async (req: Request, res: Response) => {
             }
             res.send({ message: "User was registered successfully!" });
           });
+          sendConfirmationEmail(user.email);
         }
       );
     } else {
@@ -68,6 +73,49 @@ const signup = async (req: Request, res: Response) => {
   });
 };
 
+//https://www.freecodecamp.org/news/use-nodemailer-to-send-emails-from-your-node-js-server/
+function sendConfirmationEmail(email: string) {
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      type: "OAuth2",
+      user: process.env.EMAIL_USERNAME,
+      pass: process.env.EMAIL_PASSWORD,
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      refreshToken: process.env.GOOGLE_REFRESH_TOKEN,
+    },
+  } as any);
+
+  let token = jwt.sign({ email }, process.env.SECRET_KEY);
+
+  const urlConfirm = `${process.env.APP_URL}/confirm/${token}`;
+
+  return transporter.sendMail(
+    {
+      from: process.env.EMAIL_USERNAME,
+      to: email,
+      subject: "Confirm your email",
+      html: `<p>Confirm your Metasave account at : <a href="${urlConfirm}">Confirm</a></p>`,
+    },
+    (err, info) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(info);
+      }
+    }
+  );
+}
+
+// const confirmAccount = (req: Request, res: Response) =>{
+//   var email = null
+//   try{
+//     const payload = jwt.verify(req.params.token, process.env.SECRET_KEY)
+//     email = req.userId
+//   }
+// }
+
 const signin = (req: Request, res: Response) => {
   User.findOne({
     username: req.body.username,
@@ -94,9 +142,13 @@ const signin = (req: Request, res: Response) => {
           message: "Invalid Password!",
         });
       }
-      var token = jwt.sign({ id: user.id }, process.env.SECRET_KEY, {
-        expiresIn: 86400,
-      });
+      var token = jwt.sign(
+        { id: user.id, email: user.email },
+        process.env.SECRET_KEY,
+        {
+          expiresIn: 86400,
+        }
+      );
       var authorities: string[] = [];
       for (let i = 0; i < user.roles.length; i++) {
         authorities.push(user.roles[i].name.toUpperCase());

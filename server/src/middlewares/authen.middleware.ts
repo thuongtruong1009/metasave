@@ -27,6 +27,7 @@ const verifyToken = (req: any, res: Response, next: NextFunction) => {
       return res.status(401).send({ message: "Unauthorized!" });
     }
     req.userId = decoded.id;
+    req.email = decoded.email;
     next();
   });
 };
