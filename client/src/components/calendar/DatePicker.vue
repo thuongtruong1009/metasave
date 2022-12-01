@@ -5,7 +5,7 @@ const isDark = document.documentElement.classList.contains("dark")
   ? true
   : false;
 
-const date = ref();
+const date = ref(new Date());
 
 const handleDate = (modelData) => {
   date.value = modelData;
@@ -15,7 +15,7 @@ const handleDate = (modelData) => {
 
 <template>
   <Datepicker
-    :value="date"
+    v-model="date"
     range
     auto-range="6"
     :dark="isDark"
@@ -32,10 +32,11 @@ const handleDate = (modelData) => {
 <style lang="scss">
 .dp-custom-input {
   box-shadow: 0 0 0 1px #e2e8f0;
+  width: 16rem;
 }
 .dp-custom-menu {
   border-radius: 1.2rem;
-  padding-bottom: 0.8rem;
+  padding: 0.8rem;
 }
 .dp-custom-cell {
   border-radius: 5px;
