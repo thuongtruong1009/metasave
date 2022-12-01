@@ -67,6 +67,7 @@ const signup = async (req: Request, res: Response) => {
             }
             res.send({ message: "User was registered successfully!" });
           });
+          sendConfirmationEmail(user.email);
         }
       );
     }
@@ -89,7 +90,7 @@ function sendConfirmationEmail(email: string) {
 
   let token = jwt.sign({ email }, process.env.SECRET_KEY);
 
-  const urlConfirm = `${process.env.APP_URL}/confirm/${token}`;
+  const urlConfirm = `${process.env.APP_URL}/api/auth/verify/${token}`;
 
   return transporter.sendMail(
     {
@@ -108,13 +109,33 @@ function sendConfirmationEmail(email: string) {
   );
 }
 
-// const confirmAccount = (req: Request, res: Response) =>{
-//   var email = null
-//   try{
-//     const payload = jwt.verify(req.params.token, process.env.SECRET_KEY)
-//     email = req.userId
-//   }
-// }
+const verifyAccount = (req: Request, res: Response) => {
+  var email = null;
+  try {
+    const payload = jwt.verify(req.params.token, process.env.SECRET_KEY) as any;
+    email = payload.email;
+  } catch {
+    throw new Error("Invalid Token");
+  }
+  User.findOne({ email: email }, (err: Error, user: IUser | any) => {
+    if (err) {
+      res.status(500).send({ message: err });
+      return;
+    }
+    if (user.isVerified) {
+      res.status(500).send({ message: "Account already verified" });
+      return;
+    }
+    user.isVerified = true;
+    user.save((err: Error) => {
+      if (err) {
+        res.status(500).send({ message: err });
+        return;
+      }
+      res.send({ message: "Account verified" });
+    });
+  });
+};
 
 const signin = (req: Request, res: Response) => {
   User.findOne({
@@ -157,6 +178,7 @@ const signin = (req: Request, res: Response) => {
         id: user._id,
         username: user.username,
         email: user.email,
+        isVerified: user.isVerified,
         avatar: user.avatar,
         roles: authorities,
         accessToken: token,
@@ -166,6 +188,7 @@ const signin = (req: Request, res: Response) => {
 
 const authController = {
   signup,
+  verifyAccount,
   signin,
 };
 
