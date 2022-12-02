@@ -1,16 +1,25 @@
 {
   "compilerOptions": {
+    /* Visit https://aka.ms/tsconfig.json to read more about this file */
+    "target": "es6",
     "module": "commonjs",
+    "declaration": true,
+    "outDir": "./dist",
+    "strict": true,
+    "moduleResolution": "node",
+    "baseUrl": "./src",
     "esModuleInterop": true,
+    "skipLibCheck": true,
+    // "forceConsistentCasingInFileNames": true,
+    // "sourceMap": true,
+    "noImplicitAny": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "target": "es6",
-    "noImplicitAny": true,
-    "moduleResolution": "node",
-    "skipLibCheck": true,
-    "sourceMap": true,
-    "outDir": "./dist",
-    "baseUrl": "./",
+    // "rootDir": "./",
+    // "removeComments": true,
+    // "noUnusedLocals": false,
+    // "noUnusedParameters": false,
+
     "typeRoots": ["./src/types", "./node_modules/@types"]
   }
 }

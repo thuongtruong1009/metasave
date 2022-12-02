@@ -22,18 +22,22 @@ const verifyToken = (req: any, res: Response, next: NextFunction) => {
       .status(403)
       .send({ status: false, message: "No token provided!" });
   }
-  jwt.verify(token, process.env.SECRET_KEY, (err: Error, decoded: IDecoded) => {
-    if (err) {
-      return res.status(401).send({ message: "Unauthorized!" });
+  jwt.verify(
+    token,
+    `${process.env.SECRET_KEY}`,
+    (err: Error | null, decoded: IDecoded | any) => {
+      if (err) {
+        return res.status(401).send({ message: "Unauthorized!" });
+      }
+      req.userId = decoded.id;
+      req.email = decoded.email;
+      next();
     }
-    req.userId = decoded.id;
-    req.email = decoded.email;
-    next();
-  });
+  );
 };
 
 const isAdmin = (req: any, res: Response, next: NextFunction) => {
-  User.findById(req.userId).exec((err: Error, user: IUser | any) => {
+  User.findById(req.userId).exec((err: Error | null, user: IUser | any) => {
     if (err) {
       res.status(500).send({ message: err });
       return;
@@ -62,7 +66,7 @@ const isAdmin = (req: any, res: Response, next: NextFunction) => {
 };
 
 const isModerator = (req: any, res: Response, next: NextFunction) => {
-  User.findById(req.userId).exec((err: Error, user: IUser | any) => {
+  User.findById(req.userId).exec((err: Error | null, user: IUser | any) => {
     if (err) {
       res.status(500).send({ message: err });
       return;

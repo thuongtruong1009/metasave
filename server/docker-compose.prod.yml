@@ -1,0 +1,10 @@
+version: "3.7"
+
+services:
+  app:
+    build:
+      target: production
+    environment:
+      MONGO_URL: ${ATLAS_URL}
+      NODE_ENV: production
+    command: yarn start

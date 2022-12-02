@@ -2,12 +2,22 @@ import { Error } from "mongoose";
 
 import db from "../models";
 
+// app.get("/retrieve", function (req, res) {
+//   Visitor.find({}, function (err, data) {
+//       if (!err) {
+//           res.render("retrieve", { title: "View Visitor Data", records: data });
+//       } else {
+//           throw err;
+//       }
+//   }).clone().catch(function(err){ console.log(err)})
+// });
+
 export const initRole = async (): Promise<void> => {
-  await db.role.estimatedDocumentCount((err: Error, count: number) => {
+  await db.role.estimatedDocumentCount((err: Error | null, count: number) => {
     if (!err && count === 0) {
       new db.role({
         name: "user",
-      }).save((err: Error) => {
+      }).save((err: Error | null) => {
         if (err) {
           console.log("error", err);
         }
@@ -15,7 +25,7 @@ export const initRole = async (): Promise<void> => {
       });
       new db.role({
         name: "moderator",
-      }).save((err: Error) => {
+      }).save((err: Error | null) => {
         if (err) {
           console.log("error", err);
         }
@@ -23,7 +33,7 @@ export const initRole = async (): Promise<void> => {
       });
       new db.role({
         name: "admin",
-      }).save((err: Error) => {
+      }).save((err: Error | null) => {
         if (err) {
           console.log("error", err);
         }
@@ -35,11 +45,11 @@ export const initRole = async (): Promise<void> => {
 };
 
 export const initTag = async (): Promise<void> => {
-  await db.tag.estimatedDocumentCount((err: Error, count: number) => {
+  await db.tag.estimatedDocumentCount((err: Error | null, count: number) => {
     if (!err && count === 0) {
       new db.tag({
         name: "family",
-      }).save((err: Error) => {
+      }).save((err: Error | null) => {
         if (err) {
           console.log("error", err);
         }
@@ -47,7 +57,7 @@ export const initTag = async (): Promise<void> => {
       });
       new db.tag({
         name: "work",
-      }).save((err: Error) => {
+      }).save((err: Error | null) => {
         if (err) {
           console.log("error", err);
         }
@@ -55,7 +65,7 @@ export const initTag = async (): Promise<void> => {
       });
       new db.tag({
         name: "study",
-      }).save((err: Error) => {
+      }).save((err: Error | null) => {
         if (err) {
           console.log("error", err);
         }
@@ -63,7 +73,7 @@ export const initTag = async (): Promise<void> => {
       });
       new db.tag({
         name: "hobby",
-      }).save((err: Error) => {
+      }).save((err: Error | null) => {
         if (err) {
           console.log("error", err);
         }
@@ -71,7 +81,7 @@ export const initTag = async (): Promise<void> => {
       });
       new db.tag({
         name: "friend",
-      }).save((err: Error) => {
+      }).save((err: Error | null) => {
         if (err) {
           console.log("error", err);
         }
@@ -79,7 +89,7 @@ export const initTag = async (): Promise<void> => {
       });
       new db.tag({
         name: "secret",
-      }).save((err: Error) => {
+      }).save((err: Error | null) => {
         if (err) {
           console.log("error", err);
         }

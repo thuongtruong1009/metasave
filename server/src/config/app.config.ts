@@ -20,7 +20,7 @@ const app: Application = express();
 ConnectDB();
 
 const corsOptions: ICorsOptions = {
-  origin: process.env.ORIGIN,
+  origin: `${process.env.ORIGIN}`,
   credentials: true,
 };
 app.use(cors(corsOptions));
