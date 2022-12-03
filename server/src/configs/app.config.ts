@@ -29,7 +29,7 @@ class App {
   }
   public listen() {
     this.app.listen(this.port, () => {
-      console.log(`App listening on the port ${this.port}`);
+      console.log(`• App listening on the port ${this.port}`);
     });
     this.app.get("/", (req, res) => {
       res.send("Hello World!");
@@ -67,7 +67,7 @@ class App {
     const options = {
       swaggerDefinition: {
         info: {
-          title: `${process.env.DB_NAME}`,
+          title: `${process.env.DB_NAME}-API`,
           version: "1.0.0",
           description: "The API documentation for Boarder server",
         },
