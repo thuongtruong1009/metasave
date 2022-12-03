@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { Error } from "mongoose";
 import { IUser } from "../types";
-import { EROLE } from "../constant";
+import { EROLE } from "../constants";
 
 import db from "../models";
 

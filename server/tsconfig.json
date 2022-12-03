@@ -1,25 +1,29 @@
 {
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
-    "target": "es6",
+    "target": "esnext",
     "module": "commonjs",
     "declaration": true,
-    "outDir": "./dist",
+    "outDir": "dist",
     "strict": true,
     "moduleResolution": "node",
     "baseUrl": "./src",
     "esModuleInterop": true,
     "skipLibCheck": true,
-    // "forceConsistentCasingInFileNames": true,
-    // "sourceMap": true,
+    "forceConsistentCasingInFileNames": true,
+    "sourceMap": true,
+    "pretty": true,
+    "allowJs": true,
     "noImplicitAny": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    // "rootDir": "./",
-    // "removeComments": true,
-    // "noUnusedLocals": false,
-    // "noUnusedParameters": false,
-
-    "typeRoots": ["./src/types", "./node_modules/@types"]
-  }
+    "resolveJsonModule": true,
+    "rootDir": "./",
+    "removeComments": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "typeRoots": ["src/types", "node_modules/@types"]
+  },
+  "include": ["src/**/*.ts", ".src/**/*.json", ".env"],
+  "exclude": ["node_modules", "http", "logs", "src/tests"]
 }

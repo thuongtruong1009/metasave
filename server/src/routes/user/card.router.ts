@@ -1,12 +1,28 @@
-import { Application } from "express";
+import { Router } from "express";
+import { IRouter } from "../../types";
 import CardController from "../../controllers/user/card.controller";
 
-const cardRouter = (prefix: string, app: Application) => {
-  app.post(`${prefix}/card`, CardController.createCard);
-  app.get(`${prefix}/column/:columnId/card`, CardController.getAllCards);
-  app.get(`${prefix}/card/:id`, CardController.getCardById);
-  app.put(`${prefix}/card`, CardController.updateCard);
-  app.delete(`${prefix}/card/:id`, CardController.deleteCard);
-};
+class CardRouter implements IRouter {
+  public path = "/card";
+  public router = Router();
 
-export default cardRouter;
+  constructor() {
+    this.initializeRoutes();
+  }
+  initializeRoutes() {
+    this.router.get(
+      `/column/:columnId${this.path}`,
+      CardController.getAllCards
+    );
+
+    this.router.post(`${this.path}`, CardController.createCard);
+
+    this.router.get(`${this.path}/:id`, CardController.getCardById);
+
+    this.router.put(`${this.path}`, CardController.updateCard);
+
+    this.router.delete(`${this.path}/:id`, CardController.deleteCard);
+  }
+}
+
+export default CardRouter;

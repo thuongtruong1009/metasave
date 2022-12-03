@@ -1,20 +1,25 @@
-import { Application } from "express";
+import { Router } from "express";
 import verifySignUp from "../../middlewares/signup.middleware";
 import authController from "../../controllers/user/auth.controller";
+import { IRouter } from "../../types";
 
-const authRouter = (prefix: string, app: Application) => {
-  app.post(
-    `${prefix}/auth/signup`,
-    [
+class AuthRouter implements IRouter {
+  public path = "/auth";
+  public router = Router();
+
+  constructor() {
+    this.initializeRoutes();
+  }
+  initializeRoutes() {
+    this.router.post(`${this.path}/signup`, [
       verifySignUp.checkDuplicateUsernameOrEmail,
       verifySignUp.checkRolesExisted,
-    ],
-    authController.signup
-  );
+    ]);
 
-  app.get(`${prefix}/auth/verify/:token`, authController.verifyAccount);
+    this.router.get(`${this.path}/verify/:token`, authController.verifyAccount);
 
-  app.post(`${prefix}/auth/signin`, authController.signin);
-};
+    this.router.post(`${this.path}/signin`, authController.signin);
+  }
+}
 
-export default authRouter;
+export default AuthRouter;
