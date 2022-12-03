@@ -1,0 +1,15 @@
+{
+    "verbose": true,
+    "watch": [
+        "src/**/*.ts",
+        ".env"
+    ],
+    "ignore": [
+        "logs/*",
+        "src/**/*.{spec,test}.ts",
+        "swagger.yaml"
+    ],
+    "execMap": {
+        "ts": "node --inspect=0.0.0.0:9229 --nolazy -r ts-node/register"
+    }
+}

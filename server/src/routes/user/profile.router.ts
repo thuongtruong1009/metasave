@@ -1,10 +1,9 @@
 import { Router } from "express";
 import { IRouter } from "../../types";
+import userController from "../../controllers/user/user.controller";
 
-import userController from "../../controllers/admin/user.controller";
-
-class UsersRouter implements IRouter {
-  public path = "/users";
+class ProfileRouter implements IRouter {
+  public path = "/user";
   public router = Router();
 
   constructor() {
@@ -12,10 +11,8 @@ class UsersRouter implements IRouter {
   }
 
   private initializeRoutes() {
-    this.router.get(`${this.path}`, userController.getAllUsers);
-
     this.router.delete(`${this.path}/:id`, userController.deleteUser);
   }
 }
 
-export default UsersRouter;
+export default ProfileRouter;

@@ -18,12 +18,12 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach(async (to, from) => {
-  const authStore = useAuthStore();
-  if (!authStore.isAuthenticated && to.name !== "signin") {
-    return { name: "signin" };
-  }
-});
+// router.beforeEach(async (to, from) => {
+//   const authStore = useAuthStore();
+//   if (!authStore.isAuthenticated && to.name !== "signin") {
+//     return { name: "signin" };
+//   }
+// });
 
 router.beforeResolve(
   (

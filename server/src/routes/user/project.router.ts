@@ -1,17 +1,26 @@
-import { Application } from "express";
+import { Router } from "express";
+import { IRouter } from "../../types";
 import projectController from "../../controllers/user/project.controller";
-import verifyAuth from "../../middlewares/authen.middleware";
 
-const authRouter = (prefix: string, app: Application) => {
-  app.post(`${prefix}/project`, projectController.createProject);
+class ProjectRouter implements IRouter {
+  public path = "/project";
+  public router = Router();
 
-  app.get(`${prefix}/project`, projectController.getAllProjects);
+  constructor() {
+    this.initializeRoutes();
+  }
 
-  app.get(`${prefix}/project/:id`, projectController.getProjectById);
+  private initializeRoutes() {
+    this.router.post(`${this.path}`, projectController.createProject);
 
-  app.put(`${prefix}/project/:id`, projectController.updateProject);
+    this.router.get(`${this.path}`, projectController.getAllProjects);
 
-  app.delete(`${prefix}/project/:id`, projectController.deleteProject);
-};
+    this.router.get(`${this.path}/:id`, projectController.getProjectById);
 
-export default authRouter;
+    this.router.put(`${this.path}/:id`, projectController.updateProject);
+
+    this.router.delete(`${this.path}/:id`, projectController.deleteProject);
+  }
+}
+
+export default ProjectRouter;

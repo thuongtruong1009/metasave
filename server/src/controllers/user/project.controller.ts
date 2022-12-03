@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import CardModel from "src/models/card.model";
+import CardModel from "../../models/card.model";
 import verifyAuth from "../../middlewares/authen.middleware";
 
 import db from "../../models";
@@ -60,9 +60,9 @@ const getAllProjects = async (req: Request, res: Response): Promise<void> => {
       const totalProjects = await Project.countDocuments({
         owner: verifyAuth.getUserId(req),
       });
-      const projects = await (
-        await User.findById(verifyAuth.getUserId(req))
-      ).populate("projects");
+      const projects = (await User.findById(verifyAuth.getUserId(req)).populate(
+        "projects"
+      )) as any;
       res
         .status(200)
         .send({ total: totalProjects, projects: projects.projects });
@@ -74,9 +74,10 @@ const getAllProjects = async (req: Request, res: Response): Promise<void> => {
 
 const getProjectById = async (req: Request, res: Response): Promise<void> => {
   try {
-    const project = await (
-      await Project.findById(req.params.id)
-    ).populate("owner", "_id username");
+    const project = await Project.findById(req.params.id).populate(
+      "owner",
+      "_id username"
+    );
     res.status(200).send(project);
   } catch (error) {
     res.status(500).send({ message: error });

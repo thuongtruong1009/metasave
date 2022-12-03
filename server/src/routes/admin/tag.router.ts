@@ -1,15 +1,25 @@
-import { Application } from "express";
+import { Router } from "express";
+import { IRouter } from "../../types";
 
 import tagController from "../../controllers/admin/tag.controller";
 
-const TagRouter = (prefix: string, app: Application) => {
-  app.post(`${prefix}/tag`, tagController.createTag);
+class TagsRouter implements IRouter {
+  public path = "/tag";
+  public router = Router();
 
-  app.get(`${prefix}/tag`, tagController.getAllTags);
+  constructor() {
+    this.initializeRoutes();
+  }
 
-  app.put(`${prefix}/tag/:id`, tagController.updateTag);
+  private initializeRoutes() {
+    this.router.post(`${this.path}`, tagController.createTag);
 
-  app.delete(`${prefix}/tag/:id`, tagController.deleteTag);
-};
+    this.router.get(`${this.path}`, tagController.getAllTags);
 
-export default TagRouter;
+    this.router.put(`${this.path}/:id`, tagController.updateTag);
+
+    this.router.delete(`${this.path}/:id`, tagController.deleteTag);
+  }
+}
+
+export default TagsRouter;

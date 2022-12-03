@@ -22,7 +22,7 @@ const signup = async (req: Request, res: Response) => {
     salt: key.salt,
   });
 
-  user.save((err: Error, user: IUser | any) => {
+  user.save((err: Error | null, user: IUser | any) => {
     if (err) {
       res.status(500).send({ message: err });
       return;
@@ -88,7 +88,7 @@ function sendConfirmationEmail(email: string) {
     },
   } as any);
 
-  let token = jwt.sign({ email }, process.env.SECRET_KEY);
+  let token = jwt.sign({ email }, `${process.env.SECRET_KEY}`);
 
   const urlConfirm = `${process.env.APP_URL}/api/auth/verify/${token}`;
 
@@ -112,7 +112,10 @@ function sendConfirmationEmail(email: string) {
 const verifyAccount = (req: Request, res: Response) => {
   var email = null;
   try {
-    const payload = jwt.verify(req.params.token, process.env.SECRET_KEY) as any;
+    const payload = jwt.verify(
+      req.params.token,
+      `${process.env.SECRET_KEY}`
+    ) as any;
     email = payload.email;
   } catch {
     throw new Error("Invalid Token");
@@ -142,7 +145,7 @@ const signin = (req: Request, res: Response) => {
     username: req.body.username,
   })
     .populate("roles", "-__v")
-    .exec((err: Error, user: IUser | any) => {
+    .exec((err: Error | null, user: IUser | any) => {
       if (err) {
         res.status(500).send({ message: err });
         return;
@@ -165,7 +168,7 @@ const signin = (req: Request, res: Response) => {
       }
       var token = jwt.sign(
         { id: user.id, email: user.email },
-        process.env.SECRET_KEY,
+        `${process.env.SECRET_KEY}`,
         {
           expiresIn: 86400,
         }

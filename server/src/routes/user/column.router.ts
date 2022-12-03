@@ -1,19 +1,29 @@
-import { Application } from "express";
+import { Router } from "express";
+import { IRouter } from "../../types";
 import columnController from "../../controllers/user/column.controller";
 
-const columnRouter = (prefix: string, app: Application) => {
-  app.post(`${prefix}/column`, columnController.createColumn);
+class ColumnRouter implements IRouter {
+  public path = "/column";
+  public router = Router();
 
-  app.get(
-    `${prefix}/project/:projectId/column`,
-    columnController.getAllColumns
-  );
+  constructor() {
+    this.initializeRoutes();
+  }
 
-  app.get(`${prefix}/column/:id`, columnController.getColumnById);
+  private initializeRoutes() {
+    this.router.post(`${this.path}`, columnController.createColumn);
 
-  app.put(`${prefix}/column/:id`, columnController.updateColumn);
+    this.router.get(
+      `/project/:projectId${this.path}`,
+      columnController.getAllColumns
+    );
 
-  app.delete(`${prefix}/column/:id`, columnController.deleteColumn);
-};
+    this.router.get(`${this.path}/:id`, columnController.getColumnById);
 
-export default columnRouter;
+    this.router.put(`${this.path}/:id`, columnController.updateColumn);
+
+    this.router.delete(`${this.path}/:id`, columnController.deleteColumn);
+  }
+}
+
+export default ColumnRouter;

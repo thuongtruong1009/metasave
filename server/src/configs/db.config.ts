@@ -11,7 +11,7 @@ function ConnectDB() {
   };
 
   try {
-    mongoose.connect(process.env.MONGO_URL, options);
+    mongoose.connect(`${process.env.MONGO_URL}`, options);
     // initRole();
     // initTag();
   } catch (error) {

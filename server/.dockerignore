@@ -3,14 +3,24 @@
 .gitignore
 .cache
 
-# ignore all markdown files (md) beside all README*.md other than README-secret.md
 *.md
 !README*.md
 README-secret.md
 
-#ignore node_modules and all subdirectories
+vscode/
 node_modules/
 npm-debug.log
 
 Dockerfile
 .dockerignore
+
+# code formatter
+.eslintrc
+.eslintignore
+.editorconfig
+.huskyrc
+.lintstagedrc.json
+.prettierrc
+
+# test
+jest.config.js

@@ -1,6 +1,27 @@
-version: "3.7"
+version: "3.8"
 
 services:
+  app:
+    container_name: app
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+      target: development
+    ports:
+      - 3000:${APP_PORT}
+    volumes:
+      - ./:/app
+    networks:
+      - common
+    depends_on:
+      - mongo
+    env_file:
+      - .env
+    restart: unless-stopped
+    environment:
+      MONGO_URL: mongodb://mongo/${DB_NAME}
+    command: yarn dev
+
   mongo:
     container_name: mongo
     image: mongo
@@ -9,42 +30,22 @@ services:
     ports:
       - 27017:27017
     networks:
-      - mongo-network
-    restart: unless-stopped
-
-  metasave:
-    container_name: metasave
-    # image: metasave
-    env_file:
-      - .env.production
-    build:
-      context: .
-      dockerfile: ./docker/Dockerfile
-    ports:
-      - 3000:3000
-    volumes:
-      - ./:/app
-    command: yarn start
-    networks:
-      - mongo-network
-    depends_on:
-      - mongo
+      - common
     restart: unless-stopped
 
   ngrok:
     container_name: ngrok
-    image: ngrok/ngrok
+    image: ngrok/ngrok:alpine
     ports:
       - 4040:4040
     volumes:
       - ./docker/ngrok/data:/home/ngrok/.ngrok2/
-    command: ["http", "metasave:3000"]
+    command: http host.docker.internal:${APP_PORT}
     networks:
-      - ngrok-network
+      - common
     depends_on:
-      - metasave
+      - app
     restart: unless-stopped
 
 networks:
-  mongo-network:
-  ngrok-network:
+  common:

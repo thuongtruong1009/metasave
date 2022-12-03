@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { Error } from "mongoose";
 import { IUser } from "../types";
-import { EROLE } from "../constant";
+import { EROLE } from "../constants";
 
 import db from "../models";
 
@@ -15,7 +15,7 @@ const checkDuplicateUsernameOrEmail = (
 ) => {
   User.findOne({
     username: req.body.username,
-  }).exec((err: Error, user: IUser | any) => {
+  }).exec((err: Error | null, user: IUser | any) => {
     if (err) {
       res.status(500).send({ message: err });
       return;
@@ -28,7 +28,7 @@ const checkDuplicateUsernameOrEmail = (
 
     User.findOne({
       email: req.body.email,
-    }).exec((err: Error, user: IUser | any) => {
+    }).exec((err: Error | null, user: IUser | any) => {
       if (err) {
         res.status(500).send({ message: err });
         return;
