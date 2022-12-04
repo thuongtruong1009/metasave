@@ -1,12 +1,12 @@
 import { Request, Response } from "express";
 
 import db from "../../models";
-const Column = db.column;
+const Board = db.board;
 const Card = db.card;
 
 const getAllCards = async (req: Request, res: Response): Promise<void> => {
   try {
-    const cards = await Column.findById(req.params.columnId, "cards").populate(
+    const cards = await Board.findById(req.params.boardId, "cards").populate(
       "cards"
     );
     res.status(200).send(cards);
@@ -26,19 +26,19 @@ const getCardById = async (req: Request, res: Response): Promise<void> => {
 
 const createCard = async (req: Request, res: Response): Promise<void> => {
   try {
-    const existed = await Column.findById(req.body.columnId);
+    const existed = await Board.findById(req.body.boardId);
     if (!existed) {
-      res.status(404).send({ message: "Column not found" });
+      res.status(404).send({ message: "Board not found" });
     }
     const card = new Card(req.body);
     const savedCard = await card.save();
 
-    await Column.updateMany(
-      { _id: req.body.columnId },
+    await Board.updateMany(
+      { _id: req.body.boardId },
       { $push: { cards: savedCard._id } }
     );
 
-    const updated = await Column.findById(savedCard.columnId, "cards").populate(
+    const updated = await Board.findById(savedCard.boardId, "cards").populate(
       "cards"
     );
     res.status(200).send(updated);
@@ -64,7 +64,7 @@ const updateCard = async (req: Request, res: Response): Promise<void> => {
 
 const deleteCard = async (req: Request, res: Response): Promise<void> => {
   try {
-    await Column.updateMany(
+    await Board.updateMany(
       { cards: req.params.id },
       { $pull: { cards: req.params.id } }
     );

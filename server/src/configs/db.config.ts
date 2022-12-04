@@ -14,9 +14,9 @@ function ConnectDB() {
     mongoose.connect(`${process.env.MONGO_URL}`, options);
     // initRole();
     // initTag();
-  } catch (error) {
-    console.log("• Connect error: ", error);
-    process.exit();
+  } catch (err) {
+    console.log("• Connect error: ", err);
+    process.exit(1);
   }
 }
 

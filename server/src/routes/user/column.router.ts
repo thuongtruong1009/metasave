@@ -1,9 +1,9 @@
 import { Router } from "express";
 import { IRouter } from "../../types";
-import columnController from "../../controllers/user/column.controller";
+import boardController from "../../controllers/user/board.controller";
 
-class ColumnRouter implements IRouter {
-  public path = "/column";
+class BoardRouter implements IRouter {
+  public path = "/Board";
   public router = Router();
 
   constructor() {
@@ -11,19 +11,19 @@ class ColumnRouter implements IRouter {
   }
 
   private initializeRoutes() {
-    this.router.post(`${this.path}`, columnController.createColumn);
+    this.router.post(`${this.path}`, boardController.createBoard);
 
     this.router.get(
       `/project/:projectId${this.path}`,
-      columnController.getAllColumns
+      boardController.getAllBoards
     );
 
-    this.router.get(`${this.path}/:id`, columnController.getColumnById);
+    this.router.get(`${this.path}/:id`, boardController.getBoardById);
 
-    this.router.put(`${this.path}/:id`, columnController.updateColumn);
+    this.router.put(`${this.path}/:id`, boardController.updateBoard);
 
-    this.router.delete(`${this.path}/:id`, columnController.deleteColumn);
+    this.router.delete(`${this.path}/:id`, boardController.deleteBoard);
   }
 }
 
-export default ColumnRouter;
+export default BoardRouter;

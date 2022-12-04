@@ -5,7 +5,7 @@ import db from "../../models";
 const Tag = db.tag;
 const User = db.user;
 const Project = db.project;
-const Column = db.column;
+const Board = db.board;
 const Card = db.card;
 
 const getOverview = async (req: Request, res: Response): Promise<void> => {
@@ -23,9 +23,9 @@ const getOverview = async (req: Request, res: Response): Promise<void> => {
         ]);
         res.status(200).send({ total: totalCards, groups: groupCards });
         break;
-      case "column":
-        const totalColumns = await Column.countDocuments();
-        const groupColumns = await Column.aggregate([
+      case "Board":
+        const totalBoards = await Board.countDocuments();
+        const groupBoards = await Board.aggregate([
           {
             $group: {
               _id: "$projectId",
@@ -33,7 +33,7 @@ const getOverview = async (req: Request, res: Response): Promise<void> => {
             },
           },
         ]);
-        res.status(200).send({ total: totalColumns, groups: groupColumns });
+        res.status(200).send({ total: totalBoards, groups: groupBoards });
         break;
       case "project":
         const totalProject = await Project.countDocuments();

@@ -74,6 +74,22 @@ const signup = async (req: Request, res: Response) => {
   });
 };
 
+const generateAccessToken = (user: IUser) => {
+  return jwt.sign(
+    { id: user.id, email: user.email },
+    `${process.env.ACCESS_TOKEN_KEY}`,
+    { expiresIn: `${process.env.ACCESS_TOKEN_LIFE}` }
+  );
+};
+
+const generateRefreshToken = (user: IUser) => {
+  return jwt.sign(
+    { id: user, email: user.email },
+    `${process.env.REFRESH_TOKEN_KEY}`,
+    { expiresIn: `${process.env.REFRESH_TOKEN_LIFE}` }
+  );
+};
+
 //https://www.freecodecamp.org/news/use-nodemailer-to-send-emails-from-your-node-js-server/
 function sendConfirmationEmail(email: string) {
   const transporter = nodemailer.createTransport({
@@ -114,7 +130,7 @@ const verifyAccount = (req: Request, res: Response) => {
   try {
     const payload = jwt.verify(
       req.params.token,
-      `${process.env.SECRET_KEY}`
+      `${process.env.ACCESS_TOKEN_SECRET}`
     ) as any;
     email = payload.email;
   } catch {
@@ -140,6 +156,7 @@ const verifyAccount = (req: Request, res: Response) => {
   });
 };
 
+let refreshTokens: Array<string> = [];
 const signin = (req: Request, res: Response) => {
   User.findOne({
     username: req.body.username,
@@ -166,27 +183,71 @@ const signin = (req: Request, res: Response) => {
           message: "Invalid Password!",
         });
       }
-      var token = jwt.sign(
-        { id: user.id, email: user.email },
-        `${process.env.SECRET_KEY}`,
-        {
-          expiresIn: 86400,
-        }
-      );
+
+      const accessToken = generateAccessToken(user);
+      const refreshToken = generateRefreshToken(user);
+      refreshTokens.push(refreshToken);
+
+      res.cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        maxAge: 1000 * 60 * 60 * 24 * 365,
+        sameSite: "strict",
+        path: "/",
+        secure: true,
+      });
+
       var authorities: string[] = [];
       for (let i = 0; i < user.roles.length; i++) {
         authorities.push(user.roles[i].name.toUpperCase());
       }
-      res.status(200).send({
-        id: user._id,
-        username: user.username,
-        email: user.email,
-        isVerified: user.isVerified,
-        avatar: user.avatar,
-        roles: authorities,
-        accessToken: token,
-      });
+      const { password, salt, ...userWithoutPassword } = user._doc;
+      res
+        .status(200)
+        .send({ ...userWithoutPassword, authorities, accessToken });
     });
+
+  const refreshToken = (req: Request, res: Response) => {
+    const refreshToken = req.cookies.refreshToken;
+    if (!refreshToken)
+      return res.status(401).send({ message: "No refresh token provided!" });
+
+    if (!refreshTokens.includes(refreshToken))
+      return res.status(403).send({ message: "Refresh token is not valid!" });
+
+    jwt.verify(
+      refreshToken,
+      `${process.env.REFRESH_TOKEN_KEY}`,
+      (err: any, user: any) => {
+        if (err)
+          return res
+            .status(403)
+            .send({ message: "Refresh token is not valid!" });
+
+        refreshTokens = refreshTokens.filter((token) => token !== refreshToken);
+
+        const newAccessToken = generateAccessToken(user);
+        const newRefreshToken = generateRefreshToken(user);
+        refreshTokens.push(newRefreshToken);
+        res.cookie("refreshToken", newRefreshToken, {
+          httpOnly: true,
+          maxAge: 1000 * 60 * 60 * 24 * 365,
+          sameSite: "strict",
+          path: "/",
+          secure: true,
+        });
+
+        res.status(200).send({ accessToken: newAccessToken });
+      }
+    );
+  };
+
+  const logout = (req: Request, res: Response) => {
+    refreshTokens = refreshTokens.filter(
+      (token) => token !== req.cookies.refreshToken
+    );
+    res.clearCookie("refreshToken");
+    res.status(200).send({ message: "Logged out!" });
+  };
 };
 
 const authController = {

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 
 import db from "../../models";
-const Column = db.column;
+const Board = db.board;
 const Tag = db.tag;
 
 const createTag = async (req: Request, res: Response): Promise<void> => {
@@ -38,7 +38,7 @@ const updateTag = async (req: Request, res: Response) => {
 
 const deleteTag = async (req: Request, res: Response): Promise<void> => {
   try {
-    await Column.updateMany(
+    await Board.updateMany(
       { cards: { tags: req.params.id } },
       { $set: { cards: { tags: null } } }
     );

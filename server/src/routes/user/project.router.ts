@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { IRouter } from "../../types";
 import projectController from "../../controllers/user/project.controller";
+import verifyAuth from "../../middlewares/authen.middleware";
 
 class ProjectRouter implements IRouter {
   public path = "/project";
@@ -11,7 +12,11 @@ class ProjectRouter implements IRouter {
   }
 
   private initializeRoutes() {
-    this.router.post(`${this.path}`, projectController.createProject);
+    this.router.post(
+      `${this.path}`,
+      verifyAuth.verifyToken,
+      projectController.createProject
+    );
 
     this.router.get(`${this.path}`, projectController.getAllProjects);
 

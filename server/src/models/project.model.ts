@@ -33,10 +33,10 @@ const ProjectModel = mongoose.model(
         default: "horizontal",
       },
     },
-    columns: [
+    boards: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Column",
+        ref: "Board",
       },
     ],
     startDate: {

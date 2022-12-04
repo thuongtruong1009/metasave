@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const CardModel = mongoose.model(
   "Card",
   new mongoose.Schema({
-    columnId: {
+    boardId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Column",
       required: true,

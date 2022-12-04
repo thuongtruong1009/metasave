@@ -4,7 +4,7 @@ import db from "../../models";
 const User = db.user;
 const Role = db.role;
 const Project = db.project;
-const Column = db.column;
+const Board = db.board;
 const Card = db.card;
 
 const getAllUsers = async (req: Request, res: Response) => {
@@ -24,12 +24,12 @@ const deleteUser = async (req: Request, res: Response): Promise<void> => {
       // await User.findByIdAndDelete(req.params.id);
 
       findProjects.forEach(async (project) => {
-        const findColumns = await Column.find({ projectId: project._id });
-        if (findColumns.length > 0) {
-          findColumns.forEach(async (column) => {
-            await Card.deleteMany({ columnId: column._id });
+        const findBoards = await Board.find({ projectId: project._id });
+        if (findBoards.length > 0) {
+          findBoards.forEach(async (Board) => {
+            await Card.deleteMany({ BoardId: Board._id });
           });
-          await Column.deleteMany({ projectId: project._id });
+          await Board.deleteMany({ projectId: project._id });
         }
         await Project.findByIdAndDelete(project._id);
       });

@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
-const ColumnModel = mongoose.model(
-  "Column",
+const BoardModel = mongoose.model(
+  "Board",
   new mongoose.Schema({
     projectId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -35,4 +35,4 @@ const ColumnModel = mongoose.model(
   }).set("timestamps", true)
 );
 
-export default ColumnModel;
+export default BoardModel;

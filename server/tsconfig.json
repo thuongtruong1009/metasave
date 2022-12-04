@@ -24,6 +24,6 @@
     "noUnusedParameters": false,
     "typeRoots": ["src/types", "node_modules/@types"]
   },
-  "include": ["src/**/*.ts", ".src/**/*.json", ".env"],
+  "include": ["src/**/*.ts", "src/**/*.json", ".env"],
   "exclude": ["node_modules", "http", "logs", "src/tests"]
 }

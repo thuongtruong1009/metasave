@@ -34,7 +34,7 @@ const toggles: Array<INav> = [
 const logout = () => {
   localStorage.removeItem("token");
   localStorage.removeItem("user");
-  router.push("/signin");
+  router.push({ name: "signin" });
 };
 </script>
 
