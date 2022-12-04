@@ -60,10 +60,8 @@ const handleCreateProject = async () => {
     categoryId: payload.categoryId,
   });
   closeModal();
-  // router.push(`/project/${res.data._id}`);
+  router.push(`/project/${res.data._id}`);
 };
-
-//{"owner":"638a0aaadbc3781c7896e58b","type":"container","name":"Project 16","access":"false","description":"dwpkfdowejfoiwejfwe","categoryId":"2","members":[],"isFavorite":false,"background":"#ffffff","customBackground":"","props":{"orientation":"horizontal"},"boards":[],"startDate":"2022-12-04T11:06:40.854Z","endDate":"2022-12-04T11:06:40.854Z","_id":"638c7f47a994985f1c343213","createdAt":"2022-12-04T11:06:47.363Z","updatedAt":"2022-12-04T11:06:47.363Z","__v":0}
 </script>
 
 <template>

@@ -9,6 +9,7 @@ import TimeBar from "@/components/calendar/TimeBar.vue";
 import DatePicker from "@/components/calendar/DatePicker.vue";
 import Tooltip from "@/components/calendar/Tooltip.vue";
 import { IEvent } from "@/types";
+import CreateEvent from "@/components/calendar/CreateEvent.vue";
 
 const headSize = ref(null);
 const bodySize = ref(null);
@@ -37,22 +38,22 @@ const listEvents: Array<IEvent> = reactive([
   {
     id: 1,
     title: "Meeting with client",
-    start: "2022-12-01T11:00:00",
-    end: "2022-12-01T13:00:00",
+    start: "2022-12-06T11:00:00",
+    end: "2022-12-06T13:00:00",
     color: "blue-100",
   },
   {
     id: 2,
     title: "Meeting with client",
-    start: "2022-12-02T08:00:00",
-    end: "2022-12-02T10:00:00",
+    start: "2022-12-09T08:00:00",
+    end: "2022-12-09T10:00:00",
     color: "green-100",
   },
   {
     id: 3,
     title: "Meeting with client",
-    start: "2022-12-03T08:00:00",
-    end: "2022-12-03T10:00:00",
+    start: "2022-12-10T08:00:00",
+    end: "2022-12-10T10:00:00",
     color: "green-100",
   },
 ]);
@@ -117,7 +118,7 @@ const listEvents: Array<IEvent> = reactive([
         </thead>
         <tbody class="relative" ref="bodySize">
           <TimeBar
-            class="absolute w-full left-0"
+            class="absolute w-full left-0 z-10"
             :style="{
               top: getPositionTimebar(getCalendarSize.bodyHeight) + 'px',
             }"
@@ -128,7 +129,13 @@ const listEvents: Array<IEvent> = reactive([
             >
               {{ hour }}
             </td>
-            <td class="py-4 px-6" v-for="i in daysOfWeek.length" :key="i"></td>
+            <td
+              class="hover:bg-gray-200 relative"
+              v-for="i in daysOfWeek.length"
+              :key="i"
+            >
+              <CreateEvent class="absolute inset-0" />
+            </td>
           </tr>
           <div
             class="absolute p-1 z-1 dark:text-gray-300"
@@ -157,18 +164,6 @@ const listEvents: Array<IEvent> = reactive([
                 'px',
             }"
           >
-            <!-- <div
-              class="w-full h-full rounded-lg break-words whitespace-pre-wrap p-1.5 text-sm cursor-pointer hover:shadow-lg"
-              :class="`bg-${event.color}`"
-            >
-              <h1 class="font-semibold">
-                {{ event.title }}
-              </h1>
-              <p class="text-xs">
-                {{ getCurrentDate(event.start).hour }}:
-                {{ getCurrentDate(event.end).hour }}
-              </p>
-            </div> -->
             <Tooltip
               :props="{
                 color: event.color,
