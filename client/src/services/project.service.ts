@@ -3,8 +3,10 @@ import axiosConfig from "./axios.service";
 const PROJECT = "/project";
 
 class ProjectService {
-  async getProjects(): Promise<any> {
-    return await axiosConfig.get(`${PROJECT}`);
+  async getProjects(sort: string, filter: string, limit: number): Promise<any> {
+    return await axiosConfig.get(
+      `${PROJECT}?sort=${sort}&filter=${filter}&limit=${limit}`
+    );
   }
 
   async getProjectById(id: string): Promise<any> {
@@ -12,11 +14,11 @@ class ProjectService {
   }
 
   async createProject(data: any): Promise<any> {
-    return await axiosConfig.post(`${PROJECT}/createProject`, data);
+    return await axiosConfig.post(`${PROJECT}`, data);
   }
 
   async updateProject(id: string, data: any): Promise<any> {
-    return await axiosConfig.put(`${PROJECT}/updateProject/${id}`, data);
+    return await axiosConfig.put(`${PROJECT}/${id}`, data);
   }
 
   async deleteProject(id: string): Promise<any> {

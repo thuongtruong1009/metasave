@@ -9,18 +9,7 @@ const Card = db.card;
 
 const createProject = async (req: any, res: Response): Promise<void> => {
   try {
-    const user = await User.findById(req.body.owner);
-    console.log("okee re", req.user);
-    if (!user) {
-      res.status(404).send({ message: "User not found" });
-      return;
-    }
-    if (req.user.id !== req.body.owner) {
-      res.status(403).send({ message: "Forbiden" });
-      return;
-    }
-
-    const project = new Project(req.body);
+    const project = new Project({ owner: req.user.id, ...req.body });
     const savedProject = await project.save();
 
     await User.updateMany(
@@ -50,10 +39,18 @@ const getAllProjects = async (req: any, res: Response): Promise<void> => {
         owner: req.user.id,
         access: access,
       },
-      "_id props members isFavorite name access category createdAt",
-      { sort: { createdAt: -1 } }
+      "_id props members isFavorite name access categoryId createdAt",
+      { sort: { createdAt: -1 }, skip: 0, limit: req.query.limit }
     );
-    res.status(200).send({ total, projects });
+    const lastUpdated = await Project.find(
+      {
+        owner: req.user.id,
+        access: access,
+      },
+      "updatedAt",
+      { sort: { createdAt: -1 }, limit: 1 }
+    );
+    res.status(200).send({ total, lastUpdated, projects });
   } catch (error) {
     res.status(500).send({ message: error });
   }

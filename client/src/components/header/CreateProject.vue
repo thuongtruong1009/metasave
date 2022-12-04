@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import { ref, reactive, computed } from "vue";
+import { useRouter } from "vue-router";
 import { Icon } from "@iconify/vue";
 import Modal from "@/components/Modal.vue";
 import { Switch } from "@headlessui/vue";
+import ProjectService from "@/services/project.service";
+
+const router = useRouter();
 
 const isOpen = ref<boolean>(false);
-
 function closeModal(): void {
   isOpen.value = false;
 }
@@ -13,14 +16,16 @@ function openModal(): void {
   isOpen.value = true;
 }
 
-const model = reactive({
-  id: "",
+const payload = reactive({
+  categoryId: "",
   name: "",
   description: "",
-  isPublic: false,
+  access: true,
 });
 
-const checkInput = computed(() => model.name.length > 0 && model.id !== "");
+const checkInput = computed(
+  () => payload.name.length > 0 && payload.categoryId !== ""
+);
 
 const templates = reactive([
   {
@@ -42,6 +47,23 @@ const templates = reactive([
     icon: "material-symbols:space-dashboard-rounded",
   },
 ]);
+
+const handleAccess = computed(() => {
+  return payload.access ? "public" : "private";
+});
+
+const handleCreateProject = async () => {
+  const res = await ProjectService.createProject({
+    name: payload.name,
+    description: payload.description,
+    access: handleAccess.value,
+    categoryId: payload.categoryId,
+  });
+  closeModal();
+  // router.push(`/project/${res.data._id}`);
+};
+
+//{"owner":"638a0aaadbc3781c7896e58b","type":"container","name":"Project 16","access":"false","description":"dwpkfdowejfoiwejfwe","categoryId":"2","members":[],"isFavorite":false,"background":"#ffffff","customBackground":"","props":{"orientation":"horizontal"},"boards":[],"startDate":"2022-12-04T11:06:40.854Z","endDate":"2022-12-04T11:06:40.854Z","_id":"638c7f47a994985f1c343213","createdAt":"2022-12-04T11:06:47.363Z","updatedAt":"2022-12-04T11:06:47.363Z","__v":0}
 </script>
 
 <template>
@@ -81,12 +103,12 @@ const templates = reactive([
               class="relative inline-flex items-center flex-grow justify-center cursor-pointer p-0.5 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group dark:hover:text-gray-900 focus:ring-2 focus:outline-none bg-gradient-to-br first-of-type:from-teal-300 first-of-type:to-lime-300 first-of-type:focus:ring-lime-200 from-cyan-300 via-cyan-400 to-cyan-500 focus:ring-cyan-300 last-of-type:from-red-200 last-of-type:via-red-300 last-of-type:to-yellow-200 last-of-type:focus:ring-red-200 dark:text-white"
               v-for="template in templates"
               :key="template.id"
-              @click="model.id = template.id"
+              @click="payload.categoryId = template.id"
             >
               <div
                 class="relative w-full p-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0"
                 :class="
-                  model.id === template.id
+                  payload.categoryId === template.id
                     ? 'bg-opacity-0 text-white'
                     : 'bg-opacity-100'
                 "
@@ -111,7 +133,7 @@ const templates = reactive([
           >
           <input
             type="text"
-            v-model="model.name"
+            v-model="payload.name"
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple-500 dark:focus:border-purple-500"
             placeholder="Enter a name for this view"
             required
@@ -123,7 +145,7 @@ const templates = reactive([
           >
           <input
             type="text"
-            v-model="model.description"
+            v-model="payload.description"
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple-500 dark:focus:border-purple-500"
             placeholder="Enter a name for this view"
             required
@@ -135,17 +157,17 @@ const templates = reactive([
       <div class="mt-4 flex justify-between items-center">
         <div class="text-xs font-medium flex gap-2 items-center">
           <Switch
-            v-model="model.isPublic"
-            :class="model.isPublic ? 'bg-purple-900' : 'bg-purple-600'"
+            v-model="payload.access"
+            :class="payload.access ? 'bg-purple-900' : 'bg-purple-600'"
             class="relative inline-flex w-14 h-6 shrink-0 cursor-pointer shadow-lg rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
           >
             <span
               aria-hidden="true"
-              :class="model.isPublic ? 'translate-x-8' : 'translate-x-0'"
+              :class="payload.access ? 'translate-x-8' : 'translate-x-0'"
               class="pointer-events-none inline-block w-5 h-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out"
             />
           </Switch>
-          <span v-html="model.isPublic ? 'private' : 'public'"></span>
+          <span v-html="payload.access ? 'public' : 'private'"></span>
         </div>
 
         <button
@@ -156,7 +178,7 @@ const templates = reactive([
               ? 'opacity-100 bg-blue-100 hover:bg-blue-200 cursor-pointer'
               : 'opacity-50 bg-blue-100 cursor-not-allowed'
           "
-          @click="closeModal"
+          @click="handleCreateProject"
           :disabled="checkInput === false"
         >
           <Icon

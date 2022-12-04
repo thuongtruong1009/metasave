@@ -18,8 +18,14 @@ const ProjectSchema = new mongoose.Schema({
     type: String,
     default: "public",
   },
-  description: String,
-  category: String,
+  description: {
+    type: String,
+    default: "",
+  },
+  categoryId: {
+    type: String,
+    required: true,
+  },
   members: [
     {
       type: mongoose.Schema.Types.ObjectId,
@@ -35,7 +41,10 @@ const ProjectSchema = new mongoose.Schema({
     type: String,
     default: "#ffffff",
   },
-  customBackground: String,
+  customBackground: {
+    type: String,
+    default: "",
+  },
   props: {
     orientation: {
       type: String,
@@ -50,9 +59,11 @@ const ProjectSchema = new mongoose.Schema({
   ],
   startDate: {
     type: Date,
+    default: Date.now(),
   },
   endDate: {
     type: Date,
+    default: Date.now(),
   },
 }).set("timestamps", true);
 

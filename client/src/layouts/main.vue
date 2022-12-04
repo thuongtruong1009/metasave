@@ -7,10 +7,13 @@ import Notification from "@/components/header/Notification.vue";
 import Search from "@/components/header/Search.vue";
 import Avatar from "@/components/header/Avatar.vue";
 import CreateProject from "@/components/header/CreateProject.vue";
+import Footer from "@/components/Footer.vue";
 </script>
 
 <template>
-  <main class="home_page px-5 pt-2">
+  <main
+    class="home_page px-5 pt-2 bg-[#F3F6FD] dark:bg-gray-800 relative overflow-x-hidden"
+  >
     <div class="flex justify-between item px-5">
       <Brand />
       <Search />
@@ -26,5 +29,6 @@ import CreateProject from "@/components/header/CreateProject.vue";
       <LeftNavigation />
       <router-view></router-view>
     </div>
+    <Footer />
   </main>
 </template>

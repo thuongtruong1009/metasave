@@ -1,15 +1,21 @@
+<script setup lang="ts">
+defineProps<{
+  total: string;
+}>();
+</script>
+
 <template>
   <div class="overview_component flex">
     <div>
-      <h3>45</h3>
+      <h3>0</h3>
       <p>In Progress</p>
     </div>
     <div>
-      <h3>24</h3>
+      <h3>0</h3>
       <p>Up Comming</p>
     </div>
     <div>
-      <h3>62</h3>
+      <h3>{{ total }}</h3>
       <p>Total Projects</p>
     </div>
   </div>
