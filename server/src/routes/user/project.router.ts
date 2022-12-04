@@ -18,13 +18,25 @@ class ProjectRouter implements IRouter {
       projectController.createProject
     );
 
-    this.router.get(`${this.path}`, projectController.getAllProjects);
+    this.router.get(
+      `${this.path}`,
+      verifyAuth.verifyToken,
+      projectController.getAllProjects
+    );
 
     this.router.get(`${this.path}/:id`, projectController.getProjectById);
 
-    this.router.put(`${this.path}/:id`, projectController.updateProject);
+    this.router.put(
+      `${this.path}/:id`,
+      verifyAuth.verifyToken,
+      projectController.updateProject
+    );
 
-    this.router.delete(`${this.path}/:id`, projectController.deleteProject);
+    this.router.delete(
+      `${this.path}/:id`,
+      verifyAuth.verifyToken,
+      projectController.deleteProject
+    );
   }
 }
 

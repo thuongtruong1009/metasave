@@ -10,7 +10,7 @@ import CreateProject from "@/components/header/CreateProject.vue";
 </script>
 
 <template>
-  <main class="home_page bg-[#F3F6FD] dark:bg-gray-800 px-5 pt-2">
+  <main class="home_page px-5 pt-2">
     <div class="flex justify-between item px-5">
       <Brand />
       <Search />

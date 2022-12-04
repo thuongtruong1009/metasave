@@ -19,6 +19,10 @@ class AuthRouter implements IRouter {
     this.router.get(`${this.path}/verify/:token`, authController.verifyAccount);
 
     this.router.post(`${this.path}/signin`, authController.signin);
+
+    this.router.post(`${this.path}/refresh-token`, authController.refreshToken);
+
+    this.router.post(`${this.path}/logout`, authController.logout);
   }
 }
 

@@ -4,7 +4,7 @@ import SignupPage from "@/pages/auth/signup.vue";
 </script>
 
 <template>
-  <div class="auth_layout min-h-screen max-h-screen h-screen overflow-hidden">
+  <div class="auth_layout min-h-screen max-h-screen h-full overflow-hidden">
     <!-- <SignupPage /> -->
     <!-- <RouterView /> -->
     <router-view></router-view>

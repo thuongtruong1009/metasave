@@ -34,7 +34,7 @@ const verifyToken = (req: any, res: Response, next: NextFunction) => {
 
   jwt.verify(
     accessToken,
-    `${process.env.SECRET_KEY}`,
+    `${process.env.ACCESS_TOKEN_KEY}`,
     (err: Error | null, decoded: IDecoded | any) => {
       if (err) {
         return res.status(401).send({ message: "Unauthorized!" });

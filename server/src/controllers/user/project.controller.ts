@@ -36,37 +36,24 @@ const createProject = async (req: any, res: Response): Promise<void> => {
 
 const getAllProjects = async (req: any, res: Response): Promise<void> => {
   try {
-    if (req.query.access === "public") {
-      const totalProjects = await Project.countDocuments({
+    let access: string =
+      req.query.access && req.query.access === "private"
+        ? req.query.access
+        : "public";
+
+    const total = await Project.countDocuments({
+      owner: req.user.id,
+      access: access,
+    });
+    const projects = await Project.find(
+      {
         owner: req.user.id,
-        access: "public",
-      });
-      const projects = await Project.find({
-        owner: req.user.id,
-        access: "public",
-      });
-      res.status(200).send({ total: totalProjects, projects: projects });
-    } else if (req.query.access === "private") {
-      const totalProjects = await Project.countDocuments({
-        owner: req.user.id,
-        access: "private",
-      });
-      const projects = await Project.find({
-        owner: req.user.id,
-        access: "private",
-      });
-      res.status(200).send({ total: totalProjects, projects: projects });
-    } else {
-      const totalProjects = await Project.countDocuments({
-        owner: req.user.id,
-      });
-      const projects = (await User.findById(req.user.id).populate(
-        "projects"
-      )) as any;
-      res
-        .status(200)
-        .send({ total: totalProjects, projects: projects.projects });
-    }
+        access: access,
+      },
+      "_id props members isFavorite name access category createdAt",
+      { sort: { createdAt: -1 } }
+    );
+    res.status(200).send({ total, projects });
   } catch (error) {
     res.status(500).send({ message: error });
   }

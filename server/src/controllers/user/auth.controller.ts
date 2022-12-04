@@ -205,55 +205,55 @@ const signin = (req: Request, res: Response) => {
         .status(200)
         .send({ ...userWithoutPassword, authorities, accessToken });
     });
+};
 
-  const refreshToken = (req: Request, res: Response) => {
-    const refreshToken = req.cookies.refreshToken;
-    if (!refreshToken)
-      return res.status(401).send({ message: "No refresh token provided!" });
+const refreshToken = (req: Request, res: Response) => {
+  const refreshToken = req.cookies.refreshToken;
+  if (!refreshToken)
+    return res.status(401).send({ message: "No refresh token provided!" });
 
-    if (!refreshTokens.includes(refreshToken))
-      return res.status(403).send({ message: "Refresh token is not valid!" });
+  if (!refreshTokens.includes(refreshToken))
+    return res.status(403).send({ message: "Refresh token is not valid!" });
 
-    jwt.verify(
-      refreshToken,
-      `${process.env.REFRESH_TOKEN_KEY}`,
-      (err: any, user: any) => {
-        if (err)
-          return res
-            .status(403)
-            .send({ message: "Refresh token is not valid!" });
+  jwt.verify(
+    refreshToken,
+    `${process.env.REFRESH_TOKEN_KEY}`,
+    (err: any, user: any) => {
+      if (err)
+        return res.status(403).send({ message: "Refresh token is not valid!" });
 
-        refreshTokens = refreshTokens.filter((token) => token !== refreshToken);
+      refreshTokens = refreshTokens.filter((token) => token !== refreshToken);
 
-        const newAccessToken = generateAccessToken(user);
-        const newRefreshToken = generateRefreshToken(user);
-        refreshTokens.push(newRefreshToken);
-        res.cookie("refreshToken", newRefreshToken, {
-          httpOnly: true,
-          maxAge: 1000 * 60 * 60 * 24 * 365,
-          sameSite: "strict",
-          path: "/",
-          secure: true,
-        });
+      const newAccessToken = generateAccessToken(user);
+      const newRefreshToken = generateRefreshToken(user);
+      refreshTokens.push(newRefreshToken);
+      res.cookie("refreshToken", newRefreshToken, {
+        httpOnly: true,
+        maxAge: 1000 * 60 * 60 * 24 * 365,
+        sameSite: "strict",
+        path: "/",
+        secure: true,
+      });
 
-        res.status(200).send({ accessToken: newAccessToken });
-      }
-    );
-  };
+      res.status(200).send({ accessToken: newAccessToken });
+    }
+  );
+};
 
-  const logout = (req: Request, res: Response) => {
-    refreshTokens = refreshTokens.filter(
-      (token) => token !== req.cookies.refreshToken
-    );
-    res.clearCookie("refreshToken");
-    res.status(200).send({ message: "Logged out!" });
-  };
+const logout = (req: Request, res: Response) => {
+  refreshTokens = refreshTokens.filter(
+    (token) => token !== req.cookies.refreshToken
+  );
+  res.clearCookie("refreshToken");
+  res.status(200).send({ message: "Logged out!" });
 };
 
 const authController = {
   signup,
   verifyAccount,
   signin,
+  refreshToken,
+  logout,
 };
 
 export default authController;
