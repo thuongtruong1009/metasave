@@ -14,7 +14,7 @@
     "sourceMap": true,
     "pretty": true,
     "allowJs": true,
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "resolveJsonModule": true,

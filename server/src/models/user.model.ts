@@ -1,6 +1,17 @@
 import mongoose from "mongoose";
 
-interface IUser {
+// interface IUser {
+//   username: string;
+//   email: string;
+//   password: string;
+//   isVerify: boolean;
+//   avatar: string;
+//   salt: string;
+//   roles: string[];
+//   projects: string[];
+// }
+
+interface IUserModel extends mongoose.Document {
   username: string;
   email: string;
   password: string;
@@ -10,8 +21,6 @@ interface IUser {
   roles: string[];
   projects: string[];
 }
-
-interface IUserModel extends IUser, mongoose.Document {}
 
 const UserSchema: mongoose.Schema = new mongoose.Schema(
   {

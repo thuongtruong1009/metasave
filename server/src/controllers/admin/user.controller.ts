@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 
 import db from "../../models";
 const User = db.user;
-const Role = db.role;
 const Project = db.project;
 const Board = db.board;
 const Card = db.card;
@@ -23,11 +22,11 @@ const deleteUser = async (req: Request, res: Response): Promise<void> => {
       // await Project.findByIdAndDelete({ owner: req.params.id });
       // await User.findByIdAndDelete(req.params.id);
 
-      findProjects.forEach(async (project) => {
+      findProjects.forEach(async (project: any) => {
         const findBoards = await Board.find({ projectId: project._id });
         if (findBoards.length > 0) {
-          findBoards.forEach(async (Board) => {
-            await Card.deleteMany({ BoardId: Board._id });
+          findBoards.forEach(async (board: any) => {
+            await Card.deleteMany({ boardId: board._id });
           });
           await Board.deleteMany({ projectId: project._id });
         }

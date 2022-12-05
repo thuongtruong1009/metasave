@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import * as dotenv from "dotenv";
 dotenv.config();
 
-import { initRole, initTag } from "../helpers/wakeup";
+import init from "../helpers/wakeup";
 
 function ConnectDB() {
   const options: any = {
@@ -12,11 +12,10 @@ function ConnectDB() {
 
   try {
     mongoose.connect(`${process.env.MONGO_URL}`, options);
-    // initRole();
-    // initTag();
+    init();
   } catch (err) {
     console.log("• Connect error: ", err);
-    process.exit(1);
+    process.exit();
   }
 }
 
