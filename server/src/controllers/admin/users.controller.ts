@@ -44,8 +44,8 @@ const deleteUser = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-const userController = {
+const usersController = {
   getAllUsers,
   deleteUser,
 };
-export default userController;
+export default usersController;

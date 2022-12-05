@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { Error } from "mongoose";
 
 import db from "../../models";
 const Tag = db.tag;
@@ -7,6 +6,9 @@ const User = db.user;
 const Project = db.project;
 const Board = db.board;
 const Card = db.card;
+const Color = db.color;
+const Role = db.role;
+const Category = db.category;
 
 const getOverview = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -23,7 +25,7 @@ const getOverview = async (req: Request, res: Response): Promise<void> => {
         ]);
         res.status(200).send({ total: totalCards, groups: groupCards });
         break;
-      case "Board":
+      case "board":
         const totalBoards = await Board.countDocuments();
         const groupBoards = await Board.aggregate([
           {
@@ -59,6 +61,34 @@ const getOverview = async (req: Request, res: Response): Promise<void> => {
         ]);
 
         res.status(200).send({ total: totalTags, groups: groupTags });
+        break;
+      case "tag":
+        const totalColors = await Color.countDocuments();
+        const groupColors = await Color.aggregate([
+          {
+            $group: {
+              _id: "$_id",
+              count: { $sum: 1 },
+            },
+          },
+        ]);
+
+        res.status(200).send({ total: totalColors, groups: groupColors });
+        break;
+      case "category":
+        const totalCategories = await Category.countDocuments();
+        const groupCategories = await Category.aggregate([
+          {
+            $group: {
+              _id: "$_id",
+              count: { $sum: 1 },
+            },
+          },
+        ]);
+
+        res
+          .status(200)
+          .send({ total: totalCategories, groups: groupCategories });
         break;
       default:
         const totalUsers = await User.countDocuments();
