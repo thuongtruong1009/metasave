@@ -10,11 +10,16 @@ class AuthRouter implements IRouter {
   constructor() {
     this.initializeRoutes();
   }
-  initializeRoutes() {
-    this.router.post(`${this.path}/signup`, [
-      verifySignUp.checkDuplicateUsernameOrEmail,
-      verifySignUp.checkRolesExisted,
-    ]);
+
+  private initializeRoutes() {
+    this.router.post(
+      `${this.path}/signup`,
+      [
+        verifySignUp.checkDuplicateUsernameOrEmail,
+        verifySignUp.checkRolesExisted,
+      ],
+      authController.signup
+    );
 
     this.router.get(`${this.path}/verify/:token`, authController.verifyAccount);
 

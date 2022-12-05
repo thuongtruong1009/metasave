@@ -33,7 +33,7 @@ const selectedHour = ref(personalHours[0]);
           leave-to-class="opacity-0"
         >
           <ListboxOptions
-            class="absolute mt-2 max-h-40 w-max right-0 overflow-auto rounded-md bg-white text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+            class="absolute mt-2 max-h-40 w-max right-0 z-10 overflow-auto rounded-md bg-white text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
           >
             <ListboxOption
               v-slot="{ active, selected }"

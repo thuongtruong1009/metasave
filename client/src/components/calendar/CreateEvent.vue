@@ -78,8 +78,7 @@ const handleCreateProject = async () => {
           <div>
             <input
               type="date"
-              name=""
-              id=""
+              name="date"
               class="text-blue-700 rounded-lg focus:ring-0 w-full"
             />
           </div>

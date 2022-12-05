@@ -130,7 +130,7 @@ const listEvents: Array<IEvent> = reactive([
               {{ hour }}
             </td>
             <td
-              class="hover:bg-gray-200 relative"
+              class="hover:bg-gray-100 relative"
               v-for="i in daysOfWeek.length"
               :key="i"
             >

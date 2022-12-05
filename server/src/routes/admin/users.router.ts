@@ -4,7 +4,7 @@ import { IRouter } from "../../types";
 import usersController from "../../controllers/admin/users.controller";
 
 class UsersRouter implements IRouter {
-  public path = "/admin/users";
+  public path = "/users";
   public router = Router();
 
   constructor() {

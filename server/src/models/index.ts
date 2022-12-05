@@ -8,6 +8,7 @@ import BoardModel from "./board.model";
 import CardModel from "./card.model";
 import ColorModel from "./color.model";
 import CategoryModel from "./category.model";
+import EventModel from "./event.model";
 
 mongoose.Promise = global.Promise;
 
@@ -20,6 +21,7 @@ const db: any = {
   card: CardModel,
   color: ColorModel,
   category: CategoryModel,
+  event: EventModel,
 };
 
 export default db;

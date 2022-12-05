@@ -17,13 +17,13 @@ class App {
   public env: string;
   public port: string;
 
-  constructor(routes: IRouter[]) {
+  constructor(userRoutes: IRouter[], adminRoutes: IRouter[]) {
     this.app = express();
     this.env = `${process.env.NODE_ENV}`;
     this.port = `${process.env.APP_PORT}`;
 
     this.initializeMiddlewares();
-    this.initializeRoutes(routes);
+    this.initializeRoutes(userRoutes, adminRoutes);
     this.initializeSwagger();
     ConnectDB();
   }
@@ -57,9 +57,12 @@ class App {
     this.app.use(express.static(path.join(__dirname, "../../public")));
   }
 
-  private initializeRoutes(routes: IRouter[]) {
-    routes.forEach((route) => {
+  private initializeRoutes(userRoutes: IRouter[], adminRoutes: IRouter[]) {
+    userRoutes.forEach((route: IRouter) => {
       this.app.use("/api", route.router);
+    });
+    adminRoutes.forEach((route: IRouter) => {
+      this.app.use("/api/admin", route.router);
     });
   }
 

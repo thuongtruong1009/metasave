@@ -10,18 +10,23 @@ import ProfileRouter from "./routes/user/profile.router";
 import ProjectRouter from "./routes/user/project.router";
 import ColumnRouter from "./routes/user/column.router";
 import CardRouter from "./routes/user/card.router";
+import EventRouter from "./routes/user/event.router";
 
-const app = new App([
-  new StatisticalRouter(),
-  new UsersRouter(),
-  new TagsRouter(),
-  new ColorsRouter(),
-
-  new AuthRouter(),
-  new ProfileRouter(),
-  new ProjectRouter(),
-  new ColumnRouter(),
-  new CardRouter(),
-]);
+const app = new App(
+  [
+    new AuthRouter(),
+    new ProfileRouter(),
+    new ProjectRouter(),
+    new ColumnRouter(),
+    new CardRouter(),
+    new EventRouter(),
+  ],
+  [
+    new StatisticalRouter(),
+    new UsersRouter(),
+    new TagsRouter(),
+    new ColorsRouter(),
+  ]
+);
 
 app.listen();

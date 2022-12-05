@@ -3,7 +3,7 @@ import { IRouter } from "../../types";
 import statisticalController from "../../controllers/admin/statistical.controller";
 
 class StatisticalRouter implements IRouter {
-  public path = "/admin/overview";
+  public path = "/overview";
   public router = Router();
 
   constructor() {

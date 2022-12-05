@@ -3,7 +3,7 @@ import { IRouter } from "../../types";
 import boardController from "../../controllers/user/board.controller";
 
 class BoardRouter implements IRouter {
-  public path = "/Board";
+  public path = "/board";
   public router = Router();
 
   constructor() {
