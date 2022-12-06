@@ -19,10 +19,20 @@ const createEvent = async (req: any, res: Response) => {
   }
 };
 
-const getAllEvents = async (req: Request, res: Response) => {
+const getAllEvents = async (req: any, res: Response) => {
   try {
-    const events = await Event.find();
-    res.status(200).send(events);
+    if (req.query.present === "organizer") {
+      const total = await Event.countDocuments({ organizer: req.user.id });
+      const events = await Event.find();
+      res.status(200).send({ total, events });
+    }
+    if (req.query.present === "participant") {
+      const total = await Event.countDocuments({
+        attendees: { $in: req.user.id },
+      });
+      const events = await Event.find({ attendees: { $in: req.user.id } });
+      res.status(200).send({ total, events });
+    }
   } catch (error) {
     res.status(500).send(error);
   }
@@ -39,16 +49,25 @@ const getEventById = async (req: Request, res: Response) => {
 
 const updateEvent = async (req: Request, res: Response) => {
   try {
-    const event = await Event.findByIdAndUpdate();
+    const event = await Event.findByIdAndUpdate(
+      { _id: req.params.id },
+      { ...req.body },
+      { new: true }
+    );
+    res.status(200).send(event);
   } catch (error) {
     res.status(500).send(error);
   }
 };
 
-const deleteEvent = async (req: Request, res: Response) => {
+const deleteEvent = async (req: any, res: Response) => {
   try {
     const event = await Event.findByIdAndDelete(req.params.id);
-    res.status(200).send(event);
+    await User.updateOne(
+      { _id: req.user.id },
+      { $pull: { events: req.params.id } }
+    );
+    res.status(200).send({ message: "Event deleted successfully" });
   } catch (error) {
     res.status(500).send(error);
   }
