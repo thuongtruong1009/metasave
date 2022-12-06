@@ -3,7 +3,6 @@ import { Request, Response } from "express";
 import db from "../../models";
 const User = db.user;
 const Event = db.event;
-const Color = db.color;
 
 const createEvent = async (req: any, res: Response) => {
   try {
@@ -62,7 +61,7 @@ const updateEvent = async (req: Request, res: Response) => {
 
 const deleteEvent = async (req: any, res: Response) => {
   try {
-    const event = await Event.findByIdAndDelete(req.params.id);
+    await Event.findByIdAndDelete(req.params.id);
     await User.updateOne(
       { _id: req.user.id },
       { $pull: { events: req.params.id } }

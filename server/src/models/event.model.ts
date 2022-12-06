@@ -9,8 +9,6 @@ interface IEventModel extends mongoose.Document {
     end: string;
     date: string;
   };
-  start: string;
-  end: string;
   location: string;
   attendees: string[];
   colorId: mongoose.Schema.Types.ObjectId;

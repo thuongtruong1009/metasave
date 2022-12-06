@@ -5,6 +5,7 @@ const User = db.user;
 const Project = db.project;
 const Board = db.board;
 const Card = db.card;
+const Color = db.color;
 
 const deleteUser = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -35,8 +36,18 @@ const deleteUser = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-const profileController = {
-  deleteUser,
+const getColorCollection = async (req: Request, res: Response) => {
+  try {
+    const colors = await Color.find();
+    res.status(200).send(colors);
+  } catch (error) {
+    res.status(500).send(error);
+  }
 };
 
-export default profileController;
+const settingController = {
+  deleteUser,
+  getColorCollection,
+};
+
+export default settingController;

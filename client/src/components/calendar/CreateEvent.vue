@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { ref, reactive, computed } from "vue";
 import { useRouter } from "vue-router";
-import { Icon } from "@iconify/vue";
-import Modal from "@/components/Modal.vue";
 import { Switch } from "@headlessui/vue";
-import ProjectService from "@/services/project.service";
+import { Icon } from "@iconify/vue";
+import EventService from "@/services/event.service";
+import Modal from "@/components/Modal.vue";
 import HourSelect from "./HourSelect.vue";
+import ColorSet from "./ColorSet.vue";
+import TagInput from "@/components/TagInput.vue";
 
 const router = useRouter();
 
@@ -17,17 +19,36 @@ function openModal(): void {
   isOpen.value = true;
 }
 const payload = reactive({
-  name: "",
+  title: "",
   description: "",
-  date: "",
+  attendees: ["user01", "user02"],
+  time: {
+    start: "",
+    end: "",
+    date: "",
+  },
+  location: "",
+  colorId: "",
 });
 
+const chooseColor = (colorId: string) => {
+  payload.colorId = colorId;
+};
+
 const checkInput = computed(
-  () => payload.name.length > 0 && payload.categoryId !== ""
+  () =>
+    payload.title.length > 0 &&
+    payload.time.date !== "" &&
+    payload.colorId !== ""
 );
 
 const handleCreateProject = async () => {
+  await EventService.createEvent(payload);
   closeModal();
+};
+
+const addAttendees = (attendee: Array<string>) => {
+  payload.attendees = attendee;
 };
 </script>
 
@@ -57,24 +78,20 @@ const handleCreateProject = async () => {
         >
         <input
           type="text"
-          v-model="payload.name"
+          v-model="payload.title"
           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple-500 dark:focus:border-purple-500"
           placeholder="Enter a name for this event"
           required
         />
-        <div class="my-3 mt-5">
-          <ul
-            class="flex items-center text-sm text-gray-400 dark:text-gray-600"
-          >
-            <span>Choose color</span>
-            <li
-              v-for="i in 10"
-              :key="i"
-              class="bg-green-100 rounded-full w-5 h-5 cursor-pointer mx-2"
-            ></li>
-          </ul>
+
+        <div
+          class="my-3 mt-5 flex items-center gap-5 text-sm text-gray-400 dark:text-gray-600"
+        >
+          <span>Choose color:</span>
+          <ColorSet @choose="chooseColor($event)" />
         </div>
-        <div class="grid grid-cols-2 w-full my-5">
+
+        <div class="grid grid-cols-2 w-full my-3">
           <div>
             <input
               type="date"
@@ -89,6 +106,9 @@ const handleCreateProject = async () => {
             <HourSelect />
           </div>
         </div>
+
+        <TagInput :tags="payload.attendees" @input="addAttendees($event)" />
+
         <label
           for="simple-search"
           class="text-sm font-medium text-gray-400 dark:text-gray-600"
@@ -98,7 +118,7 @@ const handleCreateProject = async () => {
           type="text"
           v-model="payload.description"
           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple-500 dark:focus:border-purple-500"
-          placeholder="Enter a name for this view"
+          placeholder="Enter a description for this event"
           required
         />
       </form>
@@ -108,8 +128,7 @@ const handleCreateProject = async () => {
         <button
           type="button"
           class="h-min inline-flex text-sm font-medium text-gray-400 cursor-pointer"
-          @click="handleCreateProject"
-          :disabled="checkInput === false"
+          @click="closeModal"
         >
           Cancel
         </button>
