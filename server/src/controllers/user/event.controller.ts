@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import db from "../../models";
 const User = db.user;
 const Event = db.event;
+import { queryDateTimePeriod } from "../../utils/time";
 
 const createEvent = async (req: any, res: Response) => {
   try {
@@ -21,15 +22,24 @@ const createEvent = async (req: any, res: Response) => {
 const getAllEvents = async (req: any, res: Response) => {
   try {
     if (req.query.present === "organizer") {
-      const total = await Event.countDocuments({ organizer: req.user.id });
-      const events = await Event.find();
+      const total = await Event.countDocuments(
+        { organizer: req.user.id },
+        { "time.date": queryDateTimePeriod(req.query.start, req.query.end) }
+      );
+      const events = await Event.find({
+        "time.date": queryDateTimePeriod(req.query.start, req.query.end),
+      });
       res.status(200).send({ total, events });
     }
     if (req.query.present === "participant") {
-      const total = await Event.countDocuments({
-        attendees: { $in: req.user.id },
-      });
-      const events = await Event.find({ attendees: { $in: req.user.id } });
+      const total = await Event.countDocuments(
+        { attendees: { $in: req.user.id } },
+        { "time.date": queryDateTimePeriod(req.query.start, req.query.end) }
+      );
+      const events = await Event.find(
+        { attendees: { $in: req.user.id } },
+        { "time.date": queryDateTimePeriod(req.query.start, req.query.end) }
+      );
       res.status(200).send({ total, events });
     }
   } catch (error) {
@@ -37,9 +47,11 @@ const getAllEvents = async (req: any, res: Response) => {
   }
 };
 
-const getEventById = async (req: Request, res: Response) => {
+const getEventById = async (req: any, res: Response) => {
   try {
-    const event = await Event.findById(req.params.id);
+    const event = await Event.findById(req.params.id, {
+      "time.date": queryDateTimePeriod(req.query.start, req.query.end),
+    });
     res.status(200).send(event);
   } catch (error) {
     res.status(500).send(error);

@@ -1,5 +1,5 @@
-<script setup>
-import { ref } from "vue";
+<script setup lang="ts">
+import { ref, watchEffect } from "vue";
 import {
   Listbox,
   ListboxLabel,
@@ -10,7 +10,14 @@ import {
 import { Icon } from "@iconify/vue";
 import { personalHours } from "@/shared/time";
 
-const selectedHour = ref(personalHours[0]);
+const selectedHour = ref<string>(personalHours[0]);
+
+const emit = defineEmits<{
+  (event: "select", hour: string): void;
+}>();
+watchEffect(() => {
+  emit("select", selectedHour.value);
+});
 </script>
 <template>
   <div class="w-min">

@@ -31,11 +31,13 @@ const removeTag = (tag: string) => {
 </script>
 
 <template>
-  <div class="flex flex-wrap border rounded-lg p-1 w-full my-3">
+  <div
+    class="flex flex-wrap border rounded-lg w-full my-3 max-h-24 overflow-y-scroll"
+  >
     <span
       v-for="(tag, i) in tags"
       :key="i"
-      class="inline-flex items-center text-sm bg-[#bcdefa] text-[#1c3d5a] rounded-md mr-2 pl-1 py-1.5 pr-3 relative"
+      class="inline-flex items-center text-sm bg-[#bcdefa] text-[#1c3d5a] rounded-md m-1 pl-1.5 py-1.5 pr-3 relative"
     >
       <span>{{ tag }}</span>
       <button

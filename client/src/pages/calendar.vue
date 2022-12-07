@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, ref, computed, onMounted } from "vue";
+import { reactive, ref, computed, onMounted, watchEffect } from "vue";
 import { useElementSize } from "@vueuse/core";
 import { Icon } from "@iconify/vue";
 import { personalHours, daysOfWeek } from "@/shared/time";
@@ -10,6 +10,7 @@ import DatePicker from "@/components/calendar/DatePicker.vue";
 import Tooltip from "@/components/calendar/Tooltip.vue";
 import { IEvent } from "@/types";
 import CreateEvent from "@/components/calendar/CreateEvent.vue";
+import EventService from "@/services/event.service";
 
 const headSize = ref(null);
 const bodySize = ref(null);
@@ -34,6 +35,10 @@ const getPositionTimebar = (parentHeight: number) => {
   return index;
 };
 
+watchEffect(async () => {
+  await EventService.getAllEvents();
+});
+
 const listEvents: Array<IEvent> = reactive([
   {
     id: 1,
@@ -57,6 +62,8 @@ const listEvents: Array<IEvent> = reactive([
     color: "green-100",
   },
 ]);
+
+// {"organizer":"638e20cf7cc65d797b25f52b","title":"event 1","description":"description","time":{"start":"8:00","end":"15:00","date":"2022-12-07"},"location":"okeee nha","attendees":["638e1c2be9056c12612c6194","638e1c2be9056c12612c6194"],"colorId":"638e1c2be9056c12612c618b","_id":"63905b9ae453cdda233e4c5a","createdAt":"2022-12-07T09:23:38.172Z","updatedAt":"2022-12-07T09:23:38.172Z","__v":0}
 </script>
 
 <template>

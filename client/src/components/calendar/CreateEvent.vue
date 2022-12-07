@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, reactive, computed } from "vue";
+import { ref, reactive, computed, watchEffect } from "vue";
 import { useRouter } from "vue-router";
 import { Switch } from "@headlessui/vue";
 import { Icon } from "@iconify/vue";
@@ -8,6 +8,7 @@ import Modal from "@/components/Modal.vue";
 import HourSelect from "./HourSelect.vue";
 import ColorSet from "./ColorSet.vue";
 import TagInput from "@/components/TagInput.vue";
+import { getCurrentDate } from "@/helpers/date";
 
 const router = useRouter();
 
@@ -21,11 +22,15 @@ function openModal(): void {
 const payload = reactive({
   title: "",
   description: "",
-  attendees: ["user01", "user02"],
+  attendees: ["638e1c2be9056c12612c6194", "638e1c2be9056c12612c6194"],
   time: {
     start: "",
     end: "",
-    date: "",
+    date: `${getCurrentDate(new Date()).year}-${
+      getCurrentDate(new Date()).month
+    }-${getCurrentDate(new Date()).day < 10 ? "0" : ""}${
+      getCurrentDate(new Date()).day
+    }`,
   },
   location: "",
   colorId: "",
@@ -33,6 +38,17 @@ const payload = reactive({
 
 const chooseColor = (colorId: string) => {
   payload.colorId = colorId;
+};
+
+const addAttendees = (attendee: Array<string>) => {
+  payload.attendees = attendee;
+};
+
+const getHourStart = (hour: string) => {
+  payload.time.start = hour;
+};
+const getHourEnd = (hour: string) => {
+  payload.time.end = hour;
 };
 
 const checkInput = computed(
@@ -45,10 +61,6 @@ const checkInput = computed(
 const handleCreateProject = async () => {
   await EventService.createEvent(payload);
   closeModal();
-};
-
-const addAttendees = (attendee: Array<string>) => {
-  payload.attendees = attendee;
 };
 </script>
 
@@ -91,19 +103,33 @@ const addAttendees = (attendee: Array<string>) => {
           <ColorSet @choose="chooseColor($event)" />
         </div>
 
+        <label
+          for="simple-search"
+          class="text-sm font-medium text-gray-400 dark:text-gray-600"
+          >Location</label
+        >
+        <input
+          type="text"
+          v-model="payload.location"
+          class="mb-3 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple-500 dark:focus:border-purple-500"
+          placeholder="Enter a address link or location"
+          required
+        />
+
         <div class="grid grid-cols-2 w-full my-3">
           <div>
             <input
               type="date"
+              v-model="payload.time.date"
               name="date"
               class="text-blue-700 rounded-lg focus:ring-0 w-full"
             />
           </div>
 
           <div class="flex justify-center items-center gap-3">
-            <HourSelect />
+            <HourSelect @select="getHourStart($event)" />
             <span class="text-gray-400 dark:text-gray-600">to</span>
-            <HourSelect />
+            <HourSelect @select="getHourEnd($event)" />
           </div>
         </div>
 
@@ -118,7 +144,7 @@ const addAttendees = (attendee: Array<string>) => {
           type="text"
           v-model="payload.description"
           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple-500 dark:focus:border-purple-500"
-          placeholder="Enter a description for this event"
+          placeholder="Enter a description"
           required
         />
       </form>

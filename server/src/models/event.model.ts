@@ -7,7 +7,7 @@ interface IEventModel extends mongoose.Document {
   time: {
     start: string;
     end: string;
-    date: string;
+    date: Date;
   };
   location: string;
   attendees: string[];
@@ -38,7 +38,7 @@ const eventSchema: mongoose.Schema = new mongoose.Schema({
       required: true,
     },
     date: {
-      type: String,
+      type: Date,
       required: true,
     },
   },
