@@ -4,15 +4,15 @@ interface IColorModel extends mongoose.Document {
   name: string;
 }
 
-const ColorSchema: mongoose.Schema = new mongoose.Schema({
+const CategorySchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
     unique: true,
-    max: 8,
+    max: 10,
   },
 });
 
-const ColorModel = mongoose.model<IColorModel>("Color", ColorSchema);
+const CategoryModel = mongoose.model<IColorModel>("Category", CategorySchema);
 
-export default ColorModel;
+export default CategoryModel;

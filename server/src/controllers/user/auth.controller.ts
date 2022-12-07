@@ -45,7 +45,7 @@ const signup = async (req: Request, res: Response) => {
             }
             res.send({ message: "User was registered successfully!" });
           });
-          sendConfirmationEmail(user.email);
+          // sendConfirmationEmail(user.email);
         }
       );
     } else {

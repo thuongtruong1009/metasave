@@ -1,5 +1,5 @@
-<script setup>
-import { ref } from "vue";
+<script setup lang="ts">
+import { ref, watchEffect } from "vue";
 import {
   Listbox,
   ListboxLabel,
@@ -10,7 +10,14 @@ import {
 import { Icon } from "@iconify/vue";
 import { personalHours } from "@/shared/time";
 
-const selectedHour = ref(personalHours[0]);
+const selectedHour = ref<string>(personalHours[0]);
+
+const emit = defineEmits<{
+  (event: "select", hour: string): void;
+}>();
+watchEffect(() => {
+  emit("select", selectedHour.value);
+});
 </script>
 <template>
   <div class="w-min">
@@ -33,7 +40,7 @@ const selectedHour = ref(personalHours[0]);
           leave-to-class="opacity-0"
         >
           <ListboxOptions
-            class="absolute mt-2 max-h-40 w-max right-0 overflow-auto rounded-md bg-white text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+            class="absolute mt-2 max-h-40 w-max right-0 z-10 overflow-auto rounded-md bg-white text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
           >
             <ListboxOption
               v-slot="{ active, selected }"

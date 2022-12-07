@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-interface IUser {
+interface IUserModel extends mongoose.Document {
   username: string;
   email: string;
   password: string;
@@ -9,9 +9,8 @@ interface IUser {
   salt: string;
   roles: string[];
   projects: string[];
+  events: string[];
 }
-
-interface IUserModel extends IUser, mongoose.Document {}
 
 const UserSchema: mongoose.Schema = new mongoose.Schema(
   {
@@ -48,6 +47,12 @@ const UserSchema: mongoose.Schema = new mongoose.Schema(
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Project",
+      },
+    ],
+    events: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Event",
       },
     ],
   }

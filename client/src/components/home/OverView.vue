@@ -15,7 +15,7 @@ defineProps<{
       <p>Up Comming</p>
     </div>
     <div>
-      <h3>{{ total }}</h3>
+      <h3>{{ total ? total : 0 }}</h3>
       <p>Total Projects</p>
     </div>
   </div>
