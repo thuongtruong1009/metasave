@@ -1,6 +1,6 @@
 import compression from "compression";
 import cookieParser from "cookie-parser";
-import fs from "fs";
+import fs from "fs-extra";
 import cors from "cors";
 import express from "express";
 import path from "node:path";
@@ -11,6 +11,7 @@ import swaggerUi from "swagger-ui-express";
 import ConnectDB from "./db.config";
 import { IRouter } from "../types";
 import morgan from "morgan";
+import ErrorHandler from "../middlewares/error.middleware";
 
 class App {
   public app: express.Application;
@@ -26,6 +27,7 @@ class App {
     this.initializeRoutes(userRoutes, adminRoutes);
     this.initializeSwagger();
     ConnectDB();
+    this.initializeErrorHandling();
   }
   public listen() {
     this.app.listen(this.port, () => {
@@ -48,13 +50,17 @@ class App {
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(cookieParser());
-    const accessLogStream = fs.createWriteStream(
-      path.join(__dirname, "../../logs/access.log"),
-      { flags: "a" }
-    );
-    this.app.use(morgan("combined", { stream: accessLogStream }));
+    this.app.use(morgan("combined", { stream: this.writeLogs("access") }));
 
     this.app.use(express.static(path.join(__dirname, "../../public")));
+  }
+
+  private writeLogs(fileName: string) {
+    const accessLogStream = fs.createWriteStream(
+      path.join(__dirname, `../../logs/${fileName}.log`),
+      { flags: "a" }
+    );
+    return accessLogStream;
   }
 
   private initializeRoutes(userRoutes: IRouter[], adminRoutes: IRouter[]) {
@@ -79,6 +85,10 @@ class App {
     };
     const swaggerSpec = swaggerJSDoc(options);
     this.app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+  }
+
+  private initializeErrorHandling() {
+    this.app.use(ErrorHandler);
   }
 }
 
