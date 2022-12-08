@@ -3,12 +3,15 @@ import { ref, reactive, computed, watchEffect } from "vue";
 import { useRouter } from "vue-router";
 import { Switch } from "@headlessui/vue";
 import { Icon } from "@iconify/vue";
+import html2canvas from "html2canvas";
 import EventService from "@/services/event.service";
 import Modal from "@/components/Modal.vue";
 import HourSelect from "./HourSelect.vue";
 import ColorSet from "./ColorSet.vue";
 import TagInput from "@/components/TagInput.vue";
 import { getCurrentDate, getDateFormat } from "@/helpers/date";
+import { saveFile } from "@/helpers/file";
+import { copyToClipboard } from "@/helpers/copy";
 
 const router = useRouter();
 
@@ -16,51 +19,31 @@ const isOpen = ref<boolean>(false);
 function closeModal(): void {
   isOpen.value = false;
 }
-function openModal(): void {
+async function openModal(): Promise<void> {
+  await onScreenShot();
   isOpen.value = true;
 }
-const payload = reactive({
-  title: "",
-  description: "",
-  attendees: ["638e1c2be9056c12612c6194", "638e1c2be9056c12612c6194"],
-  time: {
-    start: "",
-    end: "",
-    date: getDateFormat(
-      getCurrentDate(new Date()).year,
-      getCurrentDate(new Date()).month,
-      getCurrentDate(new Date()).day
-    ),
-  },
-  location: "",
-  colorId: "",
-});
 
-const chooseColor = (colorId: string) => {
-  payload.colorId = colorId;
+const props = defineProps<{
+  data: any;
+}>();
+
+const output = ref<any>(null);
+const onScreenShot = async () => {
+  let el = props.data;
+  output.value = (await html2canvas(el)).toDataURL();
 };
 
-const addAttendees = (attendee: Array<string>) => {
-  payload.attendees = attendee;
-};
-
-const getHourStart = (hour: string) => {
-  payload.time.start = hour;
-};
-const getHourEnd = (hour: string) => {
-  payload.time.end = hour;
-};
-
-const checkInput = computed(
-  () =>
-    payload.title.length > 0 &&
-    payload.time.date !== "" &&
-    payload.colorId !== ""
-);
-
-const handleCreateProject = async () => {
-  await EventService.createEvent(payload);
+const onSaveScreenshot = async () => {
+  saveFile(output.value, "metasave_events.png");
   closeModal();
+  output.value = "";
+};
+
+const isCopy = ref(false);
+const onCopyScreenshot = () => {
+  copyToClipboard(output.value);
+  isCopy.value = true;
 };
 </script>
 
@@ -71,13 +54,13 @@ const handleCreateProject = async () => {
         <img
           class="cursor-pointer mr-5"
           src="https://cdn.icon-icons.com/icons2/1551/PNG/512/if-traveling-icon-flat-outline08-3405109_107381.png"
-          alt=""
+          alt="camera_img"
           width="36"
         />
       </div>
     </template>
     <template #title>
-      <h1 class="text-2xl">Create new event</h1>
+      <h1 class="text-2xl">Screenshot events</h1>
     </template>
     <template #closeBtn>
       <button
@@ -89,99 +72,32 @@ const handleCreateProject = async () => {
       </button>
     </template>
     <template #content>
-      <form class="flex flex-col items-start my-5 w-128">
-        <label
-          for="simple-search"
-          class="text-sm font-medium text-gray-400 dark:text-gray-600"
-          >Name</label
-        >
-        <input
-          type="text"
-          v-model="payload.title"
-          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple-500 dark:focus:border-purple-500"
-          placeholder="Enter a name for this event"
-          required
-        />
-
-        <div
-          class="my-3 mt-5 flex items-center gap-5 text-sm text-gray-400 dark:text-gray-600"
-        >
-          <span>Choose color:</span>
-          <ColorSet @choose="chooseColor($event)" />
-        </div>
-
-        <label
-          for="simple-search"
-          class="text-sm font-medium text-gray-400 dark:text-gray-600"
-          >Location</label
-        >
-        <input
-          type="text"
-          v-model="payload.location"
-          class="mb-3 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple-500 dark:focus:border-purple-500"
-          placeholder="Enter a address link or location"
-          required
-        />
-
-        <div class="grid grid-cols-2 w-full my-3">
-          <div>
-            <input
-              type="date"
-              v-model="payload.time.date"
-              name="date"
-              class="text-blue-700 rounded-lg focus:ring-0 w-full"
-            />
-          </div>
-
-          <div class="flex justify-center items-center gap-3">
-            <HourSelect @select="getHourStart($event)" />
-            <span class="text-gray-400 dark:text-gray-600">to</span>
-            <HourSelect @select="getHourEnd($event)" />
-          </div>
-        </div>
-
-        <TagInput :tags="payload.attendees" @input="addAttendees($event)" />
-
-        <label
-          for="simple-search"
-          class="text-sm font-medium text-gray-400 dark:text-gray-600"
-          >Description</label
-        >
-        <textarea
-          type="text"
-          v-model="payload.description"
-          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple-500 dark:focus:border-purple-500"
-          placeholder="Enter a description"
-          required
-        />
-      </form>
+      <div class="overflow-y-scroll max-h-96">
+        <img :src="output" class="w-128 rounded-2xl" />
+      </div>
     </template>
     <template #doneBtn>
       <div class="mt-5 flex justify-end items-center">
         <button
           type="button"
-          class="h-min inline-flex text-sm font-medium text-gray-400 cursor-pointer"
-          @click="closeModal"
+          class="h-min inline-flex justify-center items-start rounded-md border border-transparent px-4 py-2 ml-5 text-sm font-medium text-blue-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 opacity-100 bg-blue-100 hover:bg-blue-200 cursor-pointer"
+          @click="onCopyScreenshot"
         >
-          Cancel
+          <Icon
+            icon="material-symbols:content-copy-outline"
+            width="18"
+            class="mr-1"
+          /><span>{{ isCopy ? "Copied" : "Copy image link" }}</span>
         </button>
 
         <button
           type="button"
-          class="h-min inline-flex justify-center items-start rounded-md border border-transparent px-4 py-2 ml-5 text-sm font-medium text-blue-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-          :class="
-            checkInput
-              ? 'opacity-100 bg-blue-100 hover:bg-blue-200 cursor-pointer'
-              : 'opacity-50 bg-blue-100 cursor-not-allowed'
-          "
-          @click="handleCreateProject"
-          :disabled="checkInput === false"
+          class="h-min inline-flex justify-center items-start rounded-md border border-transparent px-4 py-2 ml-5 text-sm font-medium text-blue-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 opacity-100 bg-blue-100 hover:bg-blue-200 cursor-pointer"
+          @click="onSaveScreenshot"
         >
-          <Icon
-            icon="material-symbols:event-available-outline-rounded"
-            width="18"
-            class="mr-1"
-          /><span>Create event</span>
+          <Icon icon="ic:baseline-save-alt" width="18" class="mr-1" /><span
+            >Save</span
+          >
         </button>
       </div>
     </template>

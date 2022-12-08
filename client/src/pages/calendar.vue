@@ -2,7 +2,6 @@
 import { reactive, ref, computed, onMounted, watchEffect } from "vue";
 import { useElementSize } from "@vueuse/core";
 import { Icon } from "@iconify/vue";
-import html2canvas from "html2canvas";
 import { personalHours, daysOfWeek } from "@/shared/time";
 import { getCurrentDate, getDiffPeriod, getDateFormat } from "@/helpers/date";
 import { truncateString, sliceString } from "@/utils/string";
@@ -15,12 +14,6 @@ import EventService from "@/services/event.service";
 import ScreenShot from "@/components/calendar/ScreenShot.vue";
 
 const screenShot = ref<any>(null);
-const output = ref<any>(null);
-const onScreenShot = async () => {
-  let el = screenShot.value as any;
-  output.value = (await html2canvas(el)).toDataURL();
-};
-
 const headSize = ref(null);
 const bodySize = ref(null);
 
@@ -77,12 +70,10 @@ watchEffect(async () => {
         {{ getCurrentDate(new Date()).year }}
       </h1>
       <div class="flex">
-        <ScreenShot />
+        <ScreenShot :data="screenShot" />
         <DatePicker />
       </div>
     </div>
-
-    <img :src="output" />
 
     <div
       class="overflow-x-auto relative overflow-y-scroll h-full max-h-128 w-full pr-1"
