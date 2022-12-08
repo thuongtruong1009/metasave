@@ -52,3 +52,14 @@ export const getDiffPeriod = (
   let diffDays = Number(Math.abs(endDate.getDate() - startDate.getDate()));
   return { diffHours, diffDays };
 };
+
+export const getDateFormat = (
+  year: string | number,
+  month: string | number,
+  day: string | number,
+  time?: string
+): string => {
+  let dateNoTime = `${year}-${month}-${day < 10 ? `0${day}` : day}`;
+  let dateHaveTime = time ? `${dateNoTime}T${time}` : dateNoTime;
+  return dateHaveTime;
+};

@@ -2,8 +2,9 @@
 import { reactive, ref, computed, onMounted, watchEffect } from "vue";
 import { useElementSize } from "@vueuse/core";
 import { Icon } from "@iconify/vue";
+import html2canvas from "html2canvas";
 import { personalHours, daysOfWeek } from "@/shared/time";
-import { getCurrentDate, getDiffPeriod } from "@/helpers/date";
+import { getCurrentDate, getDiffPeriod, getDateFormat } from "@/helpers/date";
 import { truncateString, sliceString } from "@/utils/string";
 import TimeBar from "@/components/calendar/TimeBar.vue";
 import DatePicker from "@/components/calendar/DatePicker.vue";
@@ -11,6 +12,14 @@ import Tooltip from "@/components/calendar/Tooltip.vue";
 import { IEvent } from "@/types";
 import CreateEvent from "@/components/calendar/CreateEvent.vue";
 import EventService from "@/services/event.service";
+import ScreenShot from "@/components/calendar/ScreenShot.vue";
+
+const screenShot = ref<any>(null);
+const output = ref<any>(null);
+const onScreenShot = async () => {
+  let el = screenShot.value as any;
+  output.value = (await html2canvas(el)).toDataURL();
+};
 
 const headSize = ref(null);
 const bodySize = ref(null);
@@ -34,36 +43,30 @@ const getPositionTimebar = (parentHeight: number) => {
   ).toFixed(2);
   return index;
 };
-
-watchEffect(async () => {
-  await EventService.getAllEvents();
+const payload = reactive({
+  present: "organizer",
+  start: getDateFormat(
+    getCurrentDate(new Date()).year,
+    getCurrentDate(new Date()).month,
+    getCurrentDate(new Date()).startDayInWeek
+  ),
+  end: getDateFormat(
+    getCurrentDate(new Date()).year,
+    getCurrentDate(new Date()).month,
+    getCurrentDate(new Date()).endDayInWeek
+  ),
 });
 
-const listEvents: Array<IEvent> = reactive([
-  {
-    id: 1,
-    title: "Meeting with client",
-    start: "2022-12-06T11:00:00",
-    end: "2022-12-06T13:00:00",
-    color: "blue-100",
-  },
-  {
-    id: 2,
-    title: "Meeting with client",
-    start: "2022-12-09T08:00:00",
-    end: "2022-12-09T10:00:00",
-    color: "green-100",
-  },
-  {
-    id: 3,
-    title: "Meeting with client",
-    start: "2022-12-10T08:00:00",
-    end: "2022-12-10T10:00:00",
-    color: "green-100",
-  },
-]);
+const events = ref([]);
 
-// {"organizer":"638e20cf7cc65d797b25f52b","title":"event 1","description":"description","time":{"start":"8:00","end":"15:00","date":"2022-12-07"},"location":"okeee nha","attendees":["638e1c2be9056c12612c6194","638e1c2be9056c12612c6194"],"colorId":"638e1c2be9056c12612c618b","_id":"63905b9ae453cdda233e4c5a","createdAt":"2022-12-07T09:23:38.172Z","updatedAt":"2022-12-07T09:23:38.172Z","__v":0}
+watchEffect(async () => {
+  const { data } = await EventService.getAllEvents(
+    payload.present,
+    payload.start,
+    payload.end
+  );
+  events.value = data.events;
+});
 </script>
 
 <template>
@@ -73,20 +76,29 @@ const listEvents: Array<IEvent> = reactive([
         {{ getCurrentDate(new Date()).monthName }}
         {{ getCurrentDate(new Date()).year }}
       </h1>
-      <DatePicker />
+      <div class="flex">
+        <ScreenShot />
+        <DatePicker />
+      </div>
     </div>
+
+    <img :src="output" />
 
     <div
       class="overflow-x-auto relative overflow-y-scroll h-full max-h-128 w-full pr-1"
     >
       <table
         class="w-full text-sm text-left text-gray-500 dark:text-gray-400 rounded-2xl"
+        ref="screenShot"
       >
         <thead
-          class="text-xs bg-purple-100 dark:bg-gray-600 sticky top-0 rounded-t-3xl z-10"
+          class="text-xs bg-purple-100 dark:bg-gray-600 sticky top-0 rounded-t-3xl z-20"
         >
           <tr>
-            <th class="py-5 flex justify-center w-full" ref="headSize">
+            <th
+              class="py-5 flex justify-center items-center w-full"
+              ref="headSize"
+            >
               <button type="button" class="rounded-lg hover:bg-green-100">
                 <Icon icon="material-symbols:chevron-left-rounded" width="26" />
               </button>
@@ -100,7 +112,7 @@ const listEvents: Array<IEvent> = reactive([
               :key="i"
             >
               <div
-                class="absolute top-2 left-1/3 w-min h-min rounded-lg py-1 px-3 flex flex-col justify-center items-center"
+                class="absolute top-2 left-1/3 w-min h-min rounded-lg pb-2.5 px-3 flex flex-col justify-center items-center"
                 :class="[
                   getCurrentDate(new Date()).day ===
                   getCurrentDate(new Date()).startDayInWeek + i
@@ -146,18 +158,18 @@ const listEvents: Array<IEvent> = reactive([
           </tr>
           <div
             class="absolute p-1 z-1 dark:text-gray-300"
-            v-for="event in listEvents"
-            :key="event.id"
+            v-for="event in events"
+            :key="event._id"
             :style="{
               right:
                 ((getCalendarSize.bodyWidth - getCalendarSize.headWidth) *
                   (getCurrentDate(new Date()).endDayInWeek -
-                    getCurrentDate(new Date(event.start)).day)) /
+                    getCurrentDate(new Date(event.time.start)).day)) /
                   daysOfWeek.length +
                 'px',
               top:
                 (getCalendarSize.bodyHeight *
-                  getHourIndex(getCurrentDate(event.start).hour)) /
+                  getHourIndex(getCurrentDate(event.time.start).hour)) /
                   personalHours.length +
                 'px',
               width:
@@ -166,17 +178,17 @@ const listEvents: Array<IEvent> = reactive([
                 'px',
               height:
                 (getCalendarSize.bodyHeight *
-                  getDiffPeriod(event.start, event.end).diffHours) /
+                  getDiffPeriod(event.time.start, event.time.end).diffHours) /
                   18 +
                 'px',
             }"
           >
             <Tooltip
               :props="{
-                color: event.color,
+                color: event.colorId.name,
                 title: event.title,
-                start: getCurrentDate(event.start).hour,
-                end: getCurrentDate(event.end).hour,
+                start: getCurrentDate(event.time.start).hour,
+                end: getCurrentDate(event.time.end).hour,
               }"
             />
           </div>

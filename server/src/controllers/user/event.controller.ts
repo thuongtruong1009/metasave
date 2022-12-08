@@ -28,7 +28,7 @@ const getAllEvents = async (req: any, res: Response) => {
       );
       const events = await Event.find({
         "time.date": queryDateTimePeriod(req.query.start, req.query.end),
-      });
+      }).populate("colorId", "name");
       res.status(200).send({ total, events });
     }
     if (req.query.present === "participant") {
@@ -39,7 +39,7 @@ const getAllEvents = async (req: any, res: Response) => {
       const events = await Event.find(
         { attendees: { $in: req.user.id } },
         { "time.date": queryDateTimePeriod(req.query.start, req.query.end) }
-      );
+      ).populate("colorId", "name");
       res.status(200).send({ total, events });
     }
   } catch (error) {

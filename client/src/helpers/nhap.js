@@ -63,4 +63,18 @@ export const getDate = (date) => {
     return { hour, day, month, year, totalDaysInMonth, dayName, monthName, startDayInWeek, endDayInWeek };
 };
 
-console.log(getDate(new Date()));
+// console.log(getDate(new Date()));
+
+
+const getDiffPeriod = (
+    start,
+    end
+) => {
+    let startDate = start ? new Date(start) : new Date();
+    let endDate = end ? new Date(end) : new Date();
+    let diffHours = Number(Math.abs(endDate.getHours() - startDate.getHours()));
+    let diffDays = Number(Math.abs(endDate.getDate() - startDate.getDate()));
+    return { diffHours, diffDays };
+};
+
+console.log(getDiffPeriod(new Date("2022-12-06T11:00:00Z"), new Date("2022-12-06T13:00:00Z")));

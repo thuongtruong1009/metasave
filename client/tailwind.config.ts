@@ -5,6 +5,7 @@ module.exports = {
   darkMode: "class",
   attributify: true,
   safelist: [
+    // project colors
     "bg-[#FEE4CB]",
     "bg-[#FF942E]",
     "bg-[#E9E7FD]",
@@ -17,6 +18,17 @@ module.exports = {
     "bg-[#34C471]",
     "bg-[#D5DEFF]",
     "bg-[#4067F9]",
+    // event colors
+    "bg-[#F5CEC7]",
+    "bg-[#FFDCA2]",
+    "bg-[#E0ECDE]",
+    "bg-[#BCE6FF]",
+    "bg-[#CFF4D2]",
+    "bg-[#FFCAD4]",
+    "bg-[#DDDDDA]",
+    "bg-[#E8B7D4]",
+    "bg-[#E4C7B7]",
+    "bg-[#F9E2AE]",
   ],
   theme: {
     fontFamily: {

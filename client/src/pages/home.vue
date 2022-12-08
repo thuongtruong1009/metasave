@@ -33,7 +33,7 @@ const getAllProjects = async () => {
   if (res) {
     payget.projects = res.data.projects;
     payget.total = res.data.total;
-    payget.lastUpdated = res.data.lastUpdated[0].updatedAt;
+    payget.lastUpdated = res.data.lastUpdated[0]?.updatedAt;
   }
 };
 

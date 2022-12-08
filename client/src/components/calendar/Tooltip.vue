@@ -21,7 +21,7 @@ const openTooltip = (status: boolean) => {
   <Menu
     as="div"
     class="relative inline-block text-left w-full w-full h-full rounded-lg break-words whitespace-pre-wrap p-1.5 text-sm cursor-pointer hover:shadow-lg dark:bg-gray-600"
-    :class="`bg-${props.color}`"
+    :class="`bg-[${props.color}]`"
     @mouseover="openTooltip(true)"
     @mouseout="openTooltip(false)"
   >

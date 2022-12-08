@@ -67,7 +67,14 @@ const handleCreateProject = async () => {
 <template>
   <Modal :status="isOpen" @close="closeModal">
     <template #openBtn>
-      <div @click="openModal" class="w-full h-full"></div>
+      <div @click="openModal" class="w-full h-full">
+        <img
+          class="cursor-pointer mr-5"
+          src="https://cdn.icon-icons.com/icons2/1551/PNG/512/if-traveling-icon-flat-outline08-3405109_107381.png"
+          alt=""
+          width="36"
+        />
+      </div>
     </template>
     <template #title>
       <h1 class="text-2xl">Create new event</h1>
