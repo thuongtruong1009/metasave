@@ -39,7 +39,7 @@ const logout = () => {
 </script>
 
 <template>
-  <nav class="left_nav grid justify-around h-80">
+  <nav class="flex flex-col items-center justify-center gap-6">
     <router-link :to="toggle.path" v-for="(toggle, i) in toggles" :key="i">
       <Icon
         :icon="toggle.icon"

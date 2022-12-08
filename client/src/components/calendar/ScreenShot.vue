@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, reactive, computed, watchEffect } from "vue";
+import { ref, reactive, computed, watchEffect, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { Switch } from "@headlessui/vue";
 import { Icon } from "@iconify/vue";
@@ -52,7 +52,7 @@ const onCopyScreenshot = () => {
     <template #openBtn>
       <div @click="openModal" class="w-full h-full">
         <img
-          class="cursor-pointer mr-5"
+          class="cursor-pointer mr-5 shadow-md shadow-gray-300 rounded-lg"
           src="https://cdn.icon-icons.com/icons2/1551/PNG/512/if-traveling-icon-flat-outline08-3405109_107381.png"
           alt="camera_img"
           width="36"

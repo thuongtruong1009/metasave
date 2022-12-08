@@ -63,7 +63,7 @@ watchEffect(async () => {
 </script>
 
 <template>
-  <section class="ml-5 p-5 bg-white dark:bg-gray-700 rounded-2xl w-full">
+  <section class="p-5 bg-white dark:bg-gray-700 rounded-2xl w-full">
     <div class="flex justify-between items-center mb-5">
       <h1 class="text-2xl font-semibold">
         {{ getCurrentDate(new Date()).monthName }}
