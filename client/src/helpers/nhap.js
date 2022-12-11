@@ -43,6 +43,10 @@ function getCurrentWeekNumber(d) {
 //     return ISOweekStart;
 // }
 // console.log(getStartDateOfWeek(getCurrentWeekNumber(new Date()), 2022));
+const getDateFormat = (year, month, day) => {
+        let formated = `${year}-${month < 10 ? `0${month}` : month}-${day < 10 ? `0${day}` : day}`;
+    return formated;
+};
 
 const getListDaysOfWeek = (date) => {
     var days = [];
@@ -52,7 +56,8 @@ const getListDaysOfWeek = (date) => {
         let name = daysOfWeek[pre.getDay()];
         let dayNum = Number(String(pre.getDate()).padStart(2, "0"));
         let day = dayNum < 10 ? "0" + dayNum : dayNum
-        days.push({ iso, name, day });
+        let format =  getDateFormat(pre.getFullYear(), pre.getMonth() + 1, pre.getDate());
+        days.push({ iso, format, name, day });
     });
     return days;
 }
@@ -68,22 +73,24 @@ export const getDate = (date) => {
     let startDayOfWeekBySunday = new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay() + 1);
     let weekNo = getCurrentWeekNumber(date);
     let weeks = getListDaysOfWeek(new Date('2022-12-27T17:00:00.000Z'))
+    let startDayInWeek = weeks[0].format;
+    let endDayInWeek = weeks[6].format;
 
-    return { hour, day, month, year, totalDaysInMonth, dayName, monthName, weekNo, weeks };
+    return { hour, day, month, year, totalDaysInMonth, dayName, monthName, weekNo, weeks, startDayInWeek, endDayInWeek };
 };
 
 console.log(getDate(new Date()));
 
 
-// const getDiffPeriod = (
-//     start,
-//     end
-// ) => {
-//     let startDate = start ? new Date(start) : new Date();
-//     let endDate = end ? new Date(end) : new Date();
-//     let diffHours = Number(Math.abs(endDate.getHours() - startDate.getHours()));
-//     let diffDays = Number(Math.abs(endDate.getDate() - startDate.getDate()));
-//     return { diffHours, diffDays };
-// };
+const getDiffPeriod = (
+    start,
+    end
+) => {
+    let startDate = start ? new Date(start) : new Date();
+    let endDate = end ? new Date(end) : new Date();
+    let diffHours = Number(Math.abs(endDate.getHours() - startDate.getHours()));
+    let diffDays = Number(Math.abs(endDate.getDate() - startDate.getDate()));
+    return { diffHours, diffDays };
+};
 
-// console.log(getDiffPeriod(new Date("2022-12-06T11:00:00Z"), new Date("2022-12-06T13:00:00Z")));
+console.log(getDiffPeriod(new Date("2022-12-06T11:00:00Z"), new Date("2022-12-06T13:00:00Z")));

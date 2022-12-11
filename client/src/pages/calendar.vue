@@ -3,7 +3,12 @@ import { reactive, ref, watchEffect } from "vue";
 import { useElementSize } from "@vueuse/core";
 import { Icon } from "@iconify/vue";
 import { personalHours, daysOfWeek } from "@/shared/time";
-import { getCurrentDate, getDiffPeriod, getDateFormat } from "@/helpers/date";
+import {
+  getCurrentDate,
+  getDiffPeriod,
+  getDateFormat,
+  getListDaysOfWeek,
+} from "@/helpers/date";
 import { truncateString, sliceString } from "@/utils/string";
 import TimeBar from "@/components/calendar/TimeBar.vue";
 import DatePicker from "@/components/calendar/DatePicker.vue";
@@ -38,16 +43,8 @@ const getPositionTimebar = (parentHeight: number) => {
 };
 const payload = reactive({
   present: "organizer",
-  start: getDateFormat(
-    getCurrentDate(new Date()).year,
-    getCurrentDate(new Date()).month,
-    getCurrentDate(new Date()).startDayInWeek
-  ),
-  end: getDateFormat(
-    getCurrentDate(new Date()).year,
-    getCurrentDate(new Date()).month,
-    getCurrentDate(new Date()).endDayInWeek
-  ),
+  start: getCurrentDate(new Date()).startDayInWeek,
+  end: getCurrentDate(new Date()).endDayInWeek,
 });
 console.log(payload);
 
@@ -108,28 +105,26 @@ function onQueryDate(dataModel: any) {
             </th>
             <th
               class="text-center relative"
-              v-for="(day, i) in daysOfWeek"
+              v-for="(list, i) in getListDaysOfWeek(new Date())"
               :key="i"
             >
               <div
                 class="absolute top-2 left-1/3 w-min h-min rounded-lg pb-2.5 px-3 flex flex-col justify-center items-center"
                 :class="[
-                  getCurrentDate(new Date()).day ===
-                  getCurrentDate(new Date()).startDayInWeek + i
+                  getCurrentDate(new Date()).day === list.day
                     ? 'bg-purple-500 text-white shadow-lg shadow-gray-400/50 dark:shadow-gray-600'
                     : 'text-black',
                 ]"
               >
                 <h3 class="text-xl font-semibold">
-                  {{ getCurrentDate(new Date()).startDayInWeek + i }}
+                  {{ list.day }}
                 </h3>
                 <span
                   :class="{
                     'text-gray-400':
-                      getCurrentDate(new Date()).day !==
-                      getCurrentDate(new Date()).startDayInWeek + i,
+                      getCurrentDate(new Date()).day !== list.day,
                   }"
-                  >{{ sliceString(day, 3) }}</span
+                  >{{ sliceString(list.name, 3) }}</span
                 >
               </div>
             </th>
@@ -171,8 +166,10 @@ function onQueryDate(dataModel: any) {
                 'px',
               right:
                 ((getCalendarSize.bodyWidth - getCalendarSize.headWidth) *
-                  (getCurrentDate(event.time.date).endDayInWeek -
-                    getCurrentDate(event.time.date).day)) /
+                  getDiffPeriod(
+                    event.time.date,
+                    getListDaysOfWeek(new Date(event.time.end))[6].iso
+                  ).diffDays) /
                   daysOfWeek.length +
                 'px',
               width:

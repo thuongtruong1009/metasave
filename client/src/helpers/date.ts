@@ -13,8 +13,8 @@ export const getCurrentWeekNumber = (date: Date): number => {
   return weekNo + 1;
 };
 
-var days: Array<IGetListDaysOfWeek> = [];
 export const getListDaysOfWeek = (date: Date): Array<IGetListDaysOfWeek> => {
+  var days: Array<IGetListDaysOfWeek> = [];
   [0, 1, 2, 3, 4, 5, 6].forEach((index) => {
     let pre = new Date(
       date.getFullYear(),
@@ -29,7 +29,12 @@ export const getListDaysOfWeek = (date: Date): Array<IGetListDaysOfWeek> => {
     let name = daysOfWeek[pre.getDay()];
     let dayNum = Number(String(pre.getDate()).padStart(2, "0"));
     let day = dayNum < 10 ? "0" + dayNum : dayNum;
-    days.push({ iso, name, day });
+    let format = getDateFormat(
+      pre.getFullYear(),
+      pre.getMonth() + 1,
+      pre.getDate()
+    );
+    days.push({ iso, format, name, day });
   });
   return days;
 };
@@ -50,14 +55,15 @@ export const getCurrentDate = (time: Date | string): IGetCurrentDate => {
   let month = Number(String(date.getMonth() + 1).padStart(2, "0"));
   let monthName = monthsOfYear[date.getMonth()];
   let year = Number(date.getFullYear());
-  let startDayOfWeek = new Date(
+  let startDayOfWeekBySunday = new Date(
     date.getFullYear(),
     date.getMonth(),
     date.getDate() - date.getDay()
   );
   let weekNo = getCurrentWeekNumber(date);
-  let weeks = getListDaysOfWeek(startDayOfWeek);
-
+  let weeks = getListDaysOfWeek(startDayOfWeekBySunday);
+  let startDayInWeek = weeks[0].format;
+  let endDayInWeek = weeks[6].format;
   return {
     minute,
     hour,
@@ -69,6 +75,8 @@ export const getCurrentDate = (time: Date | string): IGetCurrentDate => {
     monthName,
     weekNo,
     weeks,
+    startDayInWeek,
+    endDayInWeek,
   };
 };
 
@@ -88,7 +96,9 @@ export const getDateFormat = (
   month: string | number,
   day: string | number
 ): string => {
-  let formated = `${year}-${month}-${day < 10 ? `0${day}` : day}`;
+  let formated = `${year}-${month < 10 ? `0${month}` : month}-${
+    day < 10 ? `0${day}` : day
+  }`;
   return formated;
 };
 
@@ -107,12 +117,49 @@ export const getISOFormat = (date: string, hour: string | number): string => {
 //   monthName: 'December',
 //   weekNo: 50,
 //   weeks: [
-//     { iso: 2022-12-27T17:00:00.000Z, name: 'Tuesday', day: 27 },
-//     { iso: 2022-12-28T17:00:00.000Z, name: 'Wednesday', day: 28 },
-//     { iso: 2022-12-29T17:00:00.000Z, name: 'Thursday', day: 29 },
-//     { iso: 2022-12-30T17:00:00.000Z, name: 'Friday', day: 30 },
-//     { iso: 2022-12-31T17:00:00.000Z, name: 'Saturday', day: 31 },
-//     { iso: 2023-01-01T17:00:00.000Z, name: 'Sunday', day: '01' },
-//     { iso: 2023-01-02T17:00:00.000Z, name: 'Monday', day: '02' }
-//   ]
+//     {
+//       iso: 2022-12-27T17:00:00.000Z,
+//       format: '2022-12-27',
+//       name: 'Tuesday',
+//       day: 27
+//     },
+//     {
+//       iso: 2022-12-28T17:00:00.000Z,
+//       format: '2022-12-28',
+//       name: 'Wednesday',
+//       day: 28
+//     },
+//     {
+//       iso: 2022-12-29T17:00:00.000Z,
+//       format: '2022-12-29',
+//       name: 'Thursday',
+//       day: 29
+//     },
+//     {
+//       iso: 2022-12-30T17:00:00.000Z,
+//       format: '2022-12-30',
+//       name: 'Friday',
+//       day: 30
+//     },
+//     {
+//       iso: 2022-12-31T17:00:00.000Z,
+//       format: '2022-12-31',
+//       name: 'Saturday',
+//       day: 31
+//     },
+//     {
+//       iso: 2023-01-01T17:00:00.000Z,
+//       format: '2023-01-01',
+//       name: 'Sunday',
+//       day: '01'
+//     },
+//     {
+//       iso: 2023-01-02T17:00:00.000Z,
+//       format: '2023-01-02',
+//       name: 'Monday',
+//       day: '02'
+//     }
+//   ],
+//   startDayInWeek: '2022-12-27',
+//   endDayInWeek: '2023-01-02'
 // }
