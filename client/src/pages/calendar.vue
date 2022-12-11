@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, ref, computed, onMounted, watchEffect } from "vue";
+import { reactive, ref, watchEffect } from "vue";
 import { useElementSize } from "@vueuse/core";
 import { Icon } from "@iconify/vue";
 import { personalHours, daysOfWeek } from "@/shared/time";
@@ -49,17 +49,26 @@ const payload = reactive({
     getCurrentDate(new Date()).endDayInWeek
   ),
 });
+console.log(payload);
 
 const events = ref([]);
 
-watchEffect(async () => {
+const handleGetAllEvents = async () => {
   const { data } = await EventService.getAllEvents(
     payload.present,
     payload.start,
     payload.end
   );
   events.value = data.events;
+};
+watchEffect(() => {
+  handleGetAllEvents();
 });
+
+function onQueryDate(dataModel: any) {
+  payload.start = dataModel.startDate;
+  payload.end = dataModel.endDate;
+}
 </script>
 
 <template>
@@ -71,7 +80,7 @@ watchEffect(async () => {
       </h1>
       <div class="flex">
         <ScreenShot :data="screenShot" />
-        <DatePicker />
+        <DatePicker @query-date="onQueryDate($event)" />
       </div>
     </div>
 
@@ -144,7 +153,10 @@ watchEffect(async () => {
               v-for="i in daysOfWeek.length"
               :key="i"
             >
-              <CreateEvent class="absolute inset-0" />
+              <CreateEvent
+                class="absolute inset-0"
+                @created="handleGetAllEvents"
+              />
             </td>
           </tr>
           <div
@@ -152,16 +164,16 @@ watchEffect(async () => {
             v-for="event in events"
             :key="event._id"
             :style="{
-              right:
-                ((getCalendarSize.bodyWidth - getCalendarSize.headWidth) *
-                  (getCurrentDate(new Date()).endDayInWeek -
-                    getCurrentDate(new Date(event.time.start)).day)) /
-                  daysOfWeek.length +
-                'px',
               top:
                 (getCalendarSize.bodyHeight *
                   getHourIndex(getCurrentDate(event.time.start).hour)) /
                   personalHours.length +
+                'px',
+              right:
+                ((getCalendarSize.bodyWidth - getCalendarSize.headWidth) *
+                  (getCurrentDate(event.time.date).endDayInWeek -
+                    getCurrentDate(event.time.date).day)) /
+                  daysOfWeek.length +
                 'px',
               width:
                 (getCalendarSize.bodyWidth - getCalendarSize.headWidth) /

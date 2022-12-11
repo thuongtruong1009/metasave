@@ -6,6 +6,12 @@ export type IEvent = {
   color: string;
 };
 
+type IGetListDaysOfWeek = {
+  iso: Date;
+  name: string;
+  day: string | number;
+};
+
 export type IGetCurrentDate = {
   minute: number;
   hour: string;
@@ -15,6 +21,6 @@ export type IGetCurrentDate = {
   totalDaysInMonth: number;
   dayName: string;
   monthName: string;
-  startDayInWeek: number;
-  endDayInWeek: number;
+  weekNo: number;
+  weeks: Array<IGetListDaysOfWeek>;
 };

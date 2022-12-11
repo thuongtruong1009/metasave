@@ -1,15 +1,35 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue";
+import { getDateFormat } from "@/helpers/date";
 
 const isDark = document.documentElement.classList.contains("dark")
   ? true
   : false;
 
+type IQueryDate = {
+  startDate: string;
+  endDate: string;
+};
+
+const emits = defineEmits<{
+  (e: "query-date", dataModel: IQueryDate): void;
+}>();
+
 const date = ref(new Date());
 
-const handleDate = (modelData) => {
-  date.value = modelData;
-  console.log(modelData);
+const handleDate = (dataModel: any) => {
+  date.value = dataModel;
+  const startDate = getDateFormat(
+    dataModel[0].getFullYear(),
+    dataModel[0].getMonth() + 1,
+    dataModel[0].getDate()
+  );
+  const endDate = getDateFormat(
+    dataModel[1].getFullYear(),
+    dataModel[1].getMonth() + 1,
+    dataModel[1].getDate()
+  );
+  emits("query-date", { startDate, endDate });
 };
 </script>
 

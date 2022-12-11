@@ -18,7 +18,7 @@ const payload = reactive({
   limit: 12,
 });
 
-const payget = reactive({
+const payget = reactive<any>({
   total: "",
   lastUpdated: "",
   projects: [],

@@ -56,6 +56,7 @@ const onCopyScreenshot = () => {
           src="https://cdn.icon-icons.com/icons2/1551/PNG/512/if-traveling-icon-flat-outline08-3405109_107381.png"
           alt="camera_img"
           width="36"
+          title="Screenshot events"
         />
       </div>
     </template>

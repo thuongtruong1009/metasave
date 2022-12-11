@@ -8,7 +8,7 @@ import Modal from "@/components/Modal.vue";
 import HourSelect from "./HourSelect.vue";
 import ColorSet from "./ColorSet.vue";
 import TagInput from "@/components/TagInput.vue";
-import { getCurrentDate, getDateFormat } from "@/helpers/date";
+import { getCurrentDate, getDateFormat, getISOFormat } from "@/helpers/date";
 
 const router = useRouter();
 
@@ -44,11 +44,13 @@ const addAttendees = (attendee: Array<string>) => {
   payload.attendees = attendee;
 };
 
+const validateHour = (hour: string) => {};
+
 const getHourStart = (hour: string) => {
-  payload.time.start = hour;
+  payload.time.start = getISOFormat(payload.time.date, hour);
 };
 const getHourEnd = (hour: string) => {
-  payload.time.end = hour;
+  payload.time.end = getISOFormat(payload.time.date, hour);
 };
 
 const checkInput = computed(
@@ -58,8 +60,12 @@ const checkInput = computed(
     payload.colorId !== ""
 );
 
+const emits = defineEmits<{
+  (e: 'created'): void;
+}>();
 const handleCreateProject = async () => {
   await EventService.createEvent(payload);
+  emits('created');
   closeModal();
 };
 </script>
