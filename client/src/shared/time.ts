@@ -20,13 +20,13 @@ export const personalHours: Array<string> = [
 ];
 
 export const daysOfWeek: Array<string> = [
+  "Sunday",
   "Monday",
   "Tuesday",
   "Wednesday",
   "Thursday",
   "Friday",
   "Saturday",
-  "Sunday",
 ];
 
 export const monthsOfYear: Array<string> = [

@@ -1,7 +1,7 @@
 import { daysOfWeek, monthsOfYear } from "@/shared/time";
-import { IGetCurrentDate, IGetListDaysOfWeek } from "@/types/calendar";
+import { IGetCurrentDate, IListDaysOfWeek, IDayInWeek } from "@/types/calendar";
 
-export const getCurrentWeekNumber = (date: Date): number => {
+export const getWeekNo = (date: Date): number => {
   date = new Date(
     Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
   );
@@ -13,20 +13,30 @@ export const getCurrentWeekNumber = (date: Date): number => {
   return weekNo + 1;
 };
 
-export const getListDaysOfWeek = (date: Date): Array<IGetListDaysOfWeek> => {
-  var days: Array<IGetListDaysOfWeek> = [];
+export const getListDaysOfWeek = (
+  weekNo: number,
+  year: number
+): IListDaysOfWeek => {
+  var simple = new Date(year, 0, 1 + (weekNo - 2) * 7);
+  var dow = simple.getDay();
+  var ISOweekStart = simple;
+  if (dow <= 4) ISOweekStart.setDate(simple.getDate() - simple.getDay() + 2);
+  else ISOweekStart.setDate(simple.getDate() + 8 - simple.getDay());
+  // return ISOweekStart;
+
+  var days: Array<IDayInWeek> = [];
   [0, 1, 2, 3, 4, 5, 6].forEach((index) => {
-    let pre = new Date(
-      date.getFullYear(),
-      date.getMonth(),
-      date.getDate() + index - 1
-    );
     let iso = new Date(
-      date.getFullYear(),
-      date.getMonth(),
-      date.getDate() + index
+      ISOweekStart.getFullYear(),
+      ISOweekStart.getMonth(),
+      ISOweekStart.getDate() + index + 1
     );
-    let name = daysOfWeek[pre.getDay()];
+    let pre = new Date(
+      ISOweekStart.getFullYear(),
+      ISOweekStart.getMonth(),
+      ISOweekStart.getDate() + index
+    );
+    let name = daysOfWeek[Math.abs(pre.getDay() % daysOfWeek.length)];
     let dayNum = Number(String(pre.getDate()).padStart(2, "0"));
     let day = dayNum < 10 ? "0" + dayNum : dayNum;
     let format = getDateFormat(
@@ -36,7 +46,9 @@ export const getListDaysOfWeek = (date: Date): Array<IGetListDaysOfWeek> => {
     );
     days.push({ iso, format, name, day });
   });
-  return days;
+  let startDayInWeek = days[0].format;
+  let endDayInWeek = days[days.length - 1].format;
+  return { startDayInWeek, endDayInWeek, days };
 };
 
 export const getCurrentDate = (time: Date | string): IGetCurrentDate => {
@@ -55,15 +67,6 @@ export const getCurrentDate = (time: Date | string): IGetCurrentDate => {
   let month = Number(String(date.getMonth() + 1).padStart(2, "0"));
   let monthName = monthsOfYear[date.getMonth()];
   let year = Number(date.getFullYear());
-  let startDayOfWeekBySunday = new Date(
-    date.getFullYear(),
-    date.getMonth(),
-    date.getDate() - date.getDay()
-  );
-  let weekNo = getCurrentWeekNumber(date);
-  let weeks = getListDaysOfWeek(startDayOfWeekBySunday);
-  let startDayInWeek = weeks[0].format;
-  let endDayInWeek = weeks[6].format;
   return {
     minute,
     hour,
@@ -73,21 +76,26 @@ export const getCurrentDate = (time: Date | string): IGetCurrentDate => {
     totalDaysInMonth,
     dayName,
     monthName,
-    weekNo,
-    weeks,
-    startDayInWeek,
-    endDayInWeek,
   };
 };
 
+type IDiffPeriod = {
+  diffHours: number;
+  diffDays: number;
+};
+
 export const getDiffPeriod = (
-  start: string,
-  end: string
-): Record<"diffHours" | "diffDays", number> => {
+  start: string | Date,
+  end: string | Date
+): IDiffPeriod => {
   let startDate = start ? new Date(start) : new Date();
   let endDate = end ? new Date(end) : new Date();
-  let diffHours = Number(Math.abs(endDate.getHours() - startDate.getHours()));
-  let diffDays = Number(Math.abs(endDate.getDate() - startDate.getDate()));
+  let diffHours = Math.abs(
+    Number(Math.abs(endDate.getHours() - startDate.getHours()))
+  );
+  let diffDays = Math.abs(
+    Number(Math.abs(endDate.getDate() - startDate.getDate()))
+  );
   return { diffHours, diffDays };
 };
 
@@ -102,64 +110,7 @@ export const getDateFormat = (
   return formated;
 };
 
-export const getISOFormat = (date: string, hour: string | number): string => {
+export const getISOFormat = (date: string, hour: string | number): Date => {
   let formated = `${date}T${hour}:00`;
-  return formated;
+  return formated ? new Date(formated) : new Date();
 };
-
-// {
-//   hour: 23,
-//   day: 11,
-//   month: 12,
-//   year: 2022,
-//   totalDaysInMonth: 31,
-//   dayName: 'Sunday',
-//   monthName: 'December',
-//   weekNo: 50,
-//   weeks: [
-//     {
-//       iso: 2022-12-27T17:00:00.000Z,
-//       format: '2022-12-27',
-//       name: 'Tuesday',
-//       day: 27
-//     },
-//     {
-//       iso: 2022-12-28T17:00:00.000Z,
-//       format: '2022-12-28',
-//       name: 'Wednesday',
-//       day: 28
-//     },
-//     {
-//       iso: 2022-12-29T17:00:00.000Z,
-//       format: '2022-12-29',
-//       name: 'Thursday',
-//       day: 29
-//     },
-//     {
-//       iso: 2022-12-30T17:00:00.000Z,
-//       format: '2022-12-30',
-//       name: 'Friday',
-//       day: 30
-//     },
-//     {
-//       iso: 2022-12-31T17:00:00.000Z,
-//       format: '2022-12-31',
-//       name: 'Saturday',
-//       day: 31
-//     },
-//     {
-//       iso: 2023-01-01T17:00:00.000Z,
-//       format: '2023-01-01',
-//       name: 'Sunday',
-//       day: '01'
-//     },
-//     {
-//       iso: 2023-01-02T17:00:00.000Z,
-//       format: '2023-01-02',
-//       name: 'Monday',
-//       day: '02'
-//     }
-//   ],
-//   startDayInWeek: '2022-12-27',
-//   endDayInWeek: '2023-01-02'
-// }
