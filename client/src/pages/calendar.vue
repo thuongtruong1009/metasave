@@ -191,14 +191,7 @@ function onQueryDate(dataModel: any) {
                 'px',
             }"
           >
-            <Tooltip
-              :props="{
-                color: event.colorId.name,
-                title: event.title,
-                start: getCurrentDate(event.time.start).hour,
-                end: getCurrentDate(event.time.end).hour,
-              }"
-            />
+            <Tooltip :data="event" @delete-event="handleGetAllEvents" />
           </div>
         </tbody>
       </table>

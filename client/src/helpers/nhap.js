@@ -106,7 +106,7 @@ function getStartDateOfWeek(w, y) {
     let endDayInWeek = days[days.length - 1].format;
     return { startDayInWeek, endDayInWeek , days };
 }
-console.log(getStartDateOfWeek(51, 2022));
+// console.log(getStartDateOfWeek(51, 2022));
 
 
 
@@ -130,15 +130,15 @@ export const getDate = (date) => {
 // console.log(getDate(new Date()));
 
 
-// const getDiffPeriod = (
-//     start,
-//     end
-// ) => {
-//     let startDate = start ? new Date(start) : new Date();
-//     let endDate = end ? new Date(end) : new Date();
-//     let diffHours = Number(Math.abs(endDate.getHours() - startDate.getHours()));
-//     let diffDays = Number(Math.abs(endDate.getDate() - startDate.getDate()));
-//     return { diffHours, diffDays };
-// };
+const getDiffPeriod = (
+    start,
+    end
+) => {
+    let startDate = start ? new Date(start) : new Date();
+    let endDate = end ? new Date(end) : new Date();
+    let diffHours = Number(Math.abs(endDate.getHours() - startDate.getHours()));
+    let diffDays = Number(Math.abs(endDate.getDate() - startDate.getDate()));
+    return { diffHours, diffDays };
+};
 
-// console.log(getDiffPeriod(new Date("2022-12-06T11:00:00Z"), new Date("2022-12-06T13:00:00Z")));
+console.log(getDiffPeriod(new Date("2022-12-06T11:00:00Z"), new Date("2022-12-06T13:00:00Z")));
