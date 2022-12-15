@@ -52,8 +52,8 @@ const onCopyScreenshot = () => {
     <template #openBtn>
       <div @click="openModal" class="w-full h-full">
         <img
-          class="cursor-pointer mr-5 shadow-md shadow-gray-300 rounded-lg"
-          src="https://cdn.icon-icons.com/icons2/1551/PNG/512/if-traveling-icon-flat-outline08-3405109_107381.png"
+          class="cursor-pointer mr-5"
+          src="https://img.icons8.com/dusk/512/compact-camera.png"
           alt="camera_img"
           width="36"
           title="Screenshot events"

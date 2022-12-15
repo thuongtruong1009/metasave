@@ -13,9 +13,10 @@ import { getCurrentDate } from "@/helpers/date";
 const authStore = useAuthStore();
 
 const payload = reactive({
+  access: "all",
+  limit: 12,
   sort: "all",
   filter: "all",
-  limit: 12,
 });
 
 const payget = reactive<any>({
@@ -26,9 +27,10 @@ const payget = reactive<any>({
 
 const getAllProjects = async () => {
   const res = await ProjectService.getProjects(
+    payload.access,
+    payload.limit,
     payload.sort,
-    payload.filter,
-    payload.limit
+    payload.filter
   );
   if (res) {
     payget.projects = res.data.projects;

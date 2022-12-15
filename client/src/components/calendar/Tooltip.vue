@@ -2,9 +2,11 @@
 import { ref, reactive, computed } from "vue";
 import { Menu, MenuButton, MenuItem } from "@headlessui/vue";
 import { Icon } from "@iconify/vue";
-import { getCurrentDate, getDateFormat } from "@/helpers/date";
+import { getCurrentDate, getDateFormat, getISOFormat } from "@/helpers/date";
 import EventService from "@/services/event.service";
 import AvatarTag from "@/components/calendar/AvatarTag.vue";
+import HourSelect from "./HourSelect.vue";
+import TagInput from "../TagInput.vue";
 
 const props = defineProps<{
   data: {
@@ -21,30 +23,37 @@ const props = defineProps<{
     };
     updatedAt: string;
   };
+  position: {
+    top?: string;
+    right?: string;
+    bottom?: string;
+    left?: string;
+  };
 }>();
+
+console.log(props.position);
 
 const payload = reactive({
   time: {
-    start: "2023-01-15T01:00:00.000Z",
-    end: "2023-01-15T09:00:00.000Z",
-    date: "2023-01-15T00:00:00.000Z",
+    start: "",
+    end: "",
+    date: "",
   },
-  _id: "6399340800daa0b3ec71a51b",
+  _id: "",
   organizer: {
-    _id: "638e20cf7cc65d797b25f52b",
-    username: "user01",
-    avatar:
-      "https://as2.ftcdn.net/v2/jpg/03/49/49/79/1000_F_349497933_Ly4im8BDmHLaLzgyKg2f2yZOvJjBtlw5.jpg",
+    _id: "",
+    username: "",
+    avatar: "",
   },
-  title: "Đi bơi",
-  description: "Thịnh bao",
-  location: "Công viên nước Suối Tiên",
+  title: "",
+  description: "",
+  location: "",
   attendees: [],
   colorId: {
-    _id: "638e1c2be9056c12612c6192",
-    name: "#FFCAD4",
+    _id: "",
+    name: "",
   },
-  createdAt: "2022-12-14T02:25:12.688Z",
+  createdAt: "",
 });
 const getEventById = async (eventId: string) => {
   const { data } = await EventService.getEventById(eventId);
@@ -72,7 +81,6 @@ const openEdit = () => {
 };
 const closeEdit = () => {
   isEdit.value = false;
-  isOpen.value = false;
 };
 
 const deleteAttendent = async (attendentId: string) => {
@@ -93,14 +101,27 @@ const isValidatePayload = computed(() => {
   return true;
 });
 
-const updateEvent = async () => {
-  await EventService.updateEvent(payload._id, payload);
-  isOpen.value = false;
-};
-
 const emits = defineEmits<{
   (event: "delete-event"): void;
+  (event: "update-event"): void;
 }>();
+
+const addAttendees = (attendee: any) => {
+  payload.attendees = attendee;
+};
+const getHourStart = (hour: string) => {
+  payload.time.start = getISOFormat(payload.time.date, hour);
+};
+const getHourEnd = (hour: string) => {
+  payload.time.end = getISOFormat(payload.time.date, hour);
+};
+
+const updateEvent = async () => {
+  await EventService.updateEvent(payload._id, payload);
+  emits("update-event");
+  isOpen.value = false;
+  isEdit.value = false;
+};
 
 const deleteEvent = async () => {
   await EventService.deleteEvent(payload._id);
@@ -138,16 +159,16 @@ const deleteEvent = async () => {
       leave-to-class="transform scale-95 opacity-0"
     >
       <div
-        class="absolute right-full top-0 w-max bg-white mr-2 p-1 origin-top-right divide-y divide-gray-100 rounded-xl shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-10"
+        class="absolute w-max bg-white mx-2 p-1 origin-top-right divide-y divide-gray-100 rounded-xl shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-10"
+        :style="`top: ${props.position.top}; right: ${props.position.right}; bottom: ${props.position.bottom}; left: ${props.position.left};`"
         :class="isOpen ? 'block' : 'hidden'"
       >
-        <div class="tooltip_field grid grid-cols-1">
+        <div class="tooltip_field grid grid-cols-1" v-if="!isEdit">
           <div>
             <span>Name:</span>
-            <h1 v-if="!isEdit" class="text-sm font-semibold text-center">
+            <h1 class="text-sm font-semibold text-center">
               {{ payload.title }}
             </h1>
-            <input type="text" v-else v-model="payload.title" />
           </div>
           <div>
             <span>Description:</span>
@@ -165,7 +186,7 @@ const deleteEvent = async () => {
               }}/{{ getCurrentDate(payload.time.date).day }}
             </p>
             <p>{{ getCurrentDate(payload.time.start).hour }}</p>
-            <span>-</span>
+            <p>-</p>
             <p>
               {{ getCurrentDate(payload.time.end).hour }}
             </p>
@@ -201,31 +222,7 @@ const deleteEvent = async () => {
             <p>{{ getCurrentDate(payload.createdAt).hour }}</p>
           </div>
         </div>
-
-        <div class="flex text-sm text-gray-500 pt-1" v-if="isEdit">
-          <button
-            type="button"
-            @click="closeEdit"
-            class="hover:bg-violet-500 hover:text-white group flex justify-center w-full items-start rounded-md p-2"
-          >
-            <Icon
-              icon="material-symbols:cancel-outline-rounded"
-              aria-hidden="true"
-              width="18"
-            />
-            Cancel
-          </button>
-          <button
-            @click="closeEdit"
-            :class="[isValidatePayload ? '' : 'opacity-50 cursor-not-allowed']"
-            :disabled="!isValidatePayload"
-            class="hover:bg-violet-500 hover:text-white group flex justify-center w-full items-start rounded-md p-2"
-          >
-            <Icon icon="ic:outline-save" aria-hidden="true" width="18" />
-            Save
-          </button>
-        </div>
-        <div class="flex text-sm text-gray-500 pt-1" v-else>
+        <div class="flex text-sm text-gray-500 pt-1" v-if="!isEdit">
           <button
             type="button"
             @click="deleteEvent"
@@ -250,6 +247,60 @@ const deleteEvent = async () => {
             Edit
           </button>
         </div>
+
+        <div class="tooltip_field grid grid-cols-1 w-80" v-if="isEdit">
+          <div>
+            <span>Name:</span>
+            <input type="text" v-model="payload.title" />
+          </div>
+          <div>
+            <span>Description:</span>
+            <input type="text" v-model="payload.description" />
+          </div>
+          <div>
+            <span>Location:</span>
+            <input type="text" v-model="payload.location" />
+          </div>
+          <div>
+            <span>Time:</span>
+            <input type="date" />
+            <!-- <p>
+              {{ getCurrentDate(payload.time.date).year }}/{{
+                getCurrentDate(payload.time.date).month
+              }}/{{ getCurrentDate(payload.time.date).day }}
+            </p> -->
+            <HourSelect @select="getHourStart($event)" />
+            <span>to</span>
+            <HourSelect @select="getHourEnd($event)" />
+          </div>
+          <div v-if="payload.attendees.length > 0">
+            <span>Attendees:</span>
+            <TagInput :tags="payload.attendees" @input="addAttendees($event)" />
+          </div>
+        </div>
+        <div class="flex text-sm text-gray-500 pt-1" v-if="isEdit">
+          <button
+            type="button"
+            @click="closeEdit"
+            class="hover:bg-violet-500 hover:text-white group flex justify-center w-full items-start rounded-md p-2"
+          >
+            <Icon
+              icon="material-symbols:cancel-outline-rounded"
+              aria-hidden="true"
+              width="18"
+            />
+            Cancel
+          </button>
+          <button
+            @click="updateEvent"
+            :class="[isValidatePayload ? '' : 'opacity-50 cursor-not-allowed']"
+            :disabled="!isValidatePayload"
+            class="hover:bg-violet-500 hover:text-white group flex justify-center w-full items-start rounded-md p-2"
+          >
+            <Icon icon="ic:outline-save" aria-hidden="true" width="18" />
+            Save
+          </button>
+        </div>
       </div>
     </transition>
   </Menu>
@@ -258,16 +309,25 @@ const deleteEvent = async () => {
 <style lang="scss" scoped>
 .tooltip_field > div {
   display: flex;
+  align-items: center;
   gap: 0.5rem;
   padding: 0.5rem;
+  width: 100%;
 
   span {
     font-weight: 400;
     font-size: 0.8em;
+    width: 4rem;
   }
 
   p {
     font-weight: 600;
+  }
+  input {
+    border: 1px solid #ccc;
+    border-radius: 0.5rem;
+    height: 2rem;
+    width: 100%;
   }
 }
 </style>

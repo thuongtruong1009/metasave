@@ -75,6 +75,39 @@ function onQueryDate(dataModel: any) {
   payload.start = dataModel.startDate;
   payload.end = dataModel.endDate;
 }
+
+const calculatePositionToolTip = (
+  childIndexVertical: number,
+  parentHeightVertical: number,
+  childIndexHorinzontal: number,
+  parentLengthHorinzontal: number
+) => {
+  if ((childIndexVertical / parentHeightVertical) * 100 < 50) {
+    if ((childIndexHorinzontal / parentLengthHorinzontal) * 100 < 50) {
+      return {
+        top: "0",
+        right: "100%",
+      };
+    } else {
+      return {
+        top: "0",
+        left: "100%",
+      };
+    }
+  } else {
+    if ((childIndexHorinzontal / parentLengthHorinzontal) * 100 < 50) {
+      return {
+        bottom: "0",
+        right: "100%",
+      };
+    } else {
+      return {
+        bottom: "0",
+        left: "100%",
+      };
+    }
+  }
+};
 </script>
 
 <template>
@@ -191,7 +224,20 @@ function onQueryDate(dataModel: any) {
                 'px',
             }"
           >
-            <Tooltip :data="event" @delete-event="handleGetAllEvents" />
+            <Tooltip
+              :data="event"
+              :position="
+                calculatePositionToolTip(
+                  getHourIndex(getCurrentDate(event.time.start).hour),
+                  personalHours.length,
+                  getDiffPeriod(event.time.date, getAllDaysWeek[6].iso)
+                    .diffDays - 1,
+                  daysOfWeek.length
+                )
+              "
+              @delete-event="handleGetAllEvents"
+              @update-event="handleGetAllEvents"
+            />
           </div>
         </tbody>
       </table>

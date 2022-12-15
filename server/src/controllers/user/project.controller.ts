@@ -25,10 +25,29 @@ const createProject = async (req: any, res: Response): Promise<void> => {
 
 const getAllProjects = async (req: any, res: Response): Promise<void> => {
   try {
-    let access: string =
-      req.query.access && req.query.access === "private"
-        ? req.query.access
-        : "public";
+    let access: string = req.query.access;
+
+    if (access === "all") {
+      const total = await Project.countDocuments({
+        owner: req.user.id,
+      });
+      const projects = await Project.find(
+        {
+          owner: req.user.id,
+        },
+        "_id props members isFavorite name access categoryId createdAt",
+        { sort: { createdAt: -1 }, skip: 0, limit: req.query.limit }
+      );
+      const lastUpdated = await Project.find(
+        {
+          owner: req.user.id,
+        },
+        "updatedAt",
+        { sort: { createdAt: -1 }, limit: 1 }
+      );
+      res.status(200).send({ total, lastUpdated, projects });
+      return;
+    }
 
     const total = await Project.countDocuments({
       owner: req.user.id,
