@@ -3,9 +3,14 @@ import axiosConfig from "./axios.service";
 const PROJECT = "/project";
 
 class ProjectService {
-  async getProjects(sort: string, filter: string, limit: number): Promise<any> {
+  async getProjects(
+    access: string,
+    limit: number,
+    sort: string,
+    filter: string
+  ): Promise<any> {
     return await axiosConfig.get(
-      `${PROJECT}?sort=${sort}&filter=${filter}&limit=${limit}`
+      `${PROJECT}?access=${access}&limit=${limit}&sort=${sort}&filter=${filter}`
     );
   }
 

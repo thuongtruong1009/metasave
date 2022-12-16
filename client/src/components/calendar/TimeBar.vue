@@ -20,7 +20,7 @@ setInterval(() => {
 <template>
   <div class="flex items-center">
     <div
-      class="timebar_coordinate bg-[#2EA52C] text-white text-xs font-medium h-5 w-12 ml-5 pr-1 flex items-center justify-center rounded-md"
+      class="timebar_coordinate bg-[#2EA52C] text-white text-xs font-medium h-6 w-12 ml-5 px-1 rounded-md"
     >
       {{ time }}
     </div>

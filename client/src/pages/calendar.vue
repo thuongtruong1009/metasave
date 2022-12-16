@@ -1,9 +1,16 @@
 <script setup lang="ts">
-import { reactive, ref, computed, onMounted, watchEffect } from "vue";
+import { computed, reactive, ref, watchEffect } from "vue";
 import { useElementSize } from "@vueuse/core";
 import { Icon } from "@iconify/vue";
 import { personalHours, daysOfWeek } from "@/shared/time";
-import { getCurrentDate, getDiffPeriod } from "@/helpers/date";
+import {
+  getCurrentDate,
+  getDiffPeriod,
+  getDateFormat,
+  getListDaysOfWeek,
+  getISOFormat,
+  getWeekNo,
+} from "@/helpers/date";
 import { truncateString, sliceString } from "@/utils/string";
 import TimeBar from "@/components/calendar/TimeBar.vue";
 import DatePicker from "@/components/calendar/DatePicker.vue";
@@ -11,7 +18,9 @@ import Tooltip from "@/components/calendar/Tooltip.vue";
 import { IEvent } from "@/types";
 import CreateEvent from "@/components/calendar/CreateEvent.vue";
 import EventService from "@/services/event.service";
+import ScreenShot from "@/components/calendar/ScreenShot.vue";
 
+const screenShot = ref<any>(null);
 const headSize = ref(null);
 const bodySize = ref(null);
 
@@ -34,46 +43,85 @@ const getPositionTimebar = (parentHeight: number) => {
   ).toFixed(2);
   return index;
 };
-
-watchEffect(async () => {
-  await EventService.getAllEvents();
+const payload = reactive({
+  present: "organizer",
+  start: getListDaysOfWeek(
+    getWeekNo(new Date()),
+    getCurrentDate(new Date()).year
+  ).startDayInWeek,
+  end: getListDaysOfWeek(getWeekNo(new Date()), getCurrentDate(new Date()).year)
+    .endDayInWeek,
 });
 
-const listEvents: Array<IEvent> = reactive([
-  {
-    id: 1,
-    title: "Meeting with client",
-    start: "2022-12-06T11:00:00",
-    end: "2022-12-06T13:00:00",
-    color: "blue-100",
-  },
-  {
-    id: 2,
-    title: "Meeting with client",
-    start: "2022-12-09T08:00:00",
-    end: "2022-12-09T10:00:00",
-    color: "green-100",
-  },
-  {
-    id: 3,
-    title: "Meeting with client",
-    start: "2022-12-10T08:00:00",
-    end: "2022-12-10T10:00:00",
-    color: "green-100",
-  },
-]);
+const events = ref([]);
 
-// {"organizer":"638e20cf7cc65d797b25f52b","title":"event 1","description":"description","time":{"start":"8:00","end":"15:00","date":"2022-12-07"},"location":"okeee nha","attendees":["638e1c2be9056c12612c6194","638e1c2be9056c12612c6194"],"colorId":"638e1c2be9056c12612c618b","_id":"63905b9ae453cdda233e4c5a","createdAt":"2022-12-07T09:23:38.172Z","updatedAt":"2022-12-07T09:23:38.172Z","__v":0}
+const handleGetAllEvents = async () => {
+  const { data } = await EventService.getAllEvents(
+    payload.present,
+    payload.start,
+    payload.end
+  );
+  console.log(data);
+  events.value = data.events;
+};
+
+const getAllDaysWeek = computed(
+  () => getListDaysOfWeek(getWeekNo(new Date(payload.start)), 2022).days
+);
+watchEffect(() => {
+  handleGetAllEvents();
+});
+
+function onQueryDate(dataModel: any) {
+  payload.start = dataModel.startDate;
+  payload.end = dataModel.endDate;
+}
+
+const calculatePositionToolTip = (
+  childIndexVertical: number,
+  parentHeightVertical: number,
+  childIndexHorinzontal: number,
+  parentLengthHorinzontal: number
+) => {
+  if ((childIndexVertical / parentHeightVertical) * 100 < 50) {
+    if ((childIndexHorinzontal / parentLengthHorinzontal) * 100 < 50) {
+      return {
+        top: "0",
+        right: "100%",
+      };
+    } else {
+      return {
+        top: "0",
+        left: "100%",
+      };
+    }
+  } else {
+    if ((childIndexHorinzontal / parentLengthHorinzontal) * 100 < 50) {
+      return {
+        bottom: "0",
+        right: "100%",
+      };
+    } else {
+      return {
+        bottom: "0",
+        left: "100%",
+      };
+    }
+  }
+};
 </script>
 
 <template>
-  <section class="ml-5 p-5 bg-white dark:bg-gray-700 rounded-2xl w-full">
-    <div class="flex justify-between items-center mb-5">
+  <section class="p-5 bg-white dark:bg-gray-700 rounded-2xl w-full">
+    <div class="flex justify-between items-center mb-2">
       <h1 class="text-2xl font-semibold">
         {{ getCurrentDate(new Date()).monthName }}
         {{ getCurrentDate(new Date()).year }}
       </h1>
-      <DatePicker />
+      <div class="flex items-center gap-5">
+        <ScreenShot :data="screenShot" />
+        <DatePicker @query-date="onQueryDate($event)" />
+      </div>
     </div>
 
     <div
@@ -81,12 +129,16 @@ const listEvents: Array<IEvent> = reactive([
     >
       <table
         class="w-full text-sm text-left text-gray-500 dark:text-gray-400 rounded-2xl"
+        ref="screenShot"
       >
         <thead
-          class="text-xs bg-purple-100 dark:bg-gray-600 sticky top-0 rounded-t-3xl z-10"
+          class="text-xs bg-purple-100 dark:bg-gray-600 sticky top-0 rounded-t-3xl z-20"
         >
           <tr>
-            <th class="py-5 flex justify-center w-full" ref="headSize">
+            <th
+              class="py-5 flex justify-center items-center w-full"
+              ref="headSize"
+            >
               <button type="button" class="rounded-lg hover:bg-green-100">
                 <Icon icon="material-symbols:chevron-left-rounded" width="26" />
               </button>
@@ -96,28 +148,26 @@ const listEvents: Array<IEvent> = reactive([
             </th>
             <th
               class="text-center relative"
-              v-for="(day, i) in daysOfWeek"
+              v-for="(item, i) in getAllDaysWeek"
               :key="i"
             >
               <div
-                class="absolute top-2 left-1/3 w-min h-min rounded-lg py-1 px-3 flex flex-col justify-center items-center"
+                class="absolute top-2 left-1/3 w-min h-min rounded-lg pb-2.5 px-3 flex flex-col justify-center items-center"
                 :class="[
-                  getCurrentDate(new Date()).day ===
-                  getCurrentDate(new Date()).startDayInWeek + i
+                  getCurrentDate(new Date()).day === item.day
                     ? 'bg-purple-500 text-white shadow-lg shadow-gray-400/50 dark:shadow-gray-600'
                     : 'text-black',
                 ]"
               >
                 <h3 class="text-xl font-semibold">
-                  {{ getCurrentDate(new Date()).startDayInWeek + i }}
+                  {{ item.day }}
                 </h3>
                 <span
                   :class="{
                     'text-gray-400':
-                      getCurrentDate(new Date()).day !==
-                      getCurrentDate(new Date()).startDayInWeek + i,
+                      getCurrentDate(new Date()).day !== item.day,
                   }"
-                  >{{ sliceString(day, 3) }}</span
+                  >{{ sliceString(item.name, 3) }}</span
                 >
               </div>
             </th>
@@ -141,24 +191,28 @@ const listEvents: Array<IEvent> = reactive([
               v-for="i in daysOfWeek.length"
               :key="i"
             >
-              <CreateEvent class="absolute inset-0" />
+              <CreateEvent
+                class="absolute inset-0"
+                @created="handleGetAllEvents"
+              />
             </td>
           </tr>
           <div
             class="absolute p-1 z-1 dark:text-gray-300"
-            v-for="event in listEvents"
-            :key="event.id"
+            v-for="event in events"
+            :key="event._id"
             :style="{
-              right:
-                ((getCalendarSize.bodyWidth - getCalendarSize.headWidth) *
-                  (getCurrentDate(new Date()).endDayInWeek -
-                    getCurrentDate(new Date(event.start)).day)) /
-                  daysOfWeek.length +
-                'px',
               top:
                 (getCalendarSize.bodyHeight *
-                  getHourIndex(getCurrentDate(event.start).hour)) /
+                  getHourIndex(getCurrentDate(event.time.start).hour)) /
                   personalHours.length +
+                'px',
+              right:
+                ((getCalendarSize.bodyWidth - getCalendarSize.headWidth) *
+                  (getDiffPeriod(event.time.date, getAllDaysWeek[6].iso)
+                    .diffDays -
+                    1)) /
+                  daysOfWeek.length +
                 'px',
               width:
                 (getCalendarSize.bodyWidth - getCalendarSize.headWidth) /
@@ -166,18 +220,24 @@ const listEvents: Array<IEvent> = reactive([
                 'px',
               height:
                 (getCalendarSize.bodyHeight *
-                  getDiffPeriod(event.start, event.end).diffHours) /
+                  getDiffPeriod(event.time.start, event.time.end).diffHours) /
                   18 +
                 'px',
             }"
           >
             <Tooltip
-              :props="{
-                color: event.color,
-                title: event.title,
-                start: getCurrentDate(event.start).hour,
-                end: getCurrentDate(event.end).hour,
-              }"
+              :data="event"
+              :position="
+                calculatePositionToolTip(
+                  getHourIndex(getCurrentDate(event.time.start).hour),
+                  personalHours.length,
+                  getDiffPeriod(event.time.date, getAllDaysWeek[6].iso)
+                    .diffDays - 1,
+                  daysOfWeek.length
+                )
+              "
+              @delete-event="handleGetAllEvents"
+              @update-event="handleGetAllEvents"
             />
           </div>
         </tbody>

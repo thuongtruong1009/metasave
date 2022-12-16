@@ -26,9 +26,12 @@ const getAllEvents = async (req: any, res: Response) => {
         { organizer: req.user.id },
         { "time.date": queryDateTimePeriod(req.query.start, req.query.end) }
       );
-      const events = await Event.find({
-        "time.date": queryDateTimePeriod(req.query.start, req.query.end),
-      });
+      const events = await Event.find(
+        {
+          "time.date": queryDateTimePeriod(req.query.start, req.query.end),
+        },
+        "title time updatedAt"
+      ).populate("colorId", "name");
       res.status(200).send({ total, events });
     }
     if (req.query.present === "participant") {
@@ -38,8 +41,9 @@ const getAllEvents = async (req: any, res: Response) => {
       );
       const events = await Event.find(
         { attendees: { $in: req.user.id } },
-        { "time.date": queryDateTimePeriod(req.query.start, req.query.end) }
-      );
+        { "time.date": queryDateTimePeriod(req.query.start, req.query.end) },
+        "title time updatedAt"
+      ).populate("colorId", "name");
       res.status(200).send({ total, events });
     }
   } catch (error) {
@@ -49,9 +53,10 @@ const getAllEvents = async (req: any, res: Response) => {
 
 const getEventById = async (req: any, res: Response) => {
   try {
-    const event = await Event.findById(req.params.id, {
-      "time.date": queryDateTimePeriod(req.query.start, req.query.end),
-    });
+    const event = await Event.findById(req.params.id)
+      .populate("colorId", "name")
+      .populate("organizer", "username avatar")
+      .populate("attendees", "username avatar");
     res.status(200).send(event);
   } catch (error) {
     res.status(500).send(error);

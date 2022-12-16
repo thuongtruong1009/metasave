@@ -15,6 +15,7 @@ const selectedHour = ref<string>(personalHours[0]);
 const emit = defineEmits<{
   (event: "select", hour: string): void;
 }>();
+
 watchEffect(() => {
   emit("select", selectedHour.value);
 });

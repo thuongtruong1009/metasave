@@ -1,8 +1,12 @@
 import axiosConfig from "./axios.service";
 
+const EVENT = "/event";
+
 class EventService {
-  getAllEvents() {
-    return axiosConfig.get("/event");
+  getAllEvents(present: string, startDate: string, endDate: string) {
+    return axiosConfig.get(
+      `${EVENT}?present=${present}&start=${startDate}&end=${endDate}`
+    );
   }
 
   getEventById(id: string) {

@@ -9,18 +9,9 @@ import { isStarted } from "nprogress";
 const router = useRouter();
 
 defineProps<{
-  bgColor: {
-    type: string;
-    required: true;
-  };
-  progressColor: {
-    type: string;
-    required: true;
-  };
-  project: {
-    type: Object;
-    required: true;
-  };
+  bgColor: string;
+  progressColor: string;
+  project: any;
 }>();
 
 const emit = defineEmits<{

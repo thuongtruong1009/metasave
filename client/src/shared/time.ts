@@ -1,8 +1,8 @@
 export const personalHours: Array<string> = [
-  "6:00",
-  "7:00",
-  "8:00",
-  "9:00",
+  "06:00",
+  "07:00",
+  "08:00",
+  "09:00",
   "10:00",
   "11:00",
   "12:00",
@@ -20,13 +20,13 @@ export const personalHours: Array<string> = [
 ];
 
 export const daysOfWeek: Array<string> = [
+  "Sunday",
   "Monday",
   "Tuesday",
   "Wednesday",
   "Thursday",
   "Friday",
   "Saturday",
-  "Sunday",
 ];
 
 export const monthsOfYear: Array<string> = [

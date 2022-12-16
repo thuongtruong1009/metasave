@@ -1,58 +1,46 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import AvatarTag from "./calendar/AvatarTag.vue";
+import SearchUser from "./calendar/SearchUser.vue";
+import { IUserTag } from "@/types";
 
 const props = defineProps<{
-  tags: string[];
+  tags: Array<IUserTag>;
 }>();
-
-const newTag = ref<string>("");
 
 const emit = defineEmits<{
-  (event: "input", tag: Array<string>): void;
+  (event: "update-tag", tag: Array<IUserTag>): void;
 }>();
 
-const addTag = () => {
-  if (
-    newTag.value.trim().length === 0 ||
-    props.tags.includes(newTag.value.trim())
-  ) {
+const addTag = (tag: IUserTag) => {
+  if (props.tags.includes(tag)) {
     return;
   }
-  emit("input", [...props.tags, newTag.value.trim()]);
-  newTag.value = "";
+  emit("update-tag", [...props.tags, tag]);
 };
 
-const removeTag = (tag: string) => {
+const removeTag = (tagId: string) => {
   emit(
-    "input",
-    props.tags.filter((t) => t !== tag)
+    "update-tag",
+    props.tags.filter((tag: IUserTag) => tag._id !== tagId)
   );
 };
 </script>
 
 <template>
   <div
-    class="flex flex-wrap border rounded-lg w-full my-3 max-h-24 overflow-y-scroll"
+    class="flex flex-wrap border rounded-lg w-full max-h-24 overflow-y-scroll"
   >
-    <span
-      v-for="(tag, i) in tags"
-      :key="i"
-      class="inline-flex items-center text-sm bg-[#bcdefa] text-[#1c3d5a] rounded-md m-1 pl-1.5 py-1.5 pr-3 relative"
-    >
-      <span>{{ tag }}</span>
-      <button
-        type="button"
-        class="text-[##2779bd] text-lg absolute -top-2 right-0"
-        @click="removeTag(tag)"
-      >
-        &times;
-      </button>
-    </span>
-    <input
-      class="tags-input-text flex-1"
-      :placeholder="`Add attendees...`"
-      @keydown.space.prevent="addTag"
-      v-model="newTag"
-    />
+    <div v-for="tag in props.tags" :key="tag._id">
+      <AvatarTag
+        :user="{
+          _id: tag._id,
+          username: tag.username,
+          avatar: tag.avatar,
+        }"
+        @delete-user="removeTag(tag._id)"
+      />
+    </div>
+    <SearchUser @add-user="addTag($event)" />
   </div>
 </template>

@@ -1,4 +1,4 @@
-export const projectBoxColors = [
+export const projectBoxColors: any = [
   {
     bg: "#FEE4CB",
     progress: "#FF942E",
