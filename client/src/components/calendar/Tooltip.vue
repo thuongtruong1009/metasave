@@ -7,6 +7,7 @@ import EventService from "@/services/event.service";
 import AvatarTag from "@/components/calendar/AvatarTag.vue";
 import HourSelect from "./HourSelect.vue";
 import TagInput from "../TagInput.vue";
+import ColorSet from "./ColorSet.vue";
 
 const props = defineProps<{
   data: {
@@ -30,8 +31,6 @@ const props = defineProps<{
     left?: string;
   };
 }>();
-
-console.log(props.position);
 
 const payload = reactive({
   time: {
@@ -70,9 +69,9 @@ const getEventById = async (eventId: string) => {
 };
 
 const isOpen = ref<boolean>(false);
-const openTooltip = (status: boolean) => {
-  isOpen.value = status;
-  //getEventById(props.data._id);
+const openTooltip = () => {
+  isOpen.value = !isOpen.value;
+  getEventById(props.data._id);
 };
 
 const isEdit = ref<boolean>(false);
@@ -106,14 +105,26 @@ const emits = defineEmits<{
   (event: "update-event"): void;
 }>();
 
-const addAttendees = (attendee: any) => {
-  payload.attendees = attendee;
+const updateAttendees = (attendees: any) => {
+  payload.attendees = attendees;
 };
+
+const dateInputUpdate = ref(
+  getDateFormat(
+    getCurrentDate(props.data.time.date).year,
+    getCurrentDate(props.data.time.date).month,
+    getCurrentDate(props.data.time.date).day
+  )
+);
 const getHourStart = (hour: string) => {
-  payload.time.start = getISOFormat(payload.time.date, hour);
+  payload.time.start = getISOFormat(dateInputUpdate.value, hour);
 };
 const getHourEnd = (hour: string) => {
-  payload.time.end = getISOFormat(payload.time.date, hour);
+  payload.time.end = getISOFormat(dateInputUpdate.value, hour);
+};
+
+const setColor = (color: string) => {
+  payload.colorId.name = color;
 };
 
 const updateEvent = async () => {
@@ -135,12 +146,10 @@ const deleteEvent = async () => {
     as="div"
     class="relative inline-block text-left w-full w-full h-full rounded-lg break-words whitespace-pre-wrap p-1.5 text-sm hover:shadow-lg dark:bg-gray-600"
     :class="`bg-[${props.data.colorId.name}]`"
-    @mouseover="openTooltip(true)"
-    @mouseout="openTooltip(false)"
-    @mouseenter="getEventById(props.data._id)"
   >
     <div
       class="flex flex-col justify-center items-center h-full cursor-pointer"
+      @click="openTooltip"
     >
       <h1 class="font-semibold overflow-ellipsis whitespace-nowrap">
         {{ props.data.title }}
@@ -159,7 +168,7 @@ const deleteEvent = async () => {
       leave-to-class="transform scale-95 opacity-0"
     >
       <div
-        class="absolute w-max bg-white mx-2 p-1 origin-top-right divide-y divide-gray-100 rounded-xl shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-10"
+        class="absolute w-max bg-white mx-2 p-1 origin-top-right divide-y divide-gray-100 rounded-xl shadow-xl ring-1 ring-black ring-opacity-5 focus:outline-none z-10"
         :style="`top: ${props.position.top}; right: ${props.position.right}; bottom: ${props.position.bottom}; left: ${props.position.left};`"
         :class="isOpen ? 'block' : 'hidden'"
       >
@@ -197,14 +206,35 @@ const deleteEvent = async () => {
           </div>
           <div v-if="payload.attendees.length > 0">
             <span>Attendees:</span>
-            <div v-for="attendent in payload.attendees" :key="attendent._id">
-              <AvatarTag
-                :attendent="{
-                  _id: attendent._id,
-                  username: attendent.username,
-                  avatar: attendent.avatar,
-                }"
-                @delete-attendent="deleteAttendent(attendent._id)"
+            <div class="flex -space-x-2" v-if="payload.attendees.length > 5">
+              <img
+                class="w-6 h-6 rounded-full border-2 border-white dark:border-gray-800"
+                :src="`${
+                  payload.attendees[i]
+                    ? payload.attendees[i].avatar
+                    : 'https://as2.ftcdn.net/v2/jpg/03/49/49/79/1000_F_349497933_Ly4im8BDmHLaLzgyKg2f2yZOvJjBtlw5.jpg'
+                }`"
+                alt="attendent_avatar_img"
+                v-for="(avatar, i) in 5"
+                :key="i"
+              />
+              <a
+                class="flex justify-center items-center w-6 h-6 text-xs font-medium text-white bg-gray-700 rounded-full border-2 border-white hover:bg-gray-600 dark:border-gray-800"
+                href=""
+                >{{ payload.attendees.length - 5 }}</a
+              >
+            </div>
+            <div class="flex -space-x-2" v-else>
+              <img
+                class="w-6 h-6 rounded-full border-2 border-white dark:border-gray-800"
+                :src="`${
+                  payload.attendees[i]
+                    ? payload.attendees[i].avatar
+                    : 'https://as2.ftcdn.net/v2/jpg/03/49/49/79/1000_F_349497933_Ly4im8BDmHLaLzgyKg2f2yZOvJjBtlw5.jpg'
+                }`"
+                alt="attendent_avatar_img"
+                v-for="(avatar, i) in payload.attendees.length"
+                :key="i"
               />
             </div>
           </div>
@@ -226,7 +256,7 @@ const deleteEvent = async () => {
           <button
             type="button"
             @click="deleteEvent"
-            class="hover:bg-violet-500 hover:text-white group flex justify-center w-full items-start rounded-md p-2"
+            class="hover:bg-violet-500 hover:text-white group flex justify-center w-full items-start rounded-md p-2 hover:shadow-md"
           >
             <Icon
               icon="material-symbols:delete-outline-rounded"
@@ -237,7 +267,7 @@ const deleteEvent = async () => {
           </button>
           <button
             @click="openEdit"
-            class="hover:bg-violet-500 hover:text-white group flex justify-center w-full items-start rounded-md p-2"
+            class="hover:bg-violet-500 hover:text-white group flex justify-center w-full items-start rounded-md p-2 hover:shadow-md"
           >
             <Icon
               icon="material-symbols:edit-outline"
@@ -258,31 +288,39 @@ const deleteEvent = async () => {
             <input type="text" v-model="payload.description" />
           </div>
           <div>
+            <span>Color:</span>
+            <ColorSet
+              :currentColor="payload.colorId._id"
+              @choose="setColor($event)"
+            />
+          </div>
+          <div>
             <span>Location:</span>
             <input type="text" v-model="payload.location" />
           </div>
           <div>
             <span>Time:</span>
-            <input type="date" />
-            <!-- <p>
-              {{ getCurrentDate(payload.time.date).year }}/{{
-                getCurrentDate(payload.time.date).month
-              }}/{{ getCurrentDate(payload.time.date).day }}
-            </p> -->
+            <input type="date" v-model="dateInputUpdate" />
+          </div>
+          <div>
+            <span>Period:</span>
             <HourSelect @select="getHourStart($event)" />
-            <span>to</span>
+            <p>to</p>
             <HourSelect @select="getHourEnd($event)" />
           </div>
-          <div v-if="payload.attendees.length > 0">
+          <div>
             <span>Attendees:</span>
-            <TagInput :tags="payload.attendees" @input="addAttendees($event)" />
+            <TagInput
+              :tags="payload.attendees"
+              @add-tag="updateAttendees($event)"
+            />
           </div>
         </div>
         <div class="flex text-sm text-gray-500 pt-1" v-if="isEdit">
           <button
             type="button"
             @click="closeEdit"
-            class="hover:bg-violet-500 hover:text-white group flex justify-center w-full items-start rounded-md p-2"
+            class="hover:bg-violet-500 hover:text-white group flex justify-center w-full items-start rounded-md p-2 hover:shadow-md"
           >
             <Icon
               icon="material-symbols:cancel-outline-rounded"
@@ -295,7 +333,7 @@ const deleteEvent = async () => {
             @click="updateEvent"
             :class="[isValidatePayload ? '' : 'opacity-50 cursor-not-allowed']"
             :disabled="!isValidatePayload"
-            class="hover:bg-violet-500 hover:text-white group flex justify-center w-full items-start rounded-md p-2"
+            class="hover:bg-violet-500 hover:text-white group flex justify-center w-full items-start rounded-md p-2 hover:shadow-md"
           >
             <Icon icon="ic:outline-save" aria-hidden="true" width="18" />
             Save

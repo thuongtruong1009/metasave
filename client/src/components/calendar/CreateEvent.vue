@@ -9,6 +9,7 @@ import HourSelect from "./HourSelect.vue";
 import ColorSet from "./ColorSet.vue";
 import TagInput from "@/components/TagInput.vue";
 import { getCurrentDate, getDateFormat, getISOFormat } from "@/helpers/date";
+import { IUserTag } from "@/types";
 
 const router = useRouter();
 
@@ -19,10 +20,23 @@ function closeModal(): void {
 function openModal(): void {
   isOpen.value = true;
 }
-const payload = reactive({
+const payload: any = reactive({
   title: "",
   description: "",
-  attendees: ["638e1c2be9056c12612c6194", "638e1c2be9056c12612c6194"],
+  attendees: [
+    {
+      _id: "1",
+      username: "Wade Cooper",
+      avatar:
+        "https://as2.ftcdn.net/v2/jpg/03/49/49/79/1000_F_349497933_Ly4im8BDmHLaLzgyKg2f2yZOvJjBtlw5.jpg",
+    },
+    {
+      _id: "2",
+      username: "Arlene Mccoy",
+      avatar:
+        "https://as2.ftcdn.net/v2/jpg/03/49/49/79/1000_F_349497933_Ly4im8BDmHLaLzgyKg2f2yZOvJjBtlw5.jpg",
+    },
+  ],
   time: {
     start: "",
     end: "",
@@ -40,8 +54,8 @@ const chooseColor = (colorId: string) => {
   payload.colorId = colorId;
 };
 
-const addAttendees = (attendee: Array<string>) => {
-  payload.attendees = attendee;
+const addAttendees = (attendees: any) => {
+  payload.attendees = attendees;
 };
 
 const validateHour = (hour: string) => {};
@@ -61,11 +75,11 @@ const checkInput = computed(
 );
 
 const emits = defineEmits<{
-  (e: 'created'): void;
+  (e: "created"): void;
 }>();
 const handleCreateProject = async () => {
   await EventService.createEvent(payload);
-  emits('created');
+  emits("created");
   closeModal();
 };
 </script>
@@ -139,7 +153,12 @@ const handleCreateProject = async () => {
           </div>
         </div>
 
-        <TagInput :tags="payload.attendees" @input="addAttendees($event)" />
+        <div>
+          <span class="text-gray-400 dark:text-gray-600 text-sm font-medium"
+            >Attendees</span
+          >
+          <TagInput :tags="payload.attendees" @add-tag="addAttendees($event)" />
+        </div>
 
         <label
           for="simple-search"

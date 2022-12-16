@@ -15,7 +15,7 @@ const emits = defineEmits<{
   (e: "query-date", dataModel: IQueryDate): void;
 }>();
 
-const date = ref(new Date());
+const date = ref([new Date(), new Date()]);
 
 const handleDate = (dataModel: any) => {
   date.value = dataModel;
@@ -29,6 +29,7 @@ const handleDate = (dataModel: any) => {
     dataModel[1].getMonth() + 1,
     dataModel[1].getDate()
   );
+  console.log(dataModel);
   emits("query-date", { startDate, endDate });
 };
 </script>
@@ -44,7 +45,6 @@ const handleDate = (dataModel: any) => {
     menuClassName="dp-custom-menu"
     calendarCellClassName="dp-custom-cell"
     :enableTimePicker="false"
-    hideOffsetDates
     @update:modelValue="handleDate"
   />
 </template>

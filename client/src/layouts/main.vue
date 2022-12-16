@@ -17,7 +17,7 @@ import Footer from "@/components/Footer.vue";
     <div class="flex h-min w-full mb-5">
       <LeftNavigation class="min-h-full" />
       <div class="flex flex-col items-center w-full ml-5">
-        <div class="flex justify-between item my-5 w-full">
+        <div class="flex justify-between items-center item my-5 w-full">
           <Brand />
           <Search />
           <div class="flex items-end gap-5">

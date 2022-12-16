@@ -50,12 +50,14 @@ const onCopyScreenshot = () => {
 <template>
   <Modal :status="isOpen" @close="closeModal">
     <template #openBtn>
-      <div @click="openModal" class="w-full h-full">
+      <div
+        @click="openModal"
+        class="shadow-md rounded-lg hover:bg-gray-50 cursor-pointer"
+      >
         <img
-          class="cursor-pointer mr-5"
+          class="m-2 w-8"
           src="https://img.icons8.com/dusk/512/compact-camera.png"
           alt="camera_img"
-          width="36"
           title="Screenshot events"
         />
       </div>
