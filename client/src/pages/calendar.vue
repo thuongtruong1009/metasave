@@ -61,7 +61,6 @@ const handleGetAllEvents = async () => {
     payload.start,
     payload.end
   );
-  console.log(data);
   events.value = data.events;
 };
 
@@ -115,8 +114,8 @@ const calculatePositionToolTip = (
   <section class="p-5 bg-white dark:bg-gray-700 rounded-2xl w-full">
     <div class="flex justify-between items-center mb-2">
       <h1 class="text-2xl font-semibold">
-        {{ getCurrentDate(new Date()).monthName }}
-        {{ getCurrentDate(new Date()).year }}
+        {{ getCurrentDate(new Date(payload.start)).monthName }}
+        {{ getCurrentDate(new Date(payload.start)).year }}
       </h1>
       <div class="flex items-center gap-5">
         <ScreenShot :data="screenShot" />

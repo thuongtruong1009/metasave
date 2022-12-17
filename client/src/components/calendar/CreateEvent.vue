@@ -23,20 +23,7 @@ function openModal(): void {
 const payload: any = reactive({
   title: "",
   description: "",
-  attendees: [
-    {
-      _id: "1",
-      username: "Wade Cooper",
-      avatar:
-        "https://as2.ftcdn.net/v2/jpg/03/49/49/79/1000_F_349497933_Ly4im8BDmHLaLzgyKg2f2yZOvJjBtlw5.jpg",
-    },
-    {
-      _id: "2",
-      username: "Arlene Mccoy",
-      avatar:
-        "https://as2.ftcdn.net/v2/jpg/03/49/49/79/1000_F_349497933_Ly4im8BDmHLaLzgyKg2f2yZOvJjBtlw5.jpg",
-    },
-  ],
+  attendees: [],
   time: {
     start: "",
     end: "",
@@ -57,8 +44,6 @@ const chooseColor = (colorId: string) => {
 const addAttendees = (attendees: any) => {
   payload.attendees = attendees;
 };
-
-const validateHour = (hour: string) => {};
 
 const getHourStart = (hour: string) => {
   payload.time.start = getISOFormat(payload.time.date, hour);
@@ -157,7 +142,10 @@ const handleCreateProject = async () => {
           <span class="text-gray-400 dark:text-gray-600 text-sm font-medium"
             >Attendees</span
           >
-          <TagInput :tags="payload.attendees" @add-tag="addAttendees($event)" />
+          <TagInput
+            :tags="payload.attendees"
+            @update-tag="addAttendees($event)"
+          />
         </div>
 
         <label

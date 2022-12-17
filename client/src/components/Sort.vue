@@ -9,29 +9,36 @@ import {
 } from "@headlessui/vue";
 import { Icon } from "@iconify/vue";
 
-const people = [
+const options = [
   { name: "Default (all)" },
-  { name: "Alphabet key" },
-  { name: "Created init" },
-  { name: "Updated recent" },
-  { name: "Access modified" },
+  { name: "Alphabet (a-z)" },
+  { name: "Created (oldest)" },
+  { name: "Updated (latest)" },
+  { name: "Access (private)" },
 ];
-const selectedPerson = ref(people[0]);
+const selectedOption = ref(options[0]);
 </script>
 
 <template>
-  <Listbox v-model="selectedPerson" class="w-36">
+  <Listbox v-model="selectedOption" class="w-40">
     <div class="relative">
       <ListboxButton
-        class="relative w-full text-left hover:bg-purple-50 rounded-lg px-3"
+        class="w-full flex items-center hover:bg-purple-50 rounded-lg"
       >
-        <span class="block text-xs font-medium text-gray-400">Sort by:</span>
-        <span class="block truncate text-sm font-semibold">{{
-          selectedPerson.name
-        }}</span>
-        <span class="absolute bottom-0 right-0 flex items-center">
-          <Icon icon="mdi:triangle-small-down" width="20" />
-        </span>
+        <Icon
+          icon="ph:sort-ascending-duotone"
+          height="40"
+          class="text-gray-500"
+        />
+        <div class="relative w-full text-left pl-1">
+          <span class="block text-xs font-medium text-gray-400">Sort by:</span>
+          <span class="block truncate text-sm font-semibold">{{
+            selectedOption.name
+          }}</span>
+          <span class="absolute bottom-0 right-0 flex items-center">
+            <Icon icon="mdi:triangle-small-down" width="20" />
+          </span>
+        </div>
       </ListboxButton>
 
       <transition
@@ -40,13 +47,13 @@ const selectedPerson = ref(people[0]);
         leave-to-class="opacity-0"
       >
         <ListboxOptions
-          class="absolute mt-1 right-0 max-h-60 w-52 overflow-auto rounded-lg bg-white text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+          class="absolute mt-1 right-0 max-h-60 w-max overflow-auto rounded-lg bg-white text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
         >
           <ListboxOption
             v-slot="{ active, selected }"
-            v-for="person in people"
-            :key="person.name"
-            :value="person"
+            v-for="option in options"
+            :key="option.name"
+            :value="option"
             as="template"
           >
             <li
@@ -66,7 +73,7 @@ const selectedPerson = ref(people[0]);
                   selected ? 'font-semibold text-amber-600' : 'font-normal',
                   'block truncate',
                 ]"
-                >{{ person.name }}</span
+                >{{ option.name }}</span
               >
             </li>
           </ListboxOption>
