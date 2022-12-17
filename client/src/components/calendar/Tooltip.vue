@@ -312,7 +312,7 @@ const deleteEvent = async () => {
             <span>Attendees:</span>
             <TagInput
               :tags="payload.attendees"
-              @add-tag="updateAttendees($event)"
+              @update-tag="updateAttendees($event)"
             />
           </div>
         </div>

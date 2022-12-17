@@ -14,6 +14,7 @@ const emits = defineEmits<{
   (event: "add-user", tag: IUserTag): void;
 }>();
 
+// sample data for testing, replace with list user from search query db
 const people = [
   {
     _id: "1",
@@ -63,7 +64,7 @@ const addTag = (tag: IUserTag): void => {
       @after-leave="query = ''"
     >
       <ComboboxOptions
-        class="absolute left-0 top-16 max-h-60 w-full overflow-auto rounded-xl bg-white text-base shadow-lg ring-1 ring-black ring-opacity-5 text-left focus:outline-none sm:text-sm"
+        class="absolute left-0 top-1/4 max-h-60 w-11/12 mx-5 overflow-auto rounded-xl bg-white text-base shadow-lg ring-1 ring-black ring-opacity-5 text-left focus:outline-none sm:text-sm"
       >
         <div
           v-if="filteredPeople.length === 0 && query !== ''"
@@ -81,10 +82,13 @@ const addTag = (tag: IUserTag): void => {
         >
           <li
             class="relative cursor-pointer py-2 pl-10 pr-4 flex items-center gap-2"
-            :class="{
-              'bg-purple-600 text-white': active,
-              'text-gray-900': !active,
-            }"
+            :class="[
+              {
+                'bg-purple-600 text-white': active,
+              },
+              { 'text-gray-900': !active },
+              [selectedId === person] ? 'text-purple-600 bg-white' : '',
+            ]"
             @click="addTag(person)"
           >
             <img
