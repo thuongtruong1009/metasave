@@ -3,8 +3,8 @@ import { ref, computed } from "vue";
 import { Container, Draggable } from "vue3-smooth-dnd";
 import { applyDrag, getRandomEmoji } from "@/utils/helpers";
 import { customBackgrounds, fixedBackgrounds } from "@/shared/background";
-import Navigation from "@/components/project/kanban/Navigation.vue";
-import KanbanItem from "@/components/project/kanban/KanbanItem.vue";
+import Navigation from "@/components/project/board/Navigation.vue";
+import KanbanItem from "@/components/project/board/KanbanItem.vue";
 import type { ICard, IColumn, IScene } from "@/interface/index";
 
 const scene = ref<IScene>({

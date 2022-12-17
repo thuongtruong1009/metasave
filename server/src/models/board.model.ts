@@ -12,13 +12,26 @@ const BoardModel = mongoose.model(
       type: String,
       default: "container",
     },
-    icon: {
-      type: String,
-      default: "ProgressIcon",
-    },
     name: {
       type: String,
       required: true,
+    },
+    description: {
+      type: String,
+      default: "",
+    },
+    isFavorite: {
+      type: Boolean,
+      default: false,
+    },
+    background: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Color",
+      required: true,
+    },
+    customBackground: {
+      type: String,
+      default: "",
     },
     props: {
       orientation: {

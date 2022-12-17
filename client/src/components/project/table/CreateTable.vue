@@ -1,15 +1,9 @@
 <script setup lang="ts">
-import { ref, reactive, computed, watchEffect } from "vue";
+import { ref, reactive, computed } from "vue";
 import { useRouter } from "vue-router";
-import { Switch } from "@headlessui/vue";
 import { Icon } from "@iconify/vue";
-import EventService from "@/services/event.service";
 import Modal from "@/components/Modal.vue";
-import HourSelect from "./HourSelect.vue";
-import ColorSet from "@/components/ColorSet.vue";
-import TagInput from "@/components/TagInput.vue";
-import { getCurrentDate, getDateFormat, getISOFormat } from "@/helpers/date";
-import { IUserTag } from "@/types";
+import BoardService from "@/services/board.service";
 
 const router = useRouter();
 
@@ -20,51 +14,25 @@ function closeModal(): void {
 function openModal(): void {
   isOpen.value = true;
 }
-const payload: any = reactive({
-  title: "",
+
+const payload = reactive({
+  projectId: router.currentRoute.value.params.projectId,
+  name: "",
   description: "",
-  attendees: [],
-  time: {
-    start: "",
-    end: "",
-    date: getDateFormat(
-      getCurrentDate(new Date()).year,
-      getCurrentDate(new Date()).month,
-      getCurrentDate(new Date()).day
-    ),
-  },
-  location: "",
-  colorId: "",
+  icon: "",
 });
 
-const chooseColor = (colorId: string) => {
-  payload.colorId = colorId;
-};
-
-const addAttendees = (attendees: any) => {
-  payload.attendees = attendees;
-};
-
-const getHourStart = (hour: string) => {
-  payload.time.start = getISOFormat(payload.time.date, hour);
-};
-const getHourEnd = (hour: string) => {
-  payload.time.end = getISOFormat(payload.time.date, hour);
-};
-
-const checkInput = computed(
-  () =>
-    payload.title.length > 0 &&
-    payload.time.date !== "" &&
-    payload.colorId !== ""
-);
+const checkInput = computed(() => {
+  return payload.name.length > 0;
+});
 
 const emits = defineEmits<{
-  (e: "created"): void;
+  (e: "create-table"): void;
 }>();
-const handleCreateProject = async () => {
-  await EventService.createEvent(payload);
-  emits("created");
+
+const createBoard = async () => {
+  const { data } = await BoardService.createBoard(payload);
+  emits("create-table");
   closeModal();
 };
 </script>
@@ -72,7 +40,14 @@ const handleCreateProject = async () => {
 <template>
   <Modal :status="isOpen" @close="closeModal">
     <template #openBtn>
-      <div @click="openModal" class="w-full h-full"></div>
+      <button
+        @click="openModal"
+        type="button"
+        class="text-gray-900 bg-gradient-to-r from-red-200 via-red-300 to-yellow-200 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-red-100 dark:focus:ring-red-400 font-medium rounded-lg text-sm px-5 py-2.5 text-center flex justify-center items-center gap-2"
+      >
+        <Icon icon="ant-design:plus-outlined" width="20" />
+        <span>Create new table</span>
+      </button>
     </template>
     <template #title>
       <h1 class="text-2xl">Create new event</h1>
@@ -95,18 +70,10 @@ const handleCreateProject = async () => {
         >
         <input
           type="text"
-          v-model="payload.title"
           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple-500 dark:focus:border-purple-500"
           placeholder="Enter a name for this event"
           required
         />
-
-        <div
-          class="my-3 mt-5 flex items-center gap-5 text-sm text-gray-400 dark:text-gray-600"
-        >
-          <span>Choose color:</span>
-          <ColorSet @choose="chooseColor($event)" />
-        </div>
 
         <label
           for="simple-search"
@@ -115,38 +82,10 @@ const handleCreateProject = async () => {
         >
         <input
           type="text"
-          v-model="payload.location"
           class="mb-3 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple-500 dark:focus:border-purple-500"
           placeholder="Enter a address link or location"
           required
         />
-
-        <div class="grid grid-cols-2 w-full my-3">
-          <div>
-            <input
-              type="date"
-              v-model="payload.time.date"
-              name="date"
-              class="text-blue-700 rounded-lg focus:ring-0 w-full"
-            />
-          </div>
-
-          <div class="flex justify-center items-center gap-3">
-            <HourSelect @select="getHourStart($event)" />
-            <span class="text-gray-400 dark:text-gray-600">to</span>
-            <HourSelect @select="getHourEnd($event)" />
-          </div>
-        </div>
-
-        <div>
-          <span class="text-gray-400 dark:text-gray-600 text-sm font-medium"
-            >Attendees</span
-          >
-          <TagInput
-            :tags="payload.attendees"
-            @update-tag="addAttendees($event)"
-          />
-        </div>
 
         <label
           for="simple-search"
@@ -155,7 +94,6 @@ const handleCreateProject = async () => {
         >
         <textarea
           type="text"
-          v-model="payload.description"
           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple-500 dark:focus:border-purple-500"
           placeholder="Enter a description"
           required
@@ -180,7 +118,7 @@ const handleCreateProject = async () => {
               ? 'opacity-100 bg-blue-100 hover:bg-blue-200 cursor-pointer'
               : 'opacity-50 bg-blue-100 cursor-not-allowed'
           "
-          @click="handleCreateProject"
+          @click="createBoard"
           :disabled="checkInput === false"
         >
           <Icon

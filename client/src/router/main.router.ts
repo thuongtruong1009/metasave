@@ -15,9 +15,9 @@ export default [
         component: () => import("../pages/project/overview.vue"),
         children: [
           {
-            path: "kanban/:kanbanId",
-            name: "kanban",
-            component: () => import("../pages/project/kanban.vue"),
+            path: "board/:boardId",
+            name: "board",
+            component: () => import("../pages/project/board.vue"),
           },
         ],
       },
