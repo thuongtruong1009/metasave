@@ -12,6 +12,10 @@ const CardModel = mongoose.model(
       type: String,
       default: "card",
     },
+    status: {
+      type: Number,
+      required: true,
+    },
     icon: {
       type: String,
       default: "fas fa-clipboard-list",

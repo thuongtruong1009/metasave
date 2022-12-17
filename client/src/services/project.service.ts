@@ -15,7 +15,7 @@ class ProjectService {
   }
 
   async getProjectById(id: string): Promise<any> {
-    return await axiosConfig.get(`${PROJECT}/getProjectById/${id}`);
+    return await axiosConfig.get(`${PROJECT}/${id}`);
   }
 
   async createProject(data: any): Promise<any> {
@@ -27,7 +27,7 @@ class ProjectService {
   }
 
   async deleteProject(id: string): Promise<any> {
-    return await axiosConfig.delete(`${PROJECT}/deleteProject/${id}`);
+    return await axiosConfig.delete(`${PROJECT}/${id}`);
   }
 }
 

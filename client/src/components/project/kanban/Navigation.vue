@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Icon } from "@iconify/vue";
 import BackgroundMenu from "./BackgroundMenu.vue";
-import Combobox from "@/components/project/Combobox.vue";
+import Combobox from "./Combobox.vue";
 
 const props = defineProps<{
   description: string;

@@ -5,14 +5,26 @@ export default [
     component: () => import("../layouts/main.vue"),
     children: [
       {
-        path: "home",
-        name: "home",
-        component: () => import("../pages/home.vue"),
+        path: "projects",
+        name: "projects",
+        component: () => import("../pages/project/index.vue"),
+      },
+      {
+        path: "/project/:projectId",
+        name: "project",
+        component: () => import("../pages/project/overview.vue"),
+        children: [
+          {
+            path: "kanban/:kanbanId",
+            name: "kanban",
+            component: () => import("../pages/project/kanban.vue"),
+          },
+        ],
       },
       {
         path: "calendar",
         name: "calendar",
-        component: () => import("../pages/calendar.vue"),
+        component: () => import("../pages/calendar/index.vue"),
       },
       {
         path: "about",

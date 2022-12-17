@@ -4,8 +4,6 @@ import { useRouter } from "vue-router";
 import { Icon } from "@iconify/vue";
 import ProjectService from "@/services/project.service";
 import { getCurrentDate } from "@/helpers/date";
-import { isStarted } from "nprogress";
-
 const router = useRouter();
 
 defineProps<{
@@ -52,7 +50,7 @@ const onFavorite = async (projectId: string, isFavorite: boolean) => {
       <div class="flex justify-center">
         <h3
           class="text-xl font-semibold text-center my-3 cursor-pointer hover:text-purple-500 hover:underline"
-          @click="openProject"
+          @click="openProject(project._id)"
         >
           {{ project.name }}
         </h3>

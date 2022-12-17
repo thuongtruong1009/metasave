@@ -14,7 +14,7 @@ import Footer from "@/components/Footer.vue";
   <main
     class="home_page px-5 bg-[#F3F6FD] dark:bg-gray-800 relative overflow-x-hidden"
   >
-    <div class="flex h-min w-full mb-5">
+    <div class="flex h-min min-h-[calc(100%-50px)] w-full mb-5">
       <LeftNavigation class="min-h-full" />
       <div class="flex flex-col items-center w-full ml-5">
         <div class="flex justify-between items-center item my-5 w-full">

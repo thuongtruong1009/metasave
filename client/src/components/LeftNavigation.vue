@@ -10,24 +10,28 @@ const matchRoute = (query: string): boolean =>
 
 const toggles: Array<INav> = [
   {
-    path: "/home",
+    path: "/projects",
     icon: "material-symbols:home-outline-rounded",
     width: 42,
+    title: "projects",
   },
   {
     path: "/calendar",
     icon: "material-symbols:calendar-today-outline",
     width: 40,
+    title: "calendar",
   },
   {
     path: "/settings",
     icon: "ep:setting",
     width: 42,
+    title: "settings",
   },
   {
     path: "/about",
     icon: "mdi:about-circle-outline",
     width: 42,
+    title: "about",
   },
 ];
 
@@ -40,7 +44,12 @@ const logout = () => {
 
 <template>
   <nav class="flex flex-col items-center justify-center gap-6">
-    <router-link :to="toggle.path" v-for="(toggle, i) in toggles" :key="i">
+    <router-link
+      :to="toggle.path"
+      v-for="(toggle, i) in toggles"
+      :key="i"
+      :title="toggle.title"
+    >
       <Icon
         :icon="toggle.icon"
         :width="toggle.width"
@@ -58,6 +67,7 @@ const logout = () => {
       width="40"
       class="rounded-full p-2 cursor-pointer hover:bg-[#c3cff4] text-purple-500"
       @click="logout"
+      title="logout"
     />
   </nav>
 </template>
