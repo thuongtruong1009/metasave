@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import cardController from "./card.controller";
 import db from "../../models";
 
 const Project = db.project;
@@ -35,14 +36,42 @@ const getAllBoards = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+const getListBoardsName = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const boards = await Board.find(
+      { projectId: req.params.projectId },
+      "name"
+    );
+    res.status(200).send(boards);
+  } catch (error) {
+    res.status(500).send({ message: error });
+  }
+};
+
 const getBoardById = async (req: Request, res: Response): Promise<void> => {
   try {
-    const board = await Board.findById(req.params.id);
+    const board = await Board.findById(req.params.id, "-cards").populate(
+      "background",
+      "name"
+    );
     if (!board) {
       res.status(404).send({ message: "Board not found" });
       return;
     }
-    res.status(200).send(Board);
+    const cards = await Card.aggregate([
+      {
+        $group: {
+          _id: "$status",
+          total: { $sum: 1 },
+          childrens: { $push: "$$ROOT" },
+        },
+      },
+      { $sort: { _id: 1 } },
+    ]);
+    res.status(200).send({ board, cards });
   } catch (error) {
     res.status(500).send({ message: error });
   }
@@ -79,6 +108,7 @@ const deleteBoard = async (req: Request, res: Response): Promise<void> => {
 const BoardController = {
   createBoard,
   getAllBoards,
+  getListBoardsName,
   getBoardById,
   updateBoard,
   deleteBoard,

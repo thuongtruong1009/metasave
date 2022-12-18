@@ -8,7 +8,11 @@ class BoardService {
   };
 
   getAllBoards = async (projectId: string) => {
-    return await axiosConfig.get(`/project/${projectId}${BOARD}`);
+    return await axiosConfig.get(`/project/${projectId}${BOARD}/all`);
+  };
+
+  getListBoardsName = async (projectId: string) => {
+    return await axiosConfig.get(`/project/${projectId}${BOARD}/name`);
   };
 
   getBoardById = async (id: string) => {

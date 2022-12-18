@@ -8,10 +8,6 @@ const BoardModel = mongoose.model(
       ref: "Project",
       required: true,
     },
-    type: {
-      type: String,
-      default: "container",
-    },
     name: {
       type: String,
       required: true,
@@ -32,12 +28,6 @@ const BoardModel = mongoose.model(
     customBackground: {
       type: String,
       default: "",
-    },
-    props: {
-      orientation: {
-        type: String,
-        default: "vertical",
-      },
     },
     cards: [
       {

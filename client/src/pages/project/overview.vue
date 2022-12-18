@@ -23,8 +23,6 @@ watchEffect(async () => {
   getAllBoards();
 });
 
-// {"props":{"orientation":"horizontal"},"_id":"639934a400daa0b3ec71a528","owner":{"_id":"638e20cf7cc65d797b25f52b","username":"user01"},"type":"container","name":"Project của Thịnh","access":"private","description":"Trùm OS","categoryId":"2","members":[],"isFavorite":false,"background":"#ffffff","customBackground":"","boards":[],"startDate":"2022-12-14T02:22:48.970Z","endDate":"2022-12-14T02:22:48.970Z","createdAt":"2022-12-14T02:27:48.989Z","updatedAt":"2022-12-17T07:04:14.218Z","__v":0}
-
 const isOpenInside = computed(() => {
   return router.currentRoute.value.path.includes("board");
 });
@@ -44,7 +42,7 @@ const goToBoard = (boardId: string) => {
             :to="goToBoard(board._id)"
             v-for="board in payget.boards"
             :key="board._id"
-            >Board {{ board.name }}</router-link
+            >{{ board.name }}</router-link
           >
         </div>
         <CreateBoard @create-board="getAllBoards" />

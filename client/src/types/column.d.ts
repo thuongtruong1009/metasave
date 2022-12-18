@@ -1,7 +1,7 @@
-import type { ICard } from "./index";
+import type { ICard } from "./card";
 
 export type IColumn = {
-  id: string;
+  _id: number;
   type: string;
   icon: string;
   name: string;

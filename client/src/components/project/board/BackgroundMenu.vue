@@ -7,7 +7,7 @@ import { Icon } from "@iconify/vue";
   <div class="w-max z-10">
     <Menu as="div" class="relative inline-block text-left">
       <MenuButton
-        class="inline-flex w-full justify-center rounded-md bg-white/20 px-4 py-2 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
+        class="inline-flex w-full justify-center rounded-md bg-gray-300 px-4 py-2 text-sm font-medium hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
       >
         Background
         <Icon icon="mdi:chevron-down" />

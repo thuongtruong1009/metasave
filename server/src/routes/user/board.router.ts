@@ -19,9 +19,15 @@ class BoardRouter implements IRouter {
     );
 
     this.router.get(
-      `/project/:projectId${this.path}`,
+      `/project/:projectId${this.path}/all`,
       verifyAuth.verifyToken,
       boardController.getAllBoards
+    );
+
+    this.router.get(
+      `/project/:projectId${this.path}/name`,
+      verifyAuth.verifyToken,
+      boardController.getListBoardsName
     );
 
     this.router.get(
