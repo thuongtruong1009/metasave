@@ -4,6 +4,8 @@ import { Draggable } from "vue3-smooth-dnd";
 import { Icon } from "@iconify/vue";
 import CardService from "@/services/card.service";
 import SpinLoading from "@/components/icons/SpinLoading.vue";
+import CardOption from "./CardOption.vue";
+import Tag from "./Tag.vue";
 
 const props = defineProps<{
   item: {
@@ -16,7 +18,11 @@ const props = defineProps<{
 
 const isOpenMenu = ref(false);
 const onOpenMenu = () => {
-  isOpenMenu.value = !isOpenMenu.value;
+  isOpenMenu.value = true;
+};
+
+const onCloseMenu = () => {
+  isOpenMenu.value = false;
 };
 
 const emits = defineEmits<{
@@ -42,44 +48,56 @@ const deleteCard = async () => {
         <SpinLoading />
         <span>Saving...</span>
       </div>
-      <div class="p-4">
-        <div class="flex justify-between items-start">
+      <div
+        class="p-2 flex justify-between h-24"
+        @mousemove="onOpenMenu"
+        @mouseleave="onCloseMenu"
+      >
+        <div class="flex">
           <div
-            class="rounded-lg bg-primary p-2 w-max h-max inline-block box-content"
+            class="rounded-lg bg-primary w-10 h-10 flex justify-center items-center"
           >
-            <p>{{ props.item.icon }}</p>
+            <span>{{ props.item.icon }}</span>
           </div>
-
-          <Icon icon="mdi:tag-multiple" />
-
-          <span
-            @click="onOpenMenu"
-            class="card_item_option--icon cursor-pointer hidden w-7 h-7 flex text-center rounded-full hover:bg-gray-300"
-            >⋯</span
-          >
-          <div
-            class="card_item_option--menu absolute top-0 right-0"
-            v-if="isOpenMenu"
-          >
-            <Transition>
-              <ul
-                class="absolute top-10 right-5 w-max bg-white rounded-lg shadow-lg p-2 text-left text-sm cursor-pointer"
-              >
-                <li>Edit</li>
-                <li>Copy card link</li>
-                <li @click="deleteCard">Remove from column</li>
-              </ul>
-            </Transition>
+          <div class="flex flex-col justify-around mx-3">
+            <h3 class="">{{ props.item.text }}</h3>
+            <Tag />
           </div>
         </div>
-        <p>{{ props.item.text }}</p>
+        <Transition name="slide-fade">
+          <div class="flex flex-col justify-between" v-if="isOpenMenu">
+            <span
+              class="cursor-pointer w-7 h-7 flex justify-center items-center rounded-full opacity-60 hover:opacity-100 hover:bg-gray-200"
+              ><Icon icon="material-symbols:edit"
+            /></span>
+            <span
+              class="cursor-pointer w-7 h-7 flex justify-center items-center rounded-full opacity-60 hover:opacity-100 hover:bg-gray-200"
+              ><Icon icon="ic:baseline-share"
+            /></span>
+            <span
+              @click="deleteCard"
+              class="cursor-pointer w-7 h-7 flex justify-center items-center rounded-full opacity-60 hover:opacity-100 hover:bg-gray-200"
+              ><Icon icon="material-symbols:delete-outline-rounded"
+            /></span>
+          </div>
+        </Transition>
       </div>
     </div>
   </Draggable>
 </template>
 
 <style scoped>
-.card_item:hover .card_item_option--icon {
-  display: block;
+.slide-fade-enter-active {
+  transition: all 0.3s ease-out;
+}
+
+.slide-fade-leave-active {
+  transition: all 0.2s cubic-bezier(1, 0.5, 0.8, 1);
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  transform: translateX(20px);
+  opacity: 0;
 }
 </style>

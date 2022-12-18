@@ -34,7 +34,7 @@ const goToBoard = (boardId: string) => {
 </script>
 
 <template>
-  <section class="p-5 bg-white dark:bg-gray-700 rounded-2xl w-full">
+  <section class="bg-white dark:bg-gray-700 rounded-2xl w-full">
     <div class="grid grid-cols-2 gap-10" v-if="!isOpenInside">
       <div class="bg-green-50 rounded-xl flex flex-col items-center p-5">
         <div class="flex justify-around mb-10">

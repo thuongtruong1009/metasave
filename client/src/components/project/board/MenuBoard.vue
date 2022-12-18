@@ -27,11 +27,11 @@ watchEffect(async () => {
 </script>
 
 <template>
-  <div class="w-60 z-10">
+  <div class="w-max z-10">
     <Listbox v-model="selectedBoard">
-      <div class="relative mt-1">
+      <div class="relative">
         <ListboxButton
-          class="relative flex items-center w-full cursor-pointer rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
+          class="relative flex items-center w-full cursor-pointer rounded-lg bg-white hover:bg-gray-50 dark:bg-gray-600 dark:text-gray-300 py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
         >
           <Icon icon="octicon:project-roadmap-24" />
           <span class="block truncate ml-1.5">{{ selectedBoard?.name }}</span>

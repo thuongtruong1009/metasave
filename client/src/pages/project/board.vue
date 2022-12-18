@@ -2,7 +2,7 @@
 import { ref, reactive, watchEffect, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { Container, Draggable } from "vue3-smooth-dnd";
-import { applyDrag, getRandomEmoji } from "@/utils/helpers";
+import { applyDrag, getRandomEmoji } from "@/helpers/kanban";
 import { customBackgrounds, fixedBackgrounds } from "@/shared/background";
 import Navigation from "@/components/project/board/Navigation.vue";
 import KanbanItem from "@/components/project/board/KanbanItem.vue";
@@ -31,32 +31,20 @@ let payload = reactive<IBoardPayload>({
   groups: [
     {
       _id: 1,
-      icon: "ProgressIcon",
+      icon: "TodoIcon",
       name: "todo",
-      props: {
-        orientation: "vertical",
-      },
-      type: "container",
       children: [],
     },
     {
       _id: 2,
       icon: "ProgressIcon",
-      name: "in-progressing",
-      props: {
-        orientation: "vertical",
-      },
-      type: "container",
+      name: "progressing",
       children: [],
     },
     {
       _id: 3,
-      icon: "ProgressIcon",
+      icon: "DoneIcon",
       name: "done",
-      props: {
-        orientation: "vertical",
-      },
-      type: "container",
       children: [],
     },
   ],
@@ -73,17 +61,14 @@ const getBoardById = async () => {
   payload.customBackground = data.board.customBackground;
   payload.createdAt = data.board.createdAt;
   payload.updatedAt = data.board.updatedAt;
-  payload.groups[0].children = data.cards[0]?.childrens;
-  payload.groups[1].children = data.cards[1]?.childrens;
-  payload.groups[2].children = data.cards[2]?.childrens;
-  // payload.groups.forEach((group: any, index: number) => {
-  // group._id = data.cards[index]?._id;
-  // group.children = data.cards[index]?.childrens;
-  // group.props = {
-  //   orientation: "vertical",
-  // };
-  // group.type = "container";
-  // });
+  payload.groups.forEach((group: any, index: number) => {
+    group._id = data.cards[index]?._id;
+    group.children = data.cards[index]?.childrens || [];
+    group.props = {
+      orientation: "vertical",
+    };
+    group.type = "container";
+  });
 };
 
 watchEffect(() => {
@@ -102,16 +87,10 @@ const openColumnSetting = () => {
   isOpenColumnSetting.value = !isOpenColumnSetting.value;
 };
 
-const getCardPayload = (columnId: number) => {
-  return (index: string) => {
-    return payload.groups.filter((p: IColumn) => p._id === columnId)[0]
-      .children[Number(index)];
-  };
-};
 const getCardLengthByColumnId = (columnId: number): number => {
   let result = payload.groups?.find((p: IColumn) => p._id === columnId)
-    ?.children?.length;
-  return result ? result : 0;
+    ?.children.length;
+  return result;
 };
 
 const showProcess = computed(() => {
@@ -121,11 +100,12 @@ const showProcess = computed(() => {
       getCardLengthByColumnId(2) +
       getCardLengthByColumnId(3));
 
-  const format = Number(result.toFixed(2)) * 100;
+  const format = result;
   return format === 0 ? 0 : format;
 });
 
 const onAddNewCard = async (status: number) => {
+  console.log("status", status);
   const newCard: ICard = {
     boardId: payload._id,
     text: "Card new(nhap)",
@@ -140,8 +120,8 @@ const onAddNewCard = async (status: number) => {
 const onColumnDrop = (dropResult: any) => {
   const view = Object.assign({}, payload);
   payload.groups = applyDrag(view.groups, dropResult);
-  // payload = view;
 };
+
 const onCardDrop = (dropResult: any, columnId: number) => {
   if (dropResult.removedIndex !== null || dropResult.addedIndex !== null) {
     const view = Object.assign({}, payload);
@@ -157,34 +137,41 @@ const onCardDrop = (dropResult: any, columnId: number) => {
     }
 
     newColumn.children = applyDrag(newColumn.children, dropResult);
-    view.groups.splice(itemIndex, 1, newColumn);
-    payload = view;
+
+    payload.groups.splice(itemIndex, 1, newColumn);
   }
+};
+
+const getCardPayload = (columnId: number) => {
+  return (index: number) => {
+    return payload.groups.filter((p: IColumn) => p._id === columnId)[0]
+      .children[index];
+  };
 };
 </script>
 
 <template>
   <section
-    class="flex flex-col w-full overflow-y-hidden bg-cover bg-center bg-no-repeat"
+    class="flex flex-col w-full overflow-y-hidden bg-cover bg-center bg-no-repeat rounded-xl p-5 shadow-md dark:bg-gray-700"
     :class="`bg-[${getBackground}]`"
   >
     <Navigation :description="payload.description" :progress="showProcess" />
 
     <Container
-      class="h-full flex overflow-x-auto gap-8 p-8"
+      class="h-full flex justify-between flex-wrap overflow-x-auto"
       group-name="cols"
       tag="div"
       orientation="horizontal"
       @drop="onColumnDrop($event)"
     >
       <Draggable
-        class="parent_column bg-gradient-to-r from-violet-200 to-pink-200 dark:bg-gray-700 rounded-lg h-full w-96 flex-shrink-0 shadow-xl"
+        class="parent_column bg-white dark:bg-gray-600 dark:text-gray-300 rounded-xl h-full w-96 flex-shrink-0 shadow-lg m-5"
         v-for="column in payload.groups"
         :key="column._id"
       >
         <div class="h-128 flex flex-col">
           <div
-            class="cursor-move rounded-t-lg p-4 space-x-4 bg-primary text-white flex justify-between space-x-2"
+            class="cursor-move rounded-t-xl p-4 space-x-4 bg-primary dark:bg-purple-700 text-white flex justify-between space-x-2"
           >
             <div class="flex item-center">
               <img
