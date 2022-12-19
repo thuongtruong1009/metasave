@@ -11,7 +11,7 @@ import {
   getISOFormat,
   getWeekNo,
 } from "@/helpers/date";
-import { truncateString, sliceString } from "@/utils/string";
+import { truncateString, sliceString } from "@/utils/format";
 import TimeBar from "@/components/calendar/TimeBar.vue";
 import DatePicker from "@/components/calendar/DatePicker.vue";
 import Tooltip from "@/components/calendar/Tooltip.vue";

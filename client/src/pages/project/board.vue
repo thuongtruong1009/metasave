@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import { ref, reactive, watchEffect, computed, onMounted } from "vue";
+import { ref, reactive, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { Container, Draggable } from "vue3-smooth-dnd";
 import { applyDrag, getRandomEmoji } from "@/helpers/kanban";
-import { customBackgrounds, fixedBackgrounds } from "@/shared/background";
 import Navigation from "@/components/project/board/Navigation.vue";
 import KanbanItem from "@/components/project/board/KanbanItem.vue";
-import type { ICard, IColumn, IBoardPayload } from "@/types";
+import type { IColumn, IBoardPayload } from "@/types";
 import BoardService from "@/services/board.service";
-import CardService from "@/services/card.service";
 import CreateCard from "@/components/project/board/CreateCard.vue";
+import { fixedPercent } from "@/utils/format";
+import Setting from "@/components/project/board/Setting.vue";
 
 const router = useRouter();
 
@@ -26,7 +26,7 @@ let payload = reactive<IBoardPayload>({
     _id: "",
     name: "",
   },
-  customBackground: customBackgrounds[4],
+  customBackground: "",
   createdAt: "",
   updatedAt: "",
   groups: [
@@ -60,9 +60,7 @@ const getBoardById = async () => {
   payload.createdAt = data.board.createdAt;
   payload.updatedAt = data.board.updatedAt;
   payload.groups.forEach((group: any, index: number) => {
-    group._id = data.cards[index]?._id;
     group.children = data.cards[index]?.childrens || [];
-    group.total = data.cards[index]?.total || 0;
     group.props = {
       orientation: "vertical",
     };
@@ -70,7 +68,7 @@ const getBoardById = async () => {
   });
 };
 
-watchEffect(() => {
+onMounted(() => {
   getBoardById();
 });
 
@@ -81,35 +79,26 @@ const getBackground = computed(() => {
   return payload.background.name;
 });
 
-const isOpenColumnSetting = ref(false);
-const openColumnSetting = () => {
-  isOpenColumnSetting.value = !isOpenColumnSetting.value;
-};
-
 const getCardLengthByColumnId = (columnId: number): number => {
-  let result = payload.groups?.find((p: IColumn) => p._id === columnId)?.total;
+  let result = payload.groups?.find((p: IColumn) => p._id === columnId)
+    ?.children?.length;
   return result ? result : 0;
 };
 
-const showProcess = computed(() => {
-  let result: number =
+const showProcess = computed<number>(() =>
+  fixedPercent(
     getCardLengthByColumnId(3) /
-    (getCardLengthByColumnId(1) +
-      getCardLengthByColumnId(2) +
-      getCardLengthByColumnId(3));
-  return Number.parseFloat(result.toFixed(2));
-});
+      (getCardLengthByColumnId(1) +
+        getCardLengthByColumnId(2) +
+        getCardLengthByColumnId(3))
+  )
+);
 
-const onAddNewCard = async (status: number, text: string) => {
-  const newCard: ICard = {
-    boardId: payload._id,
-    text: text,
-    status: status,
-    icon: getRandomEmoji(),
+const getCardPayload = (columnId: number) => {
+  return (index: number) => {
+    return payload.groups.filter((p: IColumn) => p._id === columnId)[0]
+      .children[index];
   };
-
-  await CardService.createCard(newCard);
-  getBoardById();
 };
 
 const onColumnDrop = (dropResult: any) => {
@@ -128,24 +117,13 @@ const onCardDrop = (dropResult: any, columnId: number) => {
       dropResult.payload.loading = true;
       setTimeout(() => {
         dropResult.payload.loading = false;
-      }, Math.random() * 1000);
+      }, 1000);
     }
 
     newColumn.children = applyDrag(newColumn.children, dropResult);
 
-    view.groups.splice(itemIndex, 1, newColumn);
-    payload = view;
-
-    //bug at here - not undefined columnid after drop
-    console.log(columnId);
+    payload.groups.splice(itemIndex, 1, newColumn);
   }
-};
-
-const getCardPayload = (columnId: number) => {
-  return (index: number) => {
-    return payload.groups.filter((p: IColumn) => p._id === columnId)[0]
-      .children[index];
-  };
 };
 </script>
 
@@ -154,7 +132,7 @@ const getCardPayload = (columnId: number) => {
     class="flex flex-col w-full overflow-y-hidden bg-cover bg-center bg-no-repeat rounded-xl p-5 shadow-md dark:bg-gray-700"
     :class="`bg-[${getBackground}]`"
   >
-    <Navigation :description="payload.description" :progress="showProcess" />
+    <Navigation :progress="showProcess" :isFavorite="payload.isFavorite" />
 
     <Container
       class="h-full flex justify-between flex-wrap overflow-x-auto"
@@ -189,24 +167,7 @@ const getCardPayload = (columnId: number) => {
               >
                 <span>{{ getCardLengthByColumnId(column._id) }}</span>
               </div>
-              <div
-                class="w-8 h-8 p-1 rounded-full cursor-pointer hover:bg-white/30 flex place-content-center font-bold relative"
-                @click="openColumnSetting"
-              >
-                <span>⋮</span>
-                <div class="absolute z-10 top-10 right-0 w-40">
-                  <Transition name="fade">
-                    <ul
-                      v-if="isOpenColumnSetting"
-                      class="bg-white text-gray-600 rounded-lg shadow-lg p-2 text-left"
-                    >
-                      <li>Edit column</li>
-                      <li>Copy column link</li>
-                      <li>Delete column</li>
-                    </ul>
-                  </Transition>
-                </div>
-              </div>
+              <Setting />
             </div>
           </div>
           <Container
@@ -239,7 +200,10 @@ const getCardPayload = (columnId: number) => {
               :item="item"
               @delete-card="getBoardById"
             ></KanbanItem>
-            <CreateCard @create-card="onAddNewCard(column._id, $event)" />
+            <CreateCard
+              :card="{ boardId: payload._id, columnId: column._id }"
+              @create-card="getBoardById"
+            />
           </Container>
         </div>
       </Draggable>

@@ -6,6 +6,7 @@ const Project = db.project;
 const Board = db.board;
 const Card = db.card;
 const Color = db.color;
+const Tag = db.tag;
 
 const deleteUser = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -45,9 +46,19 @@ const getColorCollection = async (req: Request, res: Response) => {
   }
 };
 
+const getTagCollection = async (req: Request, res: Response) => {
+  try {
+    const tags = await Tag.find();
+    res.status(200).send(tags);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
+
 const settingController = {
   deleteUser,
   getColorCollection,
+  getTagCollection,
 };
 
 export default settingController;

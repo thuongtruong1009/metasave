@@ -7,8 +7,12 @@ class CardService {
     return await axiosConfig.post(`${CARD}`, card);
   };
 
-  deleteCard = async (id: string) => {
-    return await axiosConfig.delete(`${CARD}/${id}`);
+  updateCard = async (cardId: string, card: any) => {
+    return await axiosConfig.put(`${CARD}/${cardId}`, card);
+  };
+
+  deleteCard = async (cardId: string) => {
+    return await axiosConfig.delete(`${CARD}/${cardId}`);
   };
 }
 
