@@ -5,6 +5,7 @@ import db from "../../models";
 const Project = db.project;
 const Board = db.board;
 const Card = db.card;
+const Tag = db.tag;
 
 const createBoard = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -53,25 +54,84 @@ const getListBoardsName = async (
 
 const getBoardById = async (req: Request, res: Response): Promise<void> => {
   try {
-    const board = await Board.findById(req.params.id, "-cards").populate(
-      "background",
-      "name"
-    );
+    const board = await Board.findById(
+      req.params.id,
+      "_id projectId name isFavorite customBackground"
+    ).populate("background", "name");
     if (!board) {
       res.status(404).send({ message: "Board not found" });
       return;
     }
+
     const cards = await Card.aggregate([
       {
         $group: {
           _id: "$status",
-          total: { $sum: 1 },
-          childrens: { $push: "$$ROOT" },
+          childrens: {
+            $push: "$$ROOT",
+          },
         },
       },
       { $sort: { _id: 1 } },
     ]);
+
+    //truy van nguoc nested tu tag -> card
+    // const tags = await Tag.aggregate([
+    //   {
+    //     $lookup: {
+    //       from: "cards",
+    //       localField: "_id",
+    //       foreignField: "tagId",
+    //       as: "cards",
+    //       let: { tagId: "$_id" },
+    //       pipeline: [
+    //         {
+    //           $match: {
+    //             $expr: {
+    //               $eq: ["$tagId", "$$tagId"],
+    //             },
+    //           },
+    //         },
+    //       ],
+    //     },
+    //   },
+    // ]);
     res.status(200).send({ board, cards });
+  } catch (error) {
+    res.status(500).send({ message: error });
+  }
+};
+
+const getBoardInfoById = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const board = await Board.findById(req.params.id, "-cards -__v").populate(
+      "projectId",
+      "name"
+    );
+    const totalCard = await Card.countDocuments({ BoardId: req.params.id });
+    const totalCardByTag = await Card.aggregate([
+      {
+        $group: {
+          _id: "$tagId",
+          total: { $sum: 1 },
+        },
+      },
+    ]);
+    const totalCardByStatus = await Card.aggregate([
+      {
+        $group: {
+          _id: "$status",
+          total: { $sum: 1 },
+        },
+      },
+    ]);
+
+    const info = {
+      totalCard,
+      totalCardByTag,
+      totalCardByStatus,
+    };
+    res.status(200).send({ board, info });
   } catch (error) {
     res.status(500).send({ message: error });
   }
@@ -110,6 +170,7 @@ const BoardController = {
   getAllBoards,
   getListBoardsName,
   getBoardById,
+  getBoardInfoById,
   updateBoard,
   deleteBoard,
 };

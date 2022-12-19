@@ -20,15 +20,12 @@ let payload = reactive<IBoardPayload>({
     orientation: "horizontal",
   },
   name: "",
-  description: "",
   isFavorite: false,
   background: {
     _id: "",
     name: "",
   },
   customBackground: "",
-  createdAt: "",
-  updatedAt: "",
   groups: [
     {
       _id: 1,
@@ -53,12 +50,9 @@ const getBoardById = async () => {
   const { data } = await BoardService.getBoardById(boardId);
   payload._id = data.board._id;
   payload.name = data.board.name;
-  payload.description = data.board.description;
   payload.background = data.board.background;
   payload.isFavorite = data.board.isFavorite;
   payload.customBackground = data.board.customBackground;
-  payload.createdAt = data.board.createdAt;
-  payload.updatedAt = data.board.updatedAt;
   payload.groups.forEach((group: any, index: number) => {
     group.children = data.cards[index]?.childrens || [];
     group.props = {

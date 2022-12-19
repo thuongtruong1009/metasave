@@ -7,14 +7,11 @@ export type IBoardPayload = {
     orientation: string;
   };
   name: string;
-  description: string;
   isFavorite: boolean;
   background: {
     _id: string;
     name: string;
   };
   customBackground?: string;
-  createdAt: string;
-  updatedAt: string;
   groups: Array<IColumn> | any;
 };

@@ -36,6 +36,12 @@ class BoardRouter implements IRouter {
       boardController.getBoardById
     );
 
+    this.router.get(
+      `${this.path}/:id/info`,
+      verifyAuth.verifyToken,
+      boardController.getBoardInfoById
+    );
+
     this.router.put(
       `${this.path}/:id`,
       verifyAuth.verifyToken,
