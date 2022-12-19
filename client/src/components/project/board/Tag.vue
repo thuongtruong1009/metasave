@@ -36,7 +36,7 @@ import { Icon } from "@iconify/vue";
     >Pink</span
   > -->
   <span
-    class="bg-pink-100 text-pink-800 text-xs font-semibold mr-2 px-2.5 py-0.5 w-max rounded dark:bg-pink-200 dark:text-pink-900"
+    class="bg-pink-100 text-pink-800 text-xs font-medium px-2.5 py-0.5 w-max rounded-md dark:bg-pink-200 dark:text-pink-900"
     ><Icon
       icon="mdi:tag-multiple"
       class="inline-flex mr-1"

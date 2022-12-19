@@ -9,6 +9,7 @@ import KanbanItem from "@/components/project/board/KanbanItem.vue";
 import type { ICard, IColumn, IBoardPayload } from "@/types";
 import BoardService from "@/services/board.service";
 import CardService from "@/services/card.service";
+import CreateCard from "@/components/project/board/CreateCard.vue";
 
 const router = useRouter();
 
@@ -33,19 +34,16 @@ let payload = reactive<IBoardPayload>({
       _id: 1,
       icon: "TodoIcon",
       name: "todo",
-      children: [],
     },
     {
       _id: 2,
       icon: "ProgressIcon",
       name: "progressing",
-      children: [],
     },
     {
       _id: 3,
       icon: "DoneIcon",
       name: "done",
-      children: [],
     },
   ],
 });
@@ -64,6 +62,7 @@ const getBoardById = async () => {
   payload.groups.forEach((group: any, index: number) => {
     group._id = data.cards[index]?._id;
     group.children = data.cards[index]?.childrens || [];
+    group.total = data.cards[index]?.total || 0;
     group.props = {
       orientation: "vertical",
     };
@@ -88,27 +87,23 @@ const openColumnSetting = () => {
 };
 
 const getCardLengthByColumnId = (columnId: number): number => {
-  let result = payload.groups?.find((p: IColumn) => p._id === columnId)
-    ?.children.length;
-  return result;
+  let result = payload.groups?.find((p: IColumn) => p._id === columnId)?.total;
+  return result ? result : 0;
 };
 
 const showProcess = computed(() => {
-  const result: number =
+  let result: number =
     getCardLengthByColumnId(3) /
     (getCardLengthByColumnId(1) +
       getCardLengthByColumnId(2) +
       getCardLengthByColumnId(3));
-
-  const format = result;
-  return format === 0 ? 0 : format;
+  return Number.parseFloat(result.toFixed(2));
 });
 
-const onAddNewCard = async (status: number) => {
-  console.log("status", status);
+const onAddNewCard = async (status: number, text: string) => {
   const newCard: ICard = {
     boardId: payload._id,
-    text: "Card new(nhap)",
+    text: text,
     status: status,
     icon: getRandomEmoji(),
   };
@@ -138,7 +133,11 @@ const onCardDrop = (dropResult: any, columnId: number) => {
 
     newColumn.children = applyDrag(newColumn.children, dropResult);
 
-    payload.groups.splice(itemIndex, 1, newColumn);
+    view.groups.splice(itemIndex, 1, newColumn);
+    payload = view;
+
+    //bug at here - not undefined columnid after drop
+    console.log(columnId);
   }
 };
 
@@ -191,12 +190,6 @@ const getCardPayload = (columnId: number) => {
                 <span>{{ getCardLengthByColumnId(column._id) }}</span>
               </div>
               <div
-                class="w-8 h-8 p-1 rounded-full cursor-pointer hover:bg-white/30 flex place-content-center font-bold"
-                @click="onAddNewCard(column._id)"
-              >
-                <span>+</span>
-              </div>
-              <div
                 class="w-8 h-8 p-1 rounded-full cursor-pointer hover:bg-white/30 flex place-content-center font-bold relative"
                 @click="openColumnSetting"
               >
@@ -238,7 +231,7 @@ const getCardPayload = (columnId: number) => {
             drop-class="transition duration-100 
             ease-in z-50 transform 
             -rotate-2 scale-90"
-            @drop="(e:any) => onCardDrop(e, column._id)"
+            @drop="(e) => onCardDrop(e, column._id)"
           >
             <KanbanItem
               v-for="item in column.children"
@@ -246,6 +239,7 @@ const getCardPayload = (columnId: number) => {
               :item="item"
               @delete-card="getBoardById"
             ></KanbanItem>
+            <CreateCard @create-card="onAddNewCard(column._id, $event)" />
           </Container>
         </div>
       </Draggable>

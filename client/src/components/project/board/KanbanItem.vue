@@ -32,7 +32,6 @@ const emits = defineEmits<{
 const deleteCard = async () => {
   await CardService.deleteCard(props.item._id);
   emits("delete-card");
-  onOpenMenu();
 };
 </script>
 
@@ -49,7 +48,7 @@ const deleteCard = async () => {
         <span>Saving...</span>
       </div>
       <div
-        class="p-2 flex justify-between h-24"
+        class="p-2 flex justify-between"
         @mousemove="onOpenMenu"
         @mouseleave="onCloseMenu"
       >
@@ -59,7 +58,7 @@ const deleteCard = async () => {
           >
             <span>{{ props.item.icon }}</span>
           </div>
-          <div class="flex flex-col justify-around mx-3">
+          <div class="flex flex-col justify-between gap-3 mx-3">
             <h3 class="">{{ props.item.text }}</h3>
             <Tag />
           </div>
@@ -69,10 +68,6 @@ const deleteCard = async () => {
             <span
               class="cursor-pointer w-7 h-7 flex justify-center items-center rounded-full opacity-60 hover:opacity-100 hover:bg-gray-200"
               ><Icon icon="material-symbols:edit"
-            /></span>
-            <span
-              class="cursor-pointer w-7 h-7 flex justify-center items-center rounded-full opacity-60 hover:opacity-100 hover:bg-gray-200"
-              ><Icon icon="ic:baseline-share"
             /></span>
             <span
               @click="deleteCard"
