@@ -18,9 +18,15 @@ class BoardService {
   getBoardById = async (id: string) => {
     return await axiosConfig.get(`${BOARD}/${id}`);
   };
+
+  getInfoBoard = async (boardId: string) => {
+    return await axiosConfig.get(`${BOARD}/${boardId}/info`);
+  };
+
   updateBoard = async (id: string, board: any) => {
     return await axiosConfig.put(`${BOARD}/${id}`, board);
   };
+
   deleteBoard = async (id: string) => {
     return await axiosConfig.delete(`${BOARD}/${id}`);
   };

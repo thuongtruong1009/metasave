@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, reactive, computed, onMounted } from "vue";
+import { ref, reactive, computed, onMounted, watchEffect } from "vue";
 import { useRouter } from "vue-router";
 import { Container, Draggable } from "vue3-smooth-dnd";
 import { applyDrag, getRandomEmoji } from "@/helpers/kanban";
@@ -10,8 +10,11 @@ import BoardService from "@/services/board.service";
 import CreateCard from "@/components/project/board/CreateCard.vue";
 import { fixedPercent } from "@/utils/format";
 import Setting from "@/components/project/board/Setting.vue";
+import { onScrolToBottom } from "@/helpers/scroll";
+import useTagStore from "@/store/tag";
 
 const router = useRouter();
+const tagStore = useTagStore();
 
 let payload = reactive<IBoardPayload>({
   _id: "",
@@ -30,17 +33,17 @@ let payload = reactive<IBoardPayload>({
     {
       _id: 1,
       icon: "TodoIcon",
-      name: "todo",
+      name: "Todo",
     },
     {
       _id: 2,
       icon: "ProgressIcon",
-      name: "progressing",
+      name: "Progressing",
     },
     {
       _id: 3,
       icon: "DoneIcon",
-      name: "done",
+      name: "Done",
     },
   ],
 });
@@ -64,6 +67,7 @@ const getBoardById = async () => {
 
 onMounted(() => {
   getBoardById();
+  tagStore.getTags();
 });
 
 const getBackground = computed(() => {
@@ -151,7 +155,11 @@ const onCardDrop = (dropResult: any, columnId: number) => {
                 width="20"
                 height="20"
               />
-              <h3 class="text-base ml-2 whitespace-nowrap mt-1">
+              <h3
+                class="text-base ml-2 whitespace-nowrap mt-1"
+                :style="{ 'text-shadow': '0.5px 0.5px 3px #000000' }"
+                @click="onScrolToBottom('#scrollBottom', 'down')"
+              >
                 {{ column.name }}
               </h3>
             </div>
@@ -166,6 +174,7 @@ const onCardDrop = (dropResult: any, columnId: number) => {
           </div>
           <Container
             class="flex-grow overflow-y-auto overflow-x-hidden"
+            id="scrollBottom"
             orientation="vertical"
             group-name="col-items"
             :shouldAcceptDrop="

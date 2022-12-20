@@ -110,6 +110,19 @@ export const getDateFormat = (
   return formated;
 };
 
+export const getTimeFormat = (
+  year: string | number,
+  month: string | number,
+  day: string | number,
+  hour: string | number,
+  minute: string | number
+): string => {
+  let formated = `${year}/${month < 10 ? `0${month}` : month}/${
+    day < 10 ? `0${day}` : day
+  } - ${hour < 10 ? `0${hour}` : hour}:${minute < 10 ? `0${minute}` : minute}`;
+  return formated;
+};
+
 export const getISOFormat = (date: string, hour: string | number): Date => {
   let formated = `${date}T${hour}:00`;
   return formated ? new Date(formated) : new Date();

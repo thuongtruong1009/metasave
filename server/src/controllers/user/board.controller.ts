@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import cardController from "./card.controller";
+import * as object from "mongoose";
+const ObjectId = object.Types.ObjectId;
 import db from "../../models";
 
 const Project = db.project;
@@ -18,8 +20,6 @@ const createBoard = async (req: Request, res: Response): Promise<void> => {
     );
 
     res.status(201).send(savedBoard);
-
-    res.status(200).send(board);
   } catch (error) {
     res.status(500).send({ message: error });
   }
@@ -65,6 +65,11 @@ const getBoardById = async (req: Request, res: Response): Promise<void> => {
 
     const cards = await Card.aggregate([
       {
+        $match: {
+          boardId: new ObjectId(req.params.id),
+        },
+      },
+      {
         $group: {
           _id: "$status",
           childrens: {
@@ -104,12 +109,17 @@ const getBoardById = async (req: Request, res: Response): Promise<void> => {
 
 const getBoardInfoById = async (req: Request, res: Response): Promise<void> => {
   try {
-    const board = await Board.findById(req.params.id, "-cards -__v").populate(
-      "projectId",
-      "name"
+    const board = await Board.findById(
+      req.params.id,
+      "name description createdAt updatedAt"
     );
-    const totalCard = await Card.countDocuments({ BoardId: req.params.id });
+    const totalCard = await Card.countDocuments({ boardId: req.params.id });
     const totalCardByTag = await Card.aggregate([
+      {
+        $match: {
+          boardId: new ObjectId(req.params.id),
+        },
+      },
       {
         $group: {
           _id: "$tagId",
@@ -118,6 +128,11 @@ const getBoardInfoById = async (req: Request, res: Response): Promise<void> => {
       },
     ]);
     const totalCardByStatus = await Card.aggregate([
+      {
+        $match: {
+          boardId: new ObjectId(req.params.id),
+        },
+      },
       {
         $group: {
           _id: "$status",

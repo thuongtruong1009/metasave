@@ -3,13 +3,13 @@ import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
 import { Icon } from "@iconify/vue";
 
 const items = [
-  //   {
-  //     name: "Edit",
-  //     icon: "uil:edit",
-  //   },
   {
     name: "Delete all cards",
     icon: "uil:trash-alt",
+  },
+  {
+    name: "Screenshot",
+    icon: "material-symbols:control-camera",
   },
 ];
 </script>

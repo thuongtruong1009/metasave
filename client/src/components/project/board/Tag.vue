@@ -1,5 +1,7 @@
 <script setup>
 import { Icon } from "@iconify/vue";
+import useTagStore from "@/store/tag";
+const store = useTagStore();
 </script>
 
 <template>
