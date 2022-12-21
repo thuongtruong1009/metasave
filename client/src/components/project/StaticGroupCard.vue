@@ -1,57 +1,51 @@
-<script setup>
-import { ref } from "vue";
+<script setup lang="ts">
+import { reactive, ref, watchEffect } from "vue";
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from "@headlessui/vue";
+import { Icon } from "@iconify/vue";
+import Tag from "@/components/project/board/Tag.vue";
+import useTagStore from "@/store/tag";
+import {
+  IGroupCardByTotal,
+  IGroupCardByTag,
+  IGroupCardByStatus,
+} from "@/types";
+import { getBoardIconbyStatus } from "@/helpers/kanban";
 
-const categories = ref({
-  Overview: [
-    {
-      id: 1,
-      title: "Does drinking coffee make you smarter?",
-      date: "5h ago",
-      commentCount: 5,
-      shareCount: 2,
-    },
-    {
-      id: 2,
-      title: "So you've bought coffee... now what?",
-      date: "2h ago",
-      commentCount: 3,
-      shareCount: 2,
-    },
-  ],
-  "Tag group": [
-    {
-      id: 1,
-      title: "Is tech making coffee better or worse?",
-      date: "Jan 7",
-      commentCount: 29,
-      shareCount: 16,
-    },
-    {
-      id: 2,
-      title: "The most innovative things happening in coffee",
-      date: "Mar 19",
-      commentCount: 24,
-      shareCount: 12,
-    },
-  ],
-  "Status group": [
-    {
-      id: 1,
-      title: "Ask Me Anything: 10 answers to your questions about coffee",
-      date: "2d ago",
-      commentCount: 9,
-      shareCount: 5,
-    },
-    {
-      id: 2,
-      title: "The worst advice we've ever heard about coffee",
-      date: "4d ago",
-      commentCount: 1,
-      shareCount: 2,
-    },
-  ],
+const store = useTagStore();
+
+const props = defineProps<{
+  data: {
+    total: IGroupCardByTotal;
+    groupCardByTag: Array<IGroupCardByTag>;
+    groupCardByStatus: Array<IGroupCardByStatus>;
+  };
+}>();
+
+const infos = reactive([
+  {
+    id: 0,
+    name: "Overview",
+  },
+  {
+    id: 1,
+    name: "Tag group",
+    groups: props.data.groupCardByTag,
+  },
+  {
+    id: 2,
+    name: "Status group",
+    groups: props.data.groupCardByStatus,
+  },
+]);
+
+watchEffect(() => {
+  infos[1].groups = props.data.groupCardByTag;
+  infos[2].groups = props.data.groupCardByStatus;
 });
+
+const getTagNoName = (tagId: string) => {
+  return tagId ? store.getTagName(tagId) : "No name";
+};
 </script>
 
 <template>
@@ -61,9 +55,9 @@ const categories = ref({
         class="flex justify-center space-x-1 rounded-xl bg-purple-100 p-1"
       >
         <Tab
-          v-for="category in Object.keys(categories)"
+          v-for="info in infos"
           as="template"
-          :key="category"
+          :key="info.id"
           v-slot="{ selected }"
         >
           <button
@@ -74,32 +68,92 @@ const categories = ref({
                 : 'text-gray-500 hover:bg-white/[0.12] font-normal',
             ]"
           >
-            {{ category }}
+            {{ info.name }}
           </button>
         </Tab>
       </TabList>
 
       <TabPanels>
-        <TabPanel v-for="(posts, idx) in Object.values(categories)" :key="idx">
-          <ul>
+        <TabPanel v-for="info in infos" :key="info.id">
+          <ul v-if="info.id === 0" class="grid grid-cols-3">
             <li
-              v-for="post in posts"
-              :key="post.id"
+              v-for="i in 3"
+              :key="i"
               class="rounded-md p-3 mt-1 hover:bg-gray-100"
             >
-              <h3 class="text-sm font-medium leading-5">
-                {{ post.title }}
-              </h3>
+              <div class="flex justify-center items-center">
+                <div
+                  class="text-sm font-medium leading-5 rounded-full shadow-md p-0.5 w-7 h-7 flex justify-center items-center ml-1 bg-purple-100"
+                >
+                  <p v-if="i === 1">{{ props.data.total.totalCard }}</p>
+                  <p v-if="i === 2">{{ props.data.total.totalTag }}</p>
+                  <p v-if="i === 3">{{ props.data.total.totalStatus }}</p>
+                </div>
+              </div>
+            </li>
+          </ul>
+          <ul v-if="info.id === 1" class="grid grid-cols-3">
+            <li
+              v-for="(group, i) in info.groups"
+              :key="i"
+              class="rounded-md p-3 mt-1 hover:bg-gray-100"
+            >
+              <div class="flex justify-center items-center">
+                <Tag :tagId="group?._id?._id" />
+                <h3
+                  class="text-sm font-medium leading-5 rounded-full shadow-md p-0.5 w-7 h-7 flex justify-center items-center ml-1"
+                  :class="`bg-[${store.getTagColor(group?._id?._id)}]`"
+                >
+                  {{ group.total }}
+                </h3>
+              </div>
+            </li>
+          </ul>
 
-              <ul
-                class="mt-1 flex space-x-1 text-xs font-normal leading-4 text-gray-500"
-              >
-                <li>{{ post.date }}</li>
-                <li>&middot;</li>
-                <li>{{ post.commentCount }} comments</li>
-                <li>&middot;</li>
-                <li>{{ post.shareCount }} shares</li>
-              </ul>
+          <ul v-if="info.id === 2" class="grid grid-cols-3">
+            <li
+              v-for="(group, i) in info.groups"
+              :key="i"
+              class="rounded-md p-3 mt-1 hover:bg-gray-100"
+            >
+              <div class="flex justify-center items-center">
+                <div
+                  class="text-sm font-medium leading-5 rounded-md shadow-md py-0.5 px-2 flex items-center gap-0.5"
+                  :class="[
+                    group._id === 1
+                      ? 'bg-blue-100 text-blue-700'
+                      : group._id === 2
+                      ? 'bg-yellow-100 text-yellow-700'
+                      : 'bg-green-100 text-green-700',
+                  ]"
+                >
+                  <Icon
+                    :icon="getBoardIconbyStatus(group._id + 1).icon"
+                    width="12"
+                  />
+                  <p>
+                    {{
+                      group._id === 1
+                        ? "Todo"
+                        : group._id === 2
+                        ? "Progress"
+                        : "Done"
+                    }}
+                  </p>
+                </div>
+                <h3
+                  class="text-sm font-medium leading-5 rounded-full shadow-md p-0.5 w-7 h-7 flex justify-center items-center ml-1"
+                  :class="[
+                    group._id === 1
+                      ? 'bg-blue-100 text-blue-700'
+                      : group._id === 2
+                      ? 'bg-yellow-100 text-yellow-700'
+                      : 'bg-green-100 text-green-700',
+                  ]"
+                >
+                  {{ group.total }}
+                </h3>
+              </div>
             </li>
           </ul>
         </TabPanel>

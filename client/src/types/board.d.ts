@@ -1,5 +1,19 @@
-type ICardGroupTotal = {
-  _id: string;
+export type IGroupCardByTotal = {
+  totalCard: number;
+  totalTag: number;
+  totalStatus: number;
+};
+
+export type IGroupCardByTag = {
+  _id: {
+    _id: string;
+    color: string;
+  };
+  total: number;
+};
+
+export type IGroupCardByStatus = {
+  _id: number;
   total: number;
 };
 
@@ -11,8 +25,8 @@ export type IBoardInfoPayget = {
     updatedAt: string;
   };
   info: {
-    totalCard: number;
-    totalCardByTag: Array<ICardGroupTotal>;
-    totalCardByStatus: Array<ICardGroupTotal>;
+    total: IGroupCardByTotal;
+    groupCardByTag: Array<IGroupCardByTag>;
+    groupCardByStatus: Array<IGroupCardByStatus>;
   };
 };

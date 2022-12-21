@@ -113,8 +113,8 @@ const getBoardInfoById = async (req: Request, res: Response): Promise<void> => {
       req.params.id,
       "name description createdAt updatedAt"
     );
-    const totalCard = await Card.countDocuments({ boardId: req.params.id });
-    const totalCardByTag = await Card.aggregate([
+
+    const groupCardByTag = await Card.aggregate([
       {
         $match: {
           boardId: new ObjectId(req.params.id),
@@ -126,8 +126,10 @@ const getBoardInfoById = async (req: Request, res: Response): Promise<void> => {
           total: { $sum: 1 },
         },
       },
+      { $sort: { _id: 1 } },
     ]);
-    const totalCardByStatus = await Card.aggregate([
+    await Tag.populate(groupCardByTag, { path: "_id", select: "-name -__v" });
+    const groupCardByStatus = await Card.aggregate([
       {
         $match: {
           boardId: new ObjectId(req.params.id),
@@ -139,13 +141,26 @@ const getBoardInfoById = async (req: Request, res: Response): Promise<void> => {
           total: { $sum: 1 },
         },
       },
+      { $sort: { _id: 1 } },
     ]);
 
-    const info = {
+    const totalCard = await Card.countDocuments({ boardId: req.params.id });
+    const totalTag = groupCardByTag.length;
+    const totalStatus = groupCardByTag.length;
+
+    const total = {
       totalCard,
-      totalCardByTag,
-      totalCardByStatus,
+      totalTag,
+      totalStatus,
     };
+    console.log(total);
+
+    const info = {
+      total,
+      groupCardByTag,
+      groupCardByStatus,
+    };
+
     res.status(200).send({ board, info });
   } catch (error) {
     res.status(500).send({ message: error });

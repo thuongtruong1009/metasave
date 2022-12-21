@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watchEffect, onMounted } from "vue";
+import { ref, watchEffect } from "vue";
 import {
   Listbox,
   ListboxLabel,
@@ -8,11 +8,17 @@ import {
   ListboxOption,
 } from "@headlessui/vue";
 import { Icon } from "@iconify/vue";
-import SettingService from "@/services/setting.service";
+import useTagStore from "@/store/tag";
+
+const store = useTagStore();
 
 type ITag = {
   _id: string;
   name: string;
+  color: {
+    _id: string;
+    name: string;
+  };
 };
 const tags = ref<Array<ITag>>([]);
 
@@ -27,9 +33,11 @@ const emit = defineEmits<{
 }>();
 
 watchEffect(async () => {
-  const { data } = await SettingService.getTagSet();
-  tags.value = data;
-  emit("update-tag", currentTagId.value ? currentTagId.value : data[0]._id);
+  tags.value = store.getAllTagsNoDefault;
+  emit(
+    "update-tag",
+    currentTagId.value ? currentTagId.value : store.getDefaultTagId
+  );
 });
 </script>
 
@@ -62,7 +70,7 @@ watchEffect(async () => {
               v-slot="{ active, selected }"
               v-for="tag in tags"
               :key="tag._id"
-              :value="tag.name"
+              :value="tag._id"
               as="template"
             >
               <li
@@ -85,7 +93,7 @@ watchEffect(async () => {
                     selected ? 'font-semibold' : 'font-medium',
                     'block truncate',
                   ]"
-                  >{{ tag.name }}</span
+                  >{{ store.getTagName(tag._id) }}</span
                 >
               </li>
             </ListboxOption>

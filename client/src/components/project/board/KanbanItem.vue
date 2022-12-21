@@ -6,8 +6,6 @@ import CardService from "@/services/card.service";
 import SpinLoading from "@/components/icons/SpinLoading.vue";
 import CardOption from "./CardOption.vue";
 import Tag from "./Tag.vue";
-import useTagStore from "@/store/tag";
-const store = useTagStore();
 
 const props = defineProps<{
   item: {
@@ -57,21 +55,13 @@ const deleteCard = async () => {
       >
         <div class="flex">
           <div
-            class="rounded-lg bg-primary w-10 h-10 flex justify-center items-center"
+            class="rounded-lg bg-purple-500 shadow-lg w-10 h-10 flex justify-center items-center"
           >
             <span>{{ props.item.icon }}</span>
           </div>
           <div class="flex flex-col justify-between gap-3 mx-3">
             <h3 class="">{{ props.item.text }}</h3>
-            <!-- <Tag /> -->
-            <span
-              class="bg-pink-100 text-pink-800 text-xs font-medium px-2.5 py-0.5 w-max rounded-md dark:bg-pink-200 dark:text-pink-900"
-              ><Icon
-                icon="mdi:tag-multiple"
-                class="inline-flex mr-1"
-                width="16"
-              />{{ store.getMatchedTag(props.item.tagId) }}</span
-            >
+            <Tag :tagId="props.item.tagId" />
           </div>
         </div>
         <Transition name="slide-fade">

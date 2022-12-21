@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, watchEffect } from "vue";
+import { ref, computed, watchEffect } from "vue";
 import { useRouter } from "vue-router";
 import {
   Listbox,
@@ -13,7 +13,7 @@ import BoardService from "@/services/board.service";
 
 const router = useRouter();
 
-let boards = reactive([]);
+const boards = ref([]);
 
 const selectedBoard = ref();
 
@@ -21,9 +21,21 @@ watchEffect(async () => {
   const { data } = await BoardService.getListBoardsName(
     router.currentRoute.value.params.projectId
   );
-  boards = data;
-  selectedBoard.value = boards[0];
+  boards.value = data;
+  selectedBoard.value = data.find((board) => {
+    return board._id === router.currentRoute.value.params.boardId;
+  });
 });
+
+const isMatchedBoard = (boardId) =>
+  boardId === router.currentRoute.value.params.boardId;
+
+const changeBoard = (boardId) => {
+  selectedBoard.value = boards.value.find((board) => board._id === boardId);
+  router.push(
+    `/project/${router.currentRoute.value.params.projectId}/board/${boardId}`
+  );
+};
 </script>
 
 <template>
@@ -57,37 +69,43 @@ watchEffect(async () => {
             class="absolute mt-1 max-h-60 w-max overflow-auto rounded-lg bg-white text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
           >
             <ListboxOption
-              v-slot="{ active, selected }"
-              v-for="person in boards"
-              :key="person.name"
-              :value="person"
+              v-slot="{ active }"
+              v-for="board in boards"
+              :key="board._id"
+              :value="board._id"
               as="template"
+              @click="changeBoard(board._id)"
             >
               <li
                 :class="[
-                  active ? 'bg-amber-100 text-amber-900' : 'text-gray-900',
-                  'relative cursor-pointer select-none py-2 pl-10 pr-4',
+                  active ? 'bg-purple-100' : '',
+                  'relative py-2 pl-10 pr-4 cursor-pointer',
                 ]"
               >
                 <span
+                  v-if="isMatchedBoard(board._id)"
+                  class="absolute inset-y-0 left-0 flex items-center pl-3 text-purple-600"
+                >
+                  <Icon
+                    icon="material-symbols:check-small-rounded"
+                    width="20"
+                  />
+                </span>
+                <span
                   :class="[
-                    selected ? 'font-medium' : 'font-normal',
+                    isMatchedBoard(board._id)
+                      ? 'font-semibold text-purple-900'
+                      : 'font-normal',
                     'block truncate',
                   ]"
-                  >{{ person.name }}</span
+                  >{{ board.name }}</span
                 >
-                <span
-                  v-if="selected"
-                  class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600"
-                >
-                  <Icon icon="material-symbols:check-small-rounded" />
-                </span>
               </li>
             </ListboxOption>
 
             <li class="p-1">
               <button
-                class="bg-amber-100 text-amber-900 p-2 flex justify-center items-start gap-1 w-full rounded-lg"
+                class="hover:bg-purple-100 border border-dashed border-2 text-amber-900 p-2 flex justify-center items-start gap-1 w-full rounded-lg"
               >
                 <Icon icon="gridicons:create" width="18" />
                 <span>New board</span>

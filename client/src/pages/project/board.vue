@@ -1,8 +1,12 @@
 <script setup lang="ts">
-import { ref, reactive, computed, onMounted, watchEffect } from "vue";
+import { ref, reactive, computed, onMounted, watchEffect, watch } from "vue";
 import { useRouter } from "vue-router";
 import { Container, Draggable } from "vue3-smooth-dnd";
-import { applyDrag, getRandomEmoji } from "@/helpers/kanban";
+import {
+  applyDrag,
+  getRandomEmoji,
+  getBoardIconbyStatus,
+} from "@/helpers/kanban";
 import Navigation from "@/components/project/board/Navigation.vue";
 import KanbanItem from "@/components/project/board/KanbanItem.vue";
 import type { IColumn, IBoardPayload } from "@/types";
@@ -33,24 +37,21 @@ let payload = reactive<IBoardPayload>({
   groups: [
     {
       _id: 1,
-      icon: "TodoIcon",
       name: "Todo",
     },
     {
       _id: 2,
-      icon: "ProgressIcon",
       name: "Progressing",
     },
     {
       _id: 3,
-      icon: "DoneIcon",
       name: "Done",
     },
   ],
 });
 
-const boardId = router.currentRoute.value.params.boardId as string;
 const getBoardById = async () => {
+  let boardId = router.currentRoute.value.params.boardId as string;
   const { data } = await BoardService.getBoardById(boardId);
   payload._id = data.board._id;
   payload.name = data.board.name;
@@ -64,9 +65,10 @@ const getBoardById = async () => {
     };
     group.type = "container";
   });
+  onScrolToBottom("#scrollBottom", "down");
 };
 
-onMounted(() => {
+watchEffect(() => {
   getBoardById();
   tagStore.getTags();
 });
@@ -151,7 +153,7 @@ const onCardDrop = (dropResult: any, columnId: number) => {
           >
             <div class="flex item-center">
               <img
-                :src="`/src/assets/img/${column.icon}.svg`"
+                :src="getBoardIconbyStatus(column._id).img"
                 alt="column_icon"
                 width="20"
                 height="20"
@@ -159,7 +161,6 @@ const onCardDrop = (dropResult: any, columnId: number) => {
               <h3
                 class="text-base ml-2 whitespace-nowrap mt-1"
                 :style="{ 'text-shadow': '0.5px 0.5px 3px #000000' }"
-                @click="onScrolToBottom('#scrollBottom', 'down')"
               >
                 {{ column.name }}
               </h3>

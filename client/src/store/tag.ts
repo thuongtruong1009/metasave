@@ -4,6 +4,10 @@ import SettingService from "../services/setting.service.ts";
 type IResponseTag = {
   _id: string;
   name: string;
+  color: {
+    _id: string;
+    name: string;
+  };
 };
 
 type ITags = {
@@ -26,9 +30,18 @@ const useTagStore = defineStore({
 
   getters: {
     getAllTags: (state) => state,
-    getMatchedTag: (state) => (tagId: string) => {
-      console.log("tagId", tagId);
+    getAllTagsNoDefault: (state) => {
+      let clone = state.tags;
+      return clone.filter((tag) => tag.name !== "");
+    },
+    getTagName: (state) => (tagId: string) => {
       return state.tags.find((tag) => tag._id === tagId)?.name;
+    },
+    getTagColor: (state) => (tagId: string) => {
+      return state.tags.find((tag) => tag._id === tagId)?.color.name;
+    },
+    getDefaultTagId: (state): any => {
+      return state.tags.find((tag) => tag.name === "")?._id;
     },
   },
 });

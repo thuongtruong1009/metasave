@@ -48,7 +48,7 @@ const getColorCollection = async (req: Request, res: Response) => {
 
 const getTagCollection = async (req: Request, res: Response) => {
   try {
-    const tags = await Tag.find();
+    const tags = await Tag.find().populate("color", "-__v").select("-__v");
     res.status(200).send(tags);
   } catch (error) {
     res.status(500).send(error);

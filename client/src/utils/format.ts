@@ -13,5 +13,6 @@ export const sliceString = (str: string, num: number): string => {
 };
 
 export const fixedPercent = (num: number): number => {
-  return Number.parseFloat((num * 100).toFixed(2));
+  let result = Number.parseFloat((num * 100).toFixed(2));
+  return result ? result : 0;
 };

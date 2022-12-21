@@ -21,9 +21,9 @@ let payget = reactive<IBoardInfoPayget>({
     updatedAt: "",
   },
   info: {
-    totalCard: 0,
-    totalCardByTag: [],
-    totalCardByStatus: [],
+    total: {} as any,
+    groupCardByTag: [],
+    groupCardByStatus: [],
   },
 });
 
@@ -112,7 +112,7 @@ const formatTimeStamp = (time: string) => {
           placeholder="Enter description for this board"
           required
         />
-        <StaticGroupCard :data="payget.board" />
+        <StaticGroupCard :data="payget.info" />
         <div
           class="flex justify-between items-center italic text-xs font-medium text-gray-400 w-full"
         >
