@@ -12,6 +12,7 @@ import { fixedPercent } from "@/utils/format";
 import Setting from "@/components/project/board/Setting.vue";
 import { onScrolToBottom } from "@/helpers/scroll";
 import useTagStore from "@/store/tag";
+import CardLoading from "@/components/project/board/CardLoading.vue";
 
 const router = useRouter();
 const tagStore = useTagStore();
@@ -203,6 +204,7 @@ const onCardDrop = (dropResult: any, columnId: number) => {
               :item="item"
               @delete-card="getBoardById"
             ></KanbanItem>
+            <CardLoading v-if="getCardLengthByColumnId(column._id) <= 0" />
             <CreateCard
               :card="{ boardId: payload._id, columnId: column._id }"
               @create-card="getBoardById"
