@@ -39,7 +39,7 @@ const deleteCard = async () => {
 <template>
   <Draggable v-if="props.item">
     <div
-      class="card_item cursor-move my-2 mx-4 rounded-lg shadow-md bg-gray-100 border-transparent relative dark:bg-gray-800 border-2 hover:border-primary"
+      class="card_item cursor-move my-2 mx-4 rounded-lg shadow-md bg-gray-100 dark:bg-gray-500 border-transparent relative border-2 hover:border-primary"
     >
       <div
         v-if="props.item.loading"

@@ -12,6 +12,6 @@ export type IBoardPayload = {
     _id: string;
     name: string;
   };
-  customBackground?: string;
+  customBackground: string;
   groups: Array<IColumn> | any;
 };

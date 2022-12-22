@@ -16,6 +16,7 @@ const emit = defineEmits<{
 const props = defineProps<{
   currentColor?: string | undefined;
 }>();
+
 const currentColor = ref<string | undefined>(props.currentColor);
 
 const chooseColor = (e: Event, colorId: string) => {

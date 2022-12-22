@@ -153,7 +153,7 @@ const getBoardInfoById = async (req: Request, res: Response): Promise<void> => {
       totalTag,
       totalStatus,
     };
-    console.log(total);
+    // console.log(total);
 
     const info = {
       total,

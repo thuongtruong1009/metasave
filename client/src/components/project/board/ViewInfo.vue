@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, reactive, computed } from "vue";
+import { ref, reactive, computed, watch } from "vue";
 import { useRouter } from "vue-router";
 import { Icon } from "@iconify/vue";
 import Modal from "@/components/Modal.vue";
@@ -10,8 +10,13 @@ import { getCurrentDate, getTimeFormat } from "@/helpers/date";
 
 const router = useRouter();
 
-const projectId = router.currentRoute.value.params.projectId as string;
-const boardId = router.currentRoute.value.params.boardId as string;
+let boardId = router.currentRoute.value.params.boardId as string;
+watch(
+  () => router.currentRoute.value.params.boardId,
+  (newVal) => {
+    boardId = newVal as string;
+  }
+);
 
 let payget = reactive<IBoardInfoPayget>({
   board: {
@@ -56,8 +61,7 @@ const formatTimeStamp = (time: string) => {
     getCurrentDate(time).year,
     getCurrentDate(time).month,
     getCurrentDate(time).day,
-    getCurrentDate(time).hour,
-    getCurrentDate(time).minute
+    getCurrentDate(time).hour.split(":")[0]
   );
 };
 </script>

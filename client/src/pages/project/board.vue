@@ -8,7 +8,7 @@ import {
   getBoardIconbyStatus,
 } from "@/helpers/kanban";
 import Navigation from "@/components/project/board/Navigation.vue";
-import KanbanItem from "@/components/project/board/KanbanItem.vue";
+import Card from "@/components/project/board/Card.vue";
 import type { IColumn, IBoardPayload } from "@/types";
 import BoardService from "@/services/board.service";
 import CreateCard from "@/components/project/board/CreateCard.vue";
@@ -74,10 +74,11 @@ watchEffect(() => {
 });
 
 const getBackground = computed(() => {
-  if (payload.customBackground?.length !== 0) {
+  if (payload.customBackground.length > 0) {
     return `url('${payload.customBackground}')`;
+  } else {
+    return payload.background.name;
   }
-  return payload.background.name;
 });
 
 const getCardLengthByColumnId = (columnId: number): number => {
@@ -199,12 +200,12 @@ const onCardDrop = (dropResult: any, columnId: number) => {
             -rotate-2 scale-90"
             @drop="(e) => onCardDrop(e, column._id)"
           >
-            <KanbanItem
+            <Card
               v-for="item in column.children"
               :key="item._id"
               :item="item"
               @delete-card="getBoardById"
-            ></KanbanItem>
+            ></Card>
             <CardLoading v-if="getCardLengthByColumnId(column._id) <= 0" />
             <CreateCard
               :card="{ boardId: payload._id, columnId: column._id }"

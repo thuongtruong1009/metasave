@@ -58,7 +58,7 @@ const changeBoard = (boardId) => {
         </ListboxButton>
 
         <transition
-          enter-active-class="transition duration-100 ease-out"
+          enter-active-class="transition duration-200 ease-out"
           enter-from-class="transform scale-75 opacity-0"
           enter-to-class="transform scale-100 opacity-100"
           leave-active-class="transition duration-110 ease-in"
@@ -66,7 +66,7 @@ const changeBoard = (boardId) => {
           leave-to-class="transform scale-75 opacity-0"
         >
           <ListboxOptions
-            class="absolute mt-1 max-h-60 w-max overflow-auto rounded-lg bg-white text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+            class="absolute left-0 origin-top-left mt-1 max-h-60 w-max overflow-auto rounded-lg bg-white text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
           >
             <ListboxOption
               v-slot="{ active }"

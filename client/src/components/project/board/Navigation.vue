@@ -3,7 +3,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { Icon } from "@iconify/vue";
 import BackgroundMenu from "./BackgroundMenu.vue";
-import MenuBoard from "./MenuBoard.vue";
+import BoardMenu from "./BoardMenu.vue";
 import ViewInfo from "./ViewInfo.vue";
 import BoardService from "@/services/board.service";
 
@@ -25,7 +25,7 @@ const toggleFavorite = async () => {
 <template>
   <div class="flex justify-between items-center gap-5">
     <div class="flex items-end gap-5">
-      <MenuBoard />
+      <BoardMenu />
       <button
         type="button"
         @click="toggleFavorite"
