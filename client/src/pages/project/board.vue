@@ -17,6 +17,7 @@ import Setting from "@/components/project/board/Setting.vue";
 import { onScrolToBottom } from "@/helpers/scroll";
 import useTagStore from "@/store/tag";
 import CardLoading from "@/components/project/board/CardLoading.vue";
+import { kanbanTypes } from "@/shared/kanban";
 
 const router = useRouter();
 const tagStore = useTagStore();
@@ -34,20 +35,7 @@ let payload = reactive<IBoardPayload>({
     name: "",
   },
   customBackground: "",
-  groups: [
-    {
-      _id: 1,
-      name: "Todo",
-    },
-    {
-      _id: 2,
-      name: "Progressing",
-    },
-    {
-      _id: 3,
-      name: "Done",
-    },
-  ],
+  groups: kanbanTypes,
 });
 
 const getBoardById = async () => {
@@ -60,10 +48,6 @@ const getBoardById = async () => {
   payload.customBackground = data.board.customBackground;
   payload.groups.forEach((group: any, index: number) => {
     group.children = data.cards[index]?.childrens || [];
-    group.props = {
-      orientation: "vertical",
-    };
-    group.type = "container";
   });
   onScrolToBottom("#scrollBottom", "down");
 };
@@ -74,11 +58,9 @@ watchEffect(() => {
 });
 
 const getBackground = computed(() => {
-  if (payload.customBackground.length > 0) {
-    return `url('${payload.customBackground}')`;
-  } else {
-    return payload.background.name;
-  }
+  return payload.customBackground.length > 0
+    ? `background-image: url('${payload.customBackground}')`
+    : `background: ${payload.background.name}`;
 });
 
 const getCardLengthByColumnId = (columnId: number): number => {
@@ -132,7 +114,7 @@ const onCardDrop = (dropResult: any, columnId: number) => {
 <template>
   <section
     class="flex flex-col w-full overflow-y-hidden bg-cover bg-center bg-no-repeat rounded-xl p-5 shadow-md dark:bg-gray-700"
-    :class="`bg-[${getBackground}]`"
+    :style="getBackground"
   >
     <Navigation :progress="showProcess" :isFavorite="payload.isFavorite" />
 

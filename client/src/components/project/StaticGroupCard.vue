@@ -9,7 +9,7 @@ import {
   IGroupCardByTag,
   IGroupCardByStatus,
 } from "@/types";
-import { getBoardIconbyStatus } from "@/helpers/kanban";
+import { kanbanTypes } from "@/shared/kanban";
 
 const store = useTagStore();
 
@@ -119,37 +119,16 @@ const getTagNoName = (tagId: string) => {
               <div class="flex justify-center items-center">
                 <div
                   class="text-sm font-medium leading-5 rounded-md shadow-md py-0.5 px-2 flex items-center gap-0.5"
-                  :class="[
-                    group._id === 1
-                      ? 'bg-blue-100 text-blue-700'
-                      : group._id === 2
-                      ? 'bg-yellow-100 text-yellow-700'
-                      : 'bg-green-100 text-green-700',
-                  ]"
+                  :class="kanbanTypes[group._id - 1].palette"
                 >
-                  <Icon
-                    :icon="getBoardIconbyStatus(group._id + 1).icon"
-                    width="12"
-                  />
+                  <Icon :icon="kanbanTypes[group._id].icon" width="12" />
                   <p>
-                    {{
-                      group._id === 1
-                        ? "Todo"
-                        : group._id === 2
-                        ? "Progress"
-                        : "Done"
-                    }}
+                    {{ kanbanTypes[group._id].name }}
                   </p>
                 </div>
                 <h3
                   class="text-sm font-medium leading-5 rounded-full shadow-md p-0.5 w-7 h-7 flex justify-center items-center ml-1"
-                  :class="[
-                    group._id === 1
-                      ? 'bg-blue-100 text-blue-700'
-                      : group._id === 2
-                      ? 'bg-yellow-100 text-yellow-700'
-                      : 'bg-green-100 text-green-700',
-                  ]"
+                  :class="kanbanTypes[group._id - 1].palette"
                 >
                   {{ group.total }}
                 </h3>
