@@ -203,7 +203,12 @@ const signin = (req: Request, res: Response) => {
       const { password, salt, ...userWithoutPassword } = user._doc;
       res
         .status(200)
-        .send({ ...userWithoutPassword, authorities, accessToken });
+        .send({
+          ...userWithoutPassword,
+          authorities,
+          accessToken,
+          refreshToken,
+        });
     });
 };
 
@@ -231,7 +236,7 @@ const refreshToken = (req: Request, res: Response) => {
         httpOnly: true,
         maxAge: 1000 * 60 * 60 * 24 * 365,
         sameSite: "strict",
-        path: "/",
+        // path: "/",
         secure: true,
       });
 

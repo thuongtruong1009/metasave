@@ -24,7 +24,7 @@ const handleSignin = async () => {
     const res = await AuthService.signin(payload);
     if (res.data) {
       await authStore.login(res.data);
-      router.push({ path: "/home" });
+      // router.push({ path: "/home" });
     }
   }
 };

@@ -38,6 +38,37 @@ const useAuthStore = defineStore({
       localStorage.setItem("user", JSON.stringify(user));
     },
 
+    async setCookie(cname: string, cvalue: string, exdays: number) {
+      const d = new Date();
+      d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
+      let expires = "expires=" + d.toUTCString();
+      document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    },
+
+    async getCookie(cname: string) {
+      let name = cname + "=";
+      let ca = document.cookie.split(";");
+      for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == " ") {
+          c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+          return c.substring(name.length, c.length);
+        }
+      }
+      return "";
+    },
+
+    async checkCookie(cname: string, cvalue: string, exdays: number) {
+      let user = await this.getCookie(cname);
+      if (user != "" && user != null) {
+        this.setCookie(cname, cvalue, exdays);
+        return;
+      }
+      return;
+    },
+
     async login(
       userData: IResponseUser & { accessToken: string }
     ): Promise<void> {
@@ -46,8 +77,9 @@ const useAuthStore = defineStore({
         username: userData.username,
         email: userData.email,
       });
-      this.setToken(userData.accessToken);
-      this.setUser(userData);
+      localStorage.setItem("token", userData.accessToken);
+      localStorage.setItem("user", JSON.stringify(userData));
+      this.checkCookie("token", userData.accessToken, 365);
     },
   },
 });
