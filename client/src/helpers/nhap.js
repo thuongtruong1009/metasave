@@ -141,4 +141,4 @@ const getDiffPeriod = (
     return { diffHours, diffDays };
 };
 
-console.log(getDiffPeriod(new Date("2022-12-06T11:00:00Z"), new Date("2022-12-06T13:00:00Z")));
+// console.log(getDiffPeriod(new Date("2022-12-06T11:00:00Z"), new Date("2022-12-06T13:00:00Z")));

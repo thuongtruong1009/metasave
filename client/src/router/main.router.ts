@@ -22,8 +22,8 @@ export default [
         ],
       },
       {
-        path: "calendar",
-        name: "calendar",
+        path: "events",
+        name: "events",
         component: () => import("../pages/calendar/index.vue"),
       },
       {

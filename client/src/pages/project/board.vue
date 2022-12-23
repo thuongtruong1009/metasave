@@ -2,25 +2,24 @@
 import { ref, reactive, computed, onMounted, watchEffect, watch } from "vue";
 import { useRouter } from "vue-router";
 import { Container, Draggable } from "vue3-smooth-dnd";
-import {
-  applyDrag,
-  getRandomEmoji,
-  getBoardIconbyStatus,
-} from "@/helpers/kanban";
+import { applyDrag, getRandomEmoji } from "@/helpers/kanban";
 import Navigation from "@/components/project/board/Navigation.vue";
-import Card from "@/components/project/board/Card.vue";
+import Card from "@/components/project/board/card/Card.vue";
 import type { IColumn, IBoardPayload } from "@/types";
 import BoardService from "@/services/board.service";
-import CreateCard from "@/components/project/board/CreateCard.vue";
+import CreateCard from "@/components/project/board/card/CreateCard.vue";
 import { fixedPercent } from "@/utils/format";
 import Setting from "@/components/project/board/Setting.vue";
 import { onScrolToBottom } from "@/helpers/scroll";
 import useTagStore from "@/store/tag";
-import CardLoading from "@/components/project/board/CardLoading.vue";
+import CardLoading from "@/components/project/board/card/CardLoading.vue";
 import { kanbanTypes } from "@/shared/kanban";
+import UpdateCard from "@/components/project/board/card/UpdateCard.vue";
+import useCardStore from "@/store/card";
 
 const router = useRouter();
 const tagStore = useTagStore();
+const cardStore = useCardStore();
 
 let payload = reactive<IBoardPayload>({
   _id: "",
@@ -126,17 +125,17 @@ const onCardDrop = (dropResult: any, columnId: number) => {
       @drop="onColumnDrop($event)"
     >
       <Draggable
-        class="parent_column bg-white dark:bg-gray-600 dark:text-gray-300 rounded-xl h-full w-96 flex-shrink-0 shadow-lg m-5"
+        class="parent_column bg-white dark:bg-gray-600 dark:text-gray-300 rounded-xl h-full w-96 flex-shrink-0 shadow-lg m-5 relative"
         v-for="column in payload.groups"
         :key="column._id"
       >
         <div class="h-128 flex flex-col">
           <div
-            class="cursor-move rounded-t-xl p-4 space-x-4 bg-primary dark:bg-purple-700 text-white flex justify-between space-x-2"
+            class="cursor-move rounded-t-xl p-4 space-x-4 shadow-lg bg-primary dark:bg-purple-700 text-white flex justify-between space-x-2"
           >
             <div class="flex item-center">
               <img
-                :src="getBoardIconbyStatus(column._id).img"
+                :src="kanbanTypes.find((p) => p._id === column._id)?.img"
                 alt="column_icon"
                 width="20"
                 height="20"
@@ -195,6 +194,7 @@ const onCardDrop = (dropResult: any, columnId: number) => {
             />
           </Container>
         </div>
+        <UpdateCard v-if="cardStore.isOpenCardModal" />
       </Draggable>
     </Container>
   </section>
@@ -210,16 +210,20 @@ const onCardDrop = (dropResult: any, columnId: number) => {
   height: 5px;
 }
 
-::-webkit-scrollbar-track {
+.parent_column > div:nth-child(1):hover ::-webkit-scrollbar-track {
   background: #f1f1f1;
+  margin-bottom: 0.3rem;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
 }
 
 ::-webkit-scrollbar-thumb {
   background: transparent;
-  border-radius: 4px;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
 }
 
-.parent_column:hover ::-webkit-scrollbar-thumb {
+.parent_column > div:nth-child(1):hover ::-webkit-scrollbar-thumb {
   cursor: pointer;
   background: #a855f7;
 }

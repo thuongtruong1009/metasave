@@ -115,11 +115,11 @@ export const getTimeFormat = (
   month: string | number,
   day: string | number,
   hour: string | number,
-  minute?: string | number
+  minute?: string | number | null | undefined
 ): string => {
   let formated = `${year}/${month < 10 ? `0${month}` : month}/${
     day < 10 ? `0${day}` : day
-  } - ${hour < 10 ? `0${hour}` : hour}:${
+  } - ${hour < 10 && hour > 0 ? `0${hour}` : hour}:${
     minute && minute < 10 ? `0${minute}` : minute
   }`;
   return formated;

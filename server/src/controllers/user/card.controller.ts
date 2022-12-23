@@ -56,11 +56,11 @@ const createCard = async (req: Request, res: Response): Promise<void> => {
 
 const updateCard = async (req: Request, res: Response): Promise<void> => {
   try {
-    const existed = await Card.findById(req.body.id);
+    const existed = await Card.findById(req.params.id);
     if (!existed) {
       res.status(404).send({ message: "Card not found" });
     }
-    const updated = await Card.findByIdAndUpdate(req.body.id, req.body, {
+    const updated = await Card.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });
     res.status(200).send(updated);

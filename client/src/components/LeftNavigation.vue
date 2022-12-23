@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import { computed } from "vue";
 import { useRouter } from "vue-router";
-import { Icon } from "@iconify/vue";
 import { INav } from "@/types";
 
 const router = useRouter();
@@ -11,27 +9,27 @@ const matchRoute = (query: string): boolean =>
 const toggles: Array<INav> = [
   {
     path: "/projects" || "/project/:projectId",
-    icon: "material-symbols:home-outline-rounded",
     width: 42,
     title: "projects",
+    img: "/img/project.png",
   },
   {
-    path: "/calendar",
-    icon: "material-symbols:calendar-today-outline",
+    path: "/events",
     width: 40,
-    title: "calendar",
+    title: "events",
+    img: "/img/event.png",
   },
   {
     path: "/settings",
-    icon: "ep:setting",
     width: 42,
     title: "settings",
+    img: "/img/setting.png",
   },
   {
     path: "/about",
-    icon: "mdi:about-circle-outline",
     width: 42,
     title: "about",
+    img: "/img/about.png",
   },
 ];
 
@@ -50,24 +48,27 @@ const logout = () => {
       :key="i"
       :title="toggle.title"
     >
-      <Icon
-        :icon="toggle.icon"
-        :width="toggle.width"
-        class="rounded-full p-2 cursor-pointer"
+      <button
+        type="button"
+        :title="toggle.title"
+        class="cursor-pointer rounded-full p-2"
         :class="
           matchRoute(toggle.path)
-            ? 'bg-black text-white dark:bg-gray-700'
-            : 'hover:bg-[#c3cff4]'
+            ? 'bg-purple-200 text-white dark:bg-gray-700 shadow-lg'
+            : 'hover:bg-gray-200 hover:shadow-xl'
         "
-      />
+      >
+        <img :src="toggle.img" :alt="toggle.title" :width="toggle.width" />
+      </button>
     </router-link>
 
-    <Icon
-      icon="ri:logout-circle-r-line"
-      width="40"
-      class="rounded-full p-2 cursor-pointer hover:bg-[#c3cff4] text-purple-500"
+    <button
+      type="button"
       @click="logout"
       title="logout"
-    />
+      class="cursor-pointer rounded-full p-2 hover:bg-gray-200 hover:shadow-lg"
+    >
+      <img src="/img/profile.png" alt="logout" width="40" />
+    </button>
   </nav>
 </template>

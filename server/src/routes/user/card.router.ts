@@ -30,7 +30,7 @@ class CardRouter implements IRouter {
     );
 
     this.router.put(
-      `${this.path}`,
+      `${this.path}/:id`,
       verifyAuth.verifyToken,
       CardController.updateCard
     );

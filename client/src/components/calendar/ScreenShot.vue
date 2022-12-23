@@ -52,12 +52,12 @@ const onCopyScreenshot = () => {
     <template #openBtn>
       <div
         @click="openModal"
-        class="shadow-md rounded-lg hover:bg-gray-50 cursor-pointer"
+        class="hover:shadow-lg rounded-lg hover:bg-gray-100 cursor-pointer"
       >
         <img
-          class="m-2 w-8"
-          src="https://img.icons8.com/dusk/512/compact-camera.png"
-          alt="camera_img"
+          class="w-8 my-1 mx-2"
+          src="/img/screenshot.png"
+          alt="screenshot_img"
           title="Screenshot events"
         />
       </div>

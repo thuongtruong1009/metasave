@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { ref, watchEffect } from "vue";
+import useCardStore from "@/store/card";
 import { Draggable } from "vue3-smooth-dnd";
 import { Icon } from "@iconify/vue";
 import CardService from "@/services/card.service";
 import SpinLoading from "@/components/icons/SpinLoading.vue";
-import CardOption from "./CardOption.vue";
-import Tag from "./Tag.vue";
+import Tag from "@/components/project/board/Tag.vue";
+
+const cardStore = useCardStore();
 
 const props = defineProps<{
   item: {
@@ -67,6 +69,7 @@ const deleteCard = async () => {
         <Transition name="slide-fade">
           <div class="flex flex-col justify-between" v-if="isOpenMenu">
             <span
+              @click="cardStore.getCardById(props.item._id)"
               class="cursor-pointer w-7 h-7 flex justify-center items-center rounded-full opacity-60 hover:opacity-100 hover:bg-gray-200"
               ><Icon icon="material-symbols:edit"
             /></span>

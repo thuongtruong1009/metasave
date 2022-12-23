@@ -61,7 +61,8 @@ const formatTimeStamp = (time: string) => {
     getCurrentDate(time).year,
     getCurrentDate(time).month,
     getCurrentDate(time).day,
-    getCurrentDate(time).hour.split(":")[0]
+    getCurrentDate(time).hour.split(":")[0],
+    getCurrentDate(time).minute
   );
 };
 </script>

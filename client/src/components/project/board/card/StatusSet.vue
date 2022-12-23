@@ -8,48 +8,34 @@ import {
   ListboxOption,
 } from "@headlessui/vue";
 import { Icon } from "@iconify/vue";
-import useTagStore from "@/store/tag";
-
-const store = useTagStore();
-
-type ITag = {
-  _id: string;
-  name: string;
-  color: {
-    _id: string;
-    name: string;
-  };
-};
-const tags = ref<Array<ITag>>([]);
+import { kanbanTypes } from "@/shared/kanban";
 
 const props = defineProps<{
-  currentTagId?: string | undefined;
+  currentStatusId: number;
 }>();
 
-const currentTagId = ref<string | undefined>(props.currentTagId);
+const currentStatusId = ref<number>(props.currentStatusId);
 
 const emit = defineEmits<{
-  (event: "update-tag", colorId: string): void;
+  (event: "update-status", statusId: number): void;
 }>();
 
 watchEffect(async () => {
-  tags.value = store.getAllTagsNoDefault;
-  emit(
-    "update-tag",
-    currentTagId.value ? currentTagId.value : store.getDefaultTagId
-  );
+  emit("update-status", currentStatusId.value);
 });
 </script>
 
 <template>
   <div class="w-min">
-    <Listbox v-model="currentTagId">
+    <Listbox v-model="currentStatusId">
       <div class="relative">
         <ListboxButton
           class="relative w-full cursor-pointer hover:bg-purple-100 rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
         >
           <span class="block truncate">{{
-            currentTagId ? store.getTagName(currentTagId) : "Not choosed"
+            currentStatusId
+              ? kanbanTypes.find((i) => i._id === currentStatusId)?.name
+              : "Not choosed"
           }}</span>
           <span
             class="pointer-events-none absolute inset-y-0 right-2 flex items-center text-gray-500"
@@ -68,15 +54,14 @@ watchEffect(async () => {
           >
             <ListboxOption
               v-slot="{ active, selected }"
-              v-for="tag in tags"
-              :key="tag._id"
-              :value="tag._id"
+              v-for="status in kanbanTypes"
+              :key="status._id"
+              :value="status._id"
               as="template"
             >
               <li
                 :class="[
                   selected ? 'bg-purple-100 text-purple-900' : 'text-gray-900',
-                  active ? 'bg-purple-100 text-purple-900' : 'text-gray-900',
                   'relative cursor-pointer py-2 pl-10 pr-4',
                 ]"
               >
@@ -94,7 +79,7 @@ watchEffect(async () => {
                     selected ? 'font-semibold' : 'font-medium',
                     'block truncate',
                   ]"
-                  >{{ store.getTagName(tag._id) }}</span
+                  >{{ status.name }}</span
                 >
               </li>
             </ListboxOption>
