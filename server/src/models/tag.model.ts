@@ -5,6 +5,11 @@ const TagModel = mongoose.model(
   new mongoose.Schema({
     name: {
       type: String,
+      unique: true,
+    },
+    color: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Color",
       required: true,
     },
   })

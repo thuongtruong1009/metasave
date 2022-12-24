@@ -7,7 +7,7 @@ import EventService from "@/services/event.service";
 import AvatarTag from "@/components/calendar/AvatarTag.vue";
 import HourSelect from "./HourSelect.vue";
 import TagInput from "../TagInput.vue";
-import ColorSet from "./ColorSet.vue";
+import ColorSet from "../ColorSet.vue";
 
 const props = defineProps<{
   data: {

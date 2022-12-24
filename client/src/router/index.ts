@@ -4,14 +4,8 @@ import useAuthStore from "../store/auth";
 import CommonRouter from "./common.router";
 import AuthRouter from "./auth.router";
 import Mainrouter from "./main.router";
-import ProjectRouter from "./project.router";
 
-const routes = [
-  ...CommonRouter,
-  ...AuthRouter,
-  ...Mainrouter,
-  ...ProjectRouter,
-];
+const routes = [...CommonRouter, ...AuthRouter, ...Mainrouter];
 
 const router = createRouter({
   history: createWebHistory(),

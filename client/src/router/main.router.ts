@@ -5,14 +5,26 @@ export default [
     component: () => import("../layouts/main.vue"),
     children: [
       {
-        path: "home",
-        name: "home",
-        component: () => import("../pages/home.vue"),
+        path: "projects",
+        name: "projects",
+        component: () => import("../pages/project/index.vue"),
       },
       {
-        path: "calendar",
-        name: "calendar",
-        component: () => import("../pages/calendar.vue"),
+        path: "/project/:projectId",
+        name: "project",
+        component: () => import("../pages/project/overview.vue"),
+        children: [
+          {
+            path: "board/:boardId",
+            name: "board",
+            component: () => import("../pages/project/board.vue"),
+          },
+        ],
+      },
+      {
+        path: "events",
+        name: "events",
+        component: () => import("../pages/calendar/index.vue"),
       },
       {
         path: "about",

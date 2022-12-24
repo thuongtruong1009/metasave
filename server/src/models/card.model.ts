@@ -5,23 +5,34 @@ const CardModel = mongoose.model(
   new mongoose.Schema({
     boardId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Column",
+      ref: "Board",
       required: true,
     },
     type: {
       type: String,
-      default: "card",
+      default: "draggable",
+    },
+    status: {
+      type: Number,
+      required: true,
+    },
+    loading: {
+      type: Boolean,
+      default: false,
     },
     icon: {
       type: String,
-      default: "fas fa-clipboard-list",
+      default: "",
     },
     text: {
       type: String,
       required: true,
     },
     tagId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Tag",
+      required: false,
+      default: "639ee0c235daa8e2541b1cf8",
     },
   }).set("timestamps", true)
 );

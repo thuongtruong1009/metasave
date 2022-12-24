@@ -201,9 +201,12 @@ const signin = (req: Request, res: Response) => {
         authorities.push(user.roles[i].name.toUpperCase());
       }
       const { password, salt, ...userWithoutPassword } = user._doc;
-      res
-        .status(200)
-        .send({ ...userWithoutPassword, authorities, accessToken });
+      res.status(200).send({
+        ...userWithoutPassword,
+        authorities,
+        accessToken,
+        refreshToken,
+      });
     });
 };
 

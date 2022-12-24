@@ -6,7 +6,7 @@ import { Icon } from "@iconify/vue";
 import EventService from "@/services/event.service";
 import Modal from "@/components/Modal.vue";
 import HourSelect from "./HourSelect.vue";
-import ColorSet from "./ColorSet.vue";
+import ColorSet from "@/components/ColorSet.vue";
 import TagInput from "@/components/TagInput.vue";
 import { getCurrentDate, getDateFormat, getISOFormat } from "@/helpers/date";
 import { IUserTag } from "@/types";

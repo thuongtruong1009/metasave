@@ -18,10 +18,13 @@ class SettingRouter implements IRouter {
       verifyAuth.verifyToken,
       settingController.deleteUser
     );
+
     this.router.get(
       `${this.path}/colors`,
       settingController.getColorCollection
     );
+
+    this.router.get(`${this.path}/tags`, settingController.getTagCollection);
   }
 }
 

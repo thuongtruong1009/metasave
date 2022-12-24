@@ -76,15 +76,15 @@ class App {
     const options = {
       swaggerDefinition: {
         info: {
-          title: `${process.env.DB_NAME}-API`,
+          title: `${(process.env.DB_NAME)?.toUpperCase()}-API`,
           version: "1.0.0",
-          description: "The API documentation for Boarder server",
+          description: `The API documentation for ${process.env.DB_NAME} server`,
         },
       },
       apis: ["swagger.yaml"],
     };
     const swaggerSpec = swaggerJSDoc(options);
-    this.app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+    this.app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
   }
 
   private initializeErrorHandling() {

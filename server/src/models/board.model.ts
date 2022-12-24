@@ -8,23 +8,26 @@ const BoardModel = mongoose.model(
       ref: "Project",
       required: true,
     },
-    type: {
-      type: String,
-      default: "container",
-    },
-    icon: {
-      type: String,
-      default: "ProgressIcon",
-    },
     name: {
       type: String,
       required: true,
     },
-    props: {
-      orientation: {
-        type: String,
-        default: "vertical",
-      },
+    description: {
+      type: String,
+      default: "",
+    },
+    isFavorite: {
+      type: Boolean,
+      default: false,
+    },
+    background: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Color",
+      required: true,
+    },
+    customBackground: {
+      type: String,
+      default: "",
     },
     cards: [
       {

@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { IRouter } from "../../types";
 import CardController from "../../controllers/user/card.controller";
+import verifyAuth from "../../middlewares/authen.middleware";
 
 class CardRouter implements IRouter {
   public path = "/card";
@@ -11,17 +12,34 @@ class CardRouter implements IRouter {
   }
   initializeRoutes() {
     this.router.get(
-      `/column/:columnId${this.path}`,
+      `/board/:boardId${this.path}`,
+      verifyAuth.verifyToken,
       CardController.getAllCards
     );
 
-    this.router.post(`${this.path}`, CardController.createCard);
+    this.router.post(
+      `${this.path}`,
+      verifyAuth.verifyToken,
+      CardController.createCard
+    );
 
-    this.router.get(`${this.path}/:id`, CardController.getCardById);
+    this.router.get(
+      `${this.path}/:id`,
+      verifyAuth.verifyToken,
+      CardController.getCardById
+    );
 
-    this.router.put(`${this.path}`, CardController.updateCard);
+    this.router.put(
+      `${this.path}/:id`,
+      verifyAuth.verifyToken,
+      CardController.updateCard
+    );
 
-    this.router.delete(`${this.path}/:id`, CardController.deleteCard);
+    this.router.delete(
+      `${this.path}/:id`,
+      verifyAuth.verifyToken,
+      CardController.deleteCard
+    );
   }
 }
 

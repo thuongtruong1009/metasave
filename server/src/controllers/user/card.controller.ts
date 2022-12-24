@@ -6,10 +6,17 @@ const Card = db.card;
 
 const getAllCards = async (req: Request, res: Response): Promise<void> => {
   try {
-    const cards = await Board.findById(req.params.boardId, "cards").populate(
-      "cards"
-    );
-    res.status(200).send(cards);
+    const groupCards = await Card.aggregate([
+      {
+        $group: {
+          _id: "$status",
+          total: { $sum: 1 },
+          childrens: { $push: "$$ROOT" },
+          $sort: { status: 1 },
+        },
+      },
+    ]);
+    res.status(200).send(groupCards);
   } catch (error) {
     res.status(500).send({ message: error });
   }
@@ -49,11 +56,11 @@ const createCard = async (req: Request, res: Response): Promise<void> => {
 
 const updateCard = async (req: Request, res: Response): Promise<void> => {
   try {
-    const existed = await Card.findById(req.body.id);
+    const existed = await Card.findById(req.params.id);
     if (!existed) {
       res.status(404).send({ message: "Card not found" });
     }
-    const updated = await Card.findByIdAndUpdate(req.body.id, req.body, {
+    const updated = await Card.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });
     res.status(200).send(updated);

@@ -24,7 +24,11 @@ class ProjectRouter implements IRouter {
       projectController.getAllProjects
     );
 
-    this.router.get(`${this.path}/:id`, projectController.getProjectById);
+    this.router.get(
+      `${this.path}/:id`,
+      verifyAuth.verifyToken,
+      projectController.getProjectById
+    );
 
     this.router.put(
       `${this.path}/:id`,
