@@ -2,6 +2,7 @@ import { Router } from "express";
 import verifySignUp from "../../middlewares/signup.middleware";
 import authController from "../../controllers/user/auth.controller";
 import { IRouter } from "../../types";
+import verifyAuth from "../../middlewares/authen.middleware";
 
 class AuthRouter implements IRouter {
   public path = "/auth";
@@ -25,9 +26,17 @@ class AuthRouter implements IRouter {
 
     this.router.post(`${this.path}/signin`, authController.signin);
 
-    this.router.post(`${this.path}/refresh-token`, authController.refreshToken);
+    this.router.post(
+      `${this.path}/refresh-token`,
+      verifyAuth.verifyToken,
+      authController.refreshToken
+    );
 
-    this.router.post(`${this.path}/logout`, authController.logout);
+    this.router.post(
+      `${this.path}/logout`,
+      verifyAuth.verifyToken,
+      authController.logout
+    );
   }
 }
 

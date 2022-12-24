@@ -4,6 +4,9 @@ import axios, {
   type AxiosRequestConfig,
   type AxiosResponse,
 } from "axios";
+import useAuthStore from "@/store/auth";
+
+const authStore = useAuthStore();
 
 const axiosConfig: AxiosInstance = axios.create({
   baseURL: `${import.meta.env.VITE_BASE_URL}`,
@@ -36,9 +39,9 @@ axiosConfig.interceptors.response.use(
     if (error?.response?.status === 403 && !preRequest?.sent) {
       preRequest.sent = true;
       const newToken = await axiosConfig.post(
-        "/auth/refresh",
+        "/auth/refresh-token",
         {
-          refreshToken: document.cookie,
+          refreshToken: authStore.getRefreshToken,
         },
         {
           withCredentials: true,

@@ -19,6 +19,9 @@ const useAuthStore = defineStore({
     getUser() {
       return JSON.parse(localStorage.getItem("user") || "{}");
     },
+    getRefreshToken() {
+      return document.cookie.split("=")[1];
+    },
   },
 
   actions: {
@@ -45,7 +48,7 @@ const useAuthStore = defineStore({
       document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
     },
 
-    async getCookie(cname: string) {
+    async getAvailableCookie(cname: string) {
       let name = cname + "=";
       let ca = document.cookie.split(";");
       for (let i = 0; i < ca.length; i++) {
@@ -61,7 +64,7 @@ const useAuthStore = defineStore({
     },
 
     async checkCookie(cname: string, cvalue: string, exdays: number) {
-      let user = await this.getCookie(cname);
+      let user = await this.getAvailableCookie(cname);
       if (user != "" && user != null) {
         this.setCookie(cname, cvalue, exdays);
         return;

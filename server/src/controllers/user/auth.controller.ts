@@ -201,14 +201,12 @@ const signin = (req: Request, res: Response) => {
         authorities.push(user.roles[i].name.toUpperCase());
       }
       const { password, salt, ...userWithoutPassword } = user._doc;
-      res
-        .status(200)
-        .send({
-          ...userWithoutPassword,
-          authorities,
-          accessToken,
-          refreshToken,
-        });
+      res.status(200).send({
+        ...userWithoutPassword,
+        authorities,
+        accessToken,
+        refreshToken,
+      });
     });
 };
 
@@ -236,7 +234,7 @@ const refreshToken = (req: Request, res: Response) => {
         httpOnly: true,
         maxAge: 1000 * 60 * 60 * 24 * 365,
         sameSite: "strict",
-        // path: "/",
+        path: "/",
         secure: true,
       });
 
