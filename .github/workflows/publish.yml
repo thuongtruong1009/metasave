@@ -4,8 +4,14 @@ on:
   push:
     branches:
       - main
-    paths:
-      - "server"
+    paths-ignore:
+      - ".vscode/**"
+      - ".infrastructure/**"
+      - "client/**"
+      - "public/**"
+      - "docs/**"
+      - ".gitingore"
+      - "**.md"
 
 jobs:
   push_to_registries:
@@ -14,9 +20,6 @@ jobs:
     permissions:
       packages: write
       contents: read
-    defaults:
-      run:
-        working-directory: server
     steps:
       - name: Check out the repo
         uses: actions/checkout@v3

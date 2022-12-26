@@ -22,7 +22,8 @@ dist-ssr
 *.sw?
 
 # Docker
-*/docker/mongo
+*/docker/mongo/data
+*/docker/ngrok/data
 
 */dist
 
