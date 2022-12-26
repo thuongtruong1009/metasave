@@ -2,17 +2,25 @@ FROM node:18-alpine as development
 
 WORKDIR /app
 
-COPY ./server/package*.json ./
+COPY /server .
 
-RUN yarn
+RUN yarn install
 
-COPY . .
+RUN yarn build
 
 FROM development as production
 
-ENV NODE_PATH=./dist
+WORKDIR /app
 
-RUN yarn build
+RUN chown -R node:node /app
+
+USER node
+
+COPY --chown=node:node /server/package.json /server/yarn.lock ./
+
+COPY --chown=node:node --from=development /app/dist /app/dist
+
+RUN npx yarn install --production
 
 LABEL "maintainer"="thuongtruong1009 <thuongtruongofficial@gmail.com>"
 LABEL "org.opencontainers.image.authors"="Thuong Truong <"
