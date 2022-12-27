@@ -1,3 +1,11 @@
+## Demo
+
+- [Metasave client](metasave.vercel.app)
+
+- [Metasave server api](metasave.up.railway.app)
+
+- [Metasave server api docs](metasave.up.railway.app/docs)
+
 # TypeScript + Node + Docker (with code hot-reloading in the container)
 
 ## For running locally

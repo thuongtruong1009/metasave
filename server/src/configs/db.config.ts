@@ -12,7 +12,7 @@ function ConnectDB() {
 
   try {
     mongoose.connect(`${process.env.MONGO_URL}`, options);
-    init();
+    // init();
   } catch (err) {
     console.log("• Connect error: ", err);
     process.exit();
