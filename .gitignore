@@ -5,6 +5,9 @@ yarn-debug.log*
 yarn-error.log*
 */pnpm-debug.log
 lerna-debug.log*
+*/*.log
+
+*/lib
 
 */node_modules
 dist
