@@ -1,4 +1,4 @@
-name: Publish image
+name: CI
 
 on:
   push:
@@ -15,7 +15,7 @@ on:
 
 jobs:
   push_to_registries:
-    name: Publish image to registries
+    name: Publish image to container registry
     runs-on: ubuntu-latest
     permissions:
       packages: write

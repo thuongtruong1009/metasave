@@ -12,6 +12,7 @@ import ConnectDB from "./db.config";
 import { IRouter } from "../types";
 import morgan from "morgan";
 import ErrorHandler from "../middlewares/error.middleware";
+import { capitializeString } from "../utils/string";
 
 class App {
   public app: express.Application;
@@ -76,9 +77,32 @@ class App {
     const options = {
       swaggerDefinition: {
         info: {
-          title: `${(process.env.DB_NAME)?.toUpperCase()}-API`,
+          title: `${capitializeString(process.env.DB_NAME)} - API`,
           version: "1.0.0",
           description: `The API documentation for ${process.env.DB_NAME} server`,
+          termsOfService: "http://example.com/terms/",
+          contact: {
+            name: "API Support",
+            url: "http://www.example.com/support",
+            email: "thuongtruong1009@proton.me",
+          },
+          license: {
+            name: "Apache 2.0",
+            url: "https://www.apache.org/licenses/LICENSE-2.0.html",
+          },
+          schemes:
+            process.env.NODE_ENV === "development" ? ["http"] : ["https"],
+          server: [
+            {
+              url: "{protocol}://api.example.com",
+              variables: {
+                protocol: {
+                  enum: ["http", "https"],
+                  default: "https",
+                },
+              },
+            },
+          ],
         },
       },
       apis: ["swagger.yaml"],
