@@ -1,4 +1,3 @@
-import * as functions from "firebase-functions";
 import App from "./configs/app.config";
 
 import StatisticalRouter from "./routes/admin/statistical.router";
@@ -31,5 +30,3 @@ const app = new App(
 );
 
 app.listen();
-
-export default functions.https.onRequest(app.getServer());
