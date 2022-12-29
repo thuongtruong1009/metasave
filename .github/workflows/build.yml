@@ -1,4 +1,4 @@
-name: Build api
+name: CI
 
 on:
   push:
@@ -7,8 +7,11 @@ on:
       - "**.md"
 
 jobs:
-  build-deploy:
-    runs-on: ubuntu-latest
+  build:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: server
 
     steps:
       - name: Checkout 🛎️
@@ -17,10 +20,13 @@ jobs:
           persist-credentials: false
 
       - name: Install 🔧
-        run: |
-          cd server
-          yarn
-          yarn build
+        run: yarn install
+
+      - name: Lint 🧐
+        run: yarn lint:check
+
+      - name: Build 🏗️
+        run: yarn build
         env:
           NODE_ENV: production
 
