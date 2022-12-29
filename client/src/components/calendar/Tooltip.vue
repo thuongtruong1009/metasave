@@ -32,7 +32,7 @@ const props = defineProps<{
   };
 }>();
 
-const payload = reactive({
+const payload = reactive<any>({
   time: {
     start: "",
     end: "",
@@ -84,7 +84,7 @@ const closeEdit = () => {
 
 const deleteAttendent = async (attendentId: string) => {
   payload.attendees = payload.attendees.filter(
-    (attendent) => attendent._id !== attendentId
+    (attendent: any) => attendent._id !== attendentId
   );
 };
 

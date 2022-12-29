@@ -53,7 +53,7 @@ const payload = reactive({
     .endDayInWeek,
 });
 
-const events = ref([]);
+const events = ref<any>([]);
 
 const handleGetAllEvents = async () => {
   const { data } = await EventService.getAllEvents(

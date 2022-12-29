@@ -1,5 +1,5 @@
 import { defineStore, acceptHMRUpdate } from "pinia";
-import SettingService from "../services/setting.service.ts";
+import SettingService from "../services/setting.service";
 
 type IResponseTag = {
   _id: string;

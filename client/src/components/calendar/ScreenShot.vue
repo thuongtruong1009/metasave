@@ -56,7 +56,7 @@ const onCopyScreenshot = () => {
       >
         <img
           class="w-8 my-1 mx-2"
-          src="/img/screenshot.png"
+          src="/img/photo.png"
           alt="screenshot_img"
           title="Screenshot events"
         />

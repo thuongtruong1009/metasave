@@ -21,7 +21,7 @@ const props = defineProps<{
   };
 }>();
 
-const infos = reactive([
+const infos = reactive<any>([
   {
     id: 0,
     name: "Overview",

@@ -179,7 +179,7 @@ const onCardDrop = (dropResult: any, columnId: number) => {
             drop-class="transition duration-100 
             ease-in z-50 transform 
             -rotate-2 scale-90"
-            @drop="(e) => onCardDrop(e, column._id)"
+            @drop="(e: any) => onCardDrop(e, column._id)"
           >
             <Card
               v-for="item in column.children"

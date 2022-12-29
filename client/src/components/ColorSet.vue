@@ -2,7 +2,7 @@
 import { onMounted, ref } from "vue";
 import SettingService from "@/services/setting.service";
 
-const colors = ref<Array<string>>([]);
+const colors = ref<Array<any>>([]);
 
 onMounted(async () => {
   const { data } = await SettingService.getColorSet();

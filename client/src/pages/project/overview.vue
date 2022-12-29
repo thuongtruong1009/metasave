@@ -7,7 +7,7 @@ import CreateTable from "@/components/project/table/CreateTable.vue";
 
 const router = useRouter();
 
-const payget = reactive({
+const payget = reactive<any>({
   boards: [],
   tables: [],
 });
