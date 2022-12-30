@@ -17,7 +17,7 @@ const uploadSingleResource = async (req: any, res: Response) => {
   }
 };
 
-const deleteResource = async (req: any, res: Response) => {
+const deleteResource = async (req: Request, res: Response) => {
   try {
     await unlink(req.body.dest);
     res.status(200).send("File deleted!");

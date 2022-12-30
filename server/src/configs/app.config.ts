@@ -2,7 +2,7 @@ import compression from "compression";
 import cookieParser from "cookie-parser";
 import fs from "fs-extra";
 import cors from "cors";
-import express from "express";
+import express, { Request, Response } from "express";
 import path from "node:path";
 import helmet from "helmet";
 import hpp from "hpp";
@@ -12,6 +12,7 @@ import ConnectDB from "./db.config";
 import { IRouter } from "../types";
 import morgan from "morgan";
 import ErrorHandler from "../middlewares/error.middleware";
+import { rateLimiterMiddleware } from "../middlewares/rate.middleware";
 import { capitializeString } from "../utils/string";
 
 class App {
@@ -30,11 +31,12 @@ class App {
     ConnectDB();
     this.initializeErrorHandling();
   }
+
   public listen() {
     this.app.listen(this.port, () => {
       console.log(`• App listening on the port ${this.port}`);
     });
-    this.app.get("/", (req, res) => {
+    this.app.get("/", (req: Request, res: Response) => {
       res.send("Hello World!");
     });
   }
@@ -43,14 +45,31 @@ class App {
     return this.app;
   }
 
+  private corsOptions() {
+    let whitelist = ["http://localhost:3001"];
+    let options = {
+      origin: (origin: any, callback: any) => {
+        if (whitelist.indexOf(origin) !== -1) {
+          callback(null, true);
+        } else {
+          callback(new Error("Not allowed by CORS"));
+        }
+      },
+      credentials: true,
+    };
+    return options;
+  }
+
   private initializeMiddlewares() {
-    this.app.use(cors({ origin: `${process.env.ORIGIN}`, credentials: true }));
+    // this.app.use(cors({ origin: `${process.env.ORIGIN}`, credentials: true }));
+    this.app.use(cors(this.corsOptions()));
     this.app.use(hpp());
     this.app.use(helmet());
     this.app.use(compression());
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(cookieParser());
+    this.app.use(rateLimiterMiddleware);
     this.app.use(morgan("combined", { stream: this.writeLogs("access") }));
 
     this.app.use(express.static(path.join(__dirname, "../../public")));
