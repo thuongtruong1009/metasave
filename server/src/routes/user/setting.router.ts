@@ -3,7 +3,7 @@ import { IRouter } from "../../types";
 
 import settingController from "../../controllers/user/setting.controller";
 import verifyAuth from "../../middlewares/authen.middleware";
-import { uploadAvatar } from "../../strategies/file";
+import { uploadAvatar, uploadEventImg } from "../../strategies/file";
 
 class SettingRouter implements IRouter {
   public path = "/setting";
@@ -15,10 +15,23 @@ class SettingRouter implements IRouter {
 
   private initializeRoutes() {
     this.router.post(
-      `${this.path}/resource/avatar`,
+      `${this.path}/resources/avatars`,
       verifyAuth.verifyToken,
       uploadAvatar,
       settingController.uploadSingleResource
+    );
+
+    this.router.post(
+      `${this.path}/resources/events`,
+      verifyAuth.verifyToken,
+      uploadEventImg,
+      settingController.uploadSingleResource
+    );
+
+    this.router.delete(
+      `${this.path}/resources`,
+      verifyAuth.verifyToken,
+      settingController.deleteResource
     );
 
     this.router.delete(

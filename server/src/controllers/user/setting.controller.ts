@@ -1,3 +1,4 @@
+import { unlink } from "node:fs/promises";
 import { Request, Response } from "express";
 
 import db from "../../models";
@@ -11,6 +12,15 @@ const Tag = db.tag;
 const uploadSingleResource = async (req: any, res: Response) => {
   try {
     res.status(200).send(req.file.filename);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
+
+const deleteResource = async (req: any, res: Response) => {
+  try {
+    await unlink(req.body.dest);
+    res.status(200).send("File deleted!");
   } catch (error) {
     res.status(500).send(error);
   }
@@ -65,6 +75,7 @@ const getTagCollection = async (req: Request, res: Response) => {
 
 const settingController = {
   uploadSingleResource,
+  deleteResource,
   deleteUser,
   getColorCollection,
   getTagCollection,

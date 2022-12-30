@@ -1,15 +1,15 @@
 import { Request } from "express";
 import multer from "multer";
 
+const preDest = "resources";
+
 const upload = (dest: string) => {
   const storage = multer.diskStorage({
     destination(req: Request, file: Express.Multer.File, cb: Function) {
-      cb(null, dest);
+      cb(null, `${preDest}/${dest}`);
     },
     filename(req: any, file: Express.Multer.File, cb: Function) {
-      let fileName = `${req.user.id}-${file.fieldname}.${
-        file.originalname.split(".")[1]
-      }`;
+      let fileName = `${req.user.id}-${file.originalname}`;
       cb(null, fileName);
     },
   });
@@ -27,4 +27,5 @@ const upload = (dest: string) => {
   });
 };
 
-export const uploadAvatar = upload("avatar").single("avatar");
+export const uploadAvatar = upload("avatars").single("file");
+export const uploadEventImg = upload("events").single("file");

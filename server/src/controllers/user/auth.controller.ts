@@ -251,12 +251,19 @@ const logout = (req: Request, res: Response) => {
   res.status(200).send({ message: "Logged out!" });
 };
 
+const logoutAllDevice = (req: Request, res: Response) => {
+  refreshTokens = [];
+  logout(req, res);
+  res.status(200).send({ message: "Logged out all device!" });
+};
+
 const authController = {
   signup,
   verifyAccount,
   signin,
   refreshToken,
   logout,
+  logoutAllDevice,
 };
 
 export default authController;

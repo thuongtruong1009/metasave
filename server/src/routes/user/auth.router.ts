@@ -37,6 +37,12 @@ class AuthRouter implements IRouter {
       verifyAuth.verifyToken,
       authController.logout
     );
+
+    this.router.post(
+      `${this.path}/logout-all`,
+      verifyAuth.verifyToken,
+      authController.logoutAllDevice
+    );
   }
 }
 
