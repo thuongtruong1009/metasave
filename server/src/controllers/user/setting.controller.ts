@@ -8,6 +8,14 @@ const Card = db.card;
 const Color = db.color;
 const Tag = db.tag;
 
+const uploadSingleResource = async (req: any, res: Response) => {
+  try {
+    res.status(200).send(req.file.filename);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
+
 const deleteUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const findProjects = await Project.find({ owner: req.params.id });
@@ -56,6 +64,7 @@ const getTagCollection = async (req: Request, res: Response) => {
 };
 
 const settingController = {
+  uploadSingleResource,
   deleteUser,
   getColorCollection,
   getTagCollection,
