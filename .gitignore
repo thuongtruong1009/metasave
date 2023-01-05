@@ -29,3 +29,5 @@ docker/ngrok/data
 
 !*/**/.gitkeep
 !*/**/.gitkeep
+
+.env

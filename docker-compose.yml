@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   app:
-    container_name: metasave-api
+    container_name: metasave
     image: ghcr.io/thuongtruong1009/metasave:main
     build:
       context: .
