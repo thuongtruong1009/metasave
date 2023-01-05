@@ -1,10 +1,16 @@
 import mongoose from "mongoose";
 
-const RoleModel = mongoose.model(
-  "Role",
-  new mongoose.Schema({
-    name: String,
-  })
-);
+interface IRoleModel extends mongoose.Document {
+  name: string;
+}
+
+const roleSchema: mongoose.Schema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+});
+
+const RoleModel = mongoose.model<IRoleModel>("Role", roleSchema);
 
 export default RoleModel;

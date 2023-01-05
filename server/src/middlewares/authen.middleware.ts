@@ -11,38 +11,34 @@ const User = db.user;
 const Role = db.role;
 
 const verifyToken = (req: any, res: Response, next: NextFunction) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-  );
-
   if (req.method == "OPTIONS") {
-    res.header("Access-Control-Allow-Methods", "PUT, POST, PATCH, DELETE, GET");
     return res.status(200).json({});
   }
-
-  let token = req.headers["authorization"];
-  if (!token) {
-    return res
-      .status(403)
-      .send({ status: false, message: "No token provided!" });
-  }
-
-  // const accessToken = JSON.parse(Buffer.from(token.split(".")[1], "base64").toString()).id;
-  const accessToken = token.split(" ")[1];
-
-  jwt.verify(
-    accessToken,
-    `${process.env.ACCESS_TOKEN_KEY}`,
-    (err: Error | null, decoded: IDecoded | any) => {
-      if (err) {
-        return res.status(401).send({ message: "Unauthorized!" });
-      }
-      req.user = decoded;
-      next();
+  try {
+    let token = req.headers["authorization"];
+    if (!token) {
+      return res
+        .status(403)
+        .send({ status: false, message: "No token provided!" });
     }
-  );
+
+    // const accessToken = JSON.parse(Buffer.from(token.split(".")[1], "base64").toString()).id;
+    const accessToken = token.split(" ")[1];
+
+    jwt.verify(
+      accessToken,
+      `${process.env.ACCESS_TOKEN_KEY}`,
+      (err: Error | null, decoded: IDecoded | any) => {
+        if (err) {
+          return res.status(401).send({ message: "Unauthorized!" });
+        }
+        req.user = decoded;
+        next();
+      }
+    );
+  } catch (error) {
+    res.status(401).json({ error: "Authentication Failed!" });
+  }
 };
 
 const isAdmin = (req: any, res: Response, next: NextFunction) => {

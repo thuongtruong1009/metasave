@@ -6,6 +6,7 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 import { hashPassword, comparePassword } from "../../helpers/hash";
+import { confirmEmailMsg } from "../../helpers/email.helper";
 import { IRole, IUser } from "../../types";
 
 import db from "../../models";
@@ -45,7 +46,7 @@ const signup = async (req: Request, res: Response) => {
             }
             res.send({ message: "User was registered successfully!" });
           });
-          // sendConfirmationEmail(user.email);
+          sendConfirmationEmail(user.email);
         }
       );
     } else {
@@ -106,23 +107,13 @@ function sendConfirmationEmail(email: string) {
 
   let token = jwt.sign({ email }, `${process.env.SECRET_KEY}`);
 
-  const urlConfirm = `${process.env.APP_URL}/api/auth/verify/${token}`;
-
-  return transporter.sendMail(
-    {
-      from: process.env.EMAIL_USERNAME,
-      to: email,
-      subject: "Confirm your email",
-      html: `<p>Confirm your Metasave account at : <a href="${urlConfirm}">Confirm</a></p>`,
-    },
-    (err, info) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log(info);
-      }
+  return transporter.sendMail(confirmEmailMsg(email, token), (err, info) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log(info);
     }
-  );
+  });
 }
 
 const verifyAccount = (req: Request, res: Response) => {

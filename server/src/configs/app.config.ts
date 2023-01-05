@@ -33,9 +33,13 @@ class App {
   }
 
   public listen() {
-    this.app.listen(this.port, () => {
-      console.log(`• App listening on the port ${this.port}`);
-    });
+    try {
+      this.app.listen(this.port, () => {
+        console.log(`• App listening on the port ${this.port}`);
+      });
+    } catch (error) {
+      console.log("• Cannot connect to the server");
+    }
     this.app.get("/", (req: Request, res: Response) => {
       res.send("Hello World!");
     });
@@ -46,23 +50,24 @@ class App {
   }
 
   private corsOptions() {
-    let whitelist = ["http://localhost:3001"];
-    let options = {
-      origin: (origin: any, callback: any) => {
-        if (whitelist.indexOf(origin) !== -1) {
-          callback(null, true);
-        } else {
-          callback(new Error("Not allowed by CORS"));
-        }
-      },
+    const options = {
+      origin: `${process.env.ORIGIN}`.split(","),
+      allowedHeaders: [
+        "Origin",
+        "X-Requested-With",
+        "Content-Type",
+        "Accept",
+        "X-Access-Token",
+        "Authorization",
+      ],
       credentials: true,
+      methods: "GET,PUT,PATCH,POST,DELETE",
     };
     return options;
   }
 
   private initializeMiddlewares() {
-    // this.app.use(cors({ origin: `${process.env.ORIGIN}`, credentials: true }));
-    this.app.use(cors(this.corsOptions()));
+    this.app.use(cors<Request>(this.corsOptions()));
     this.app.use(hpp());
     this.app.use(helmet());
     this.app.use(compression());
@@ -71,6 +76,7 @@ class App {
     this.app.use(cookieParser());
     this.app.use(rateLimiterMiddleware);
     this.app.use(morgan("combined", { stream: this.writeLogs("access") }));
+    this.app.disable("x-powered-by");
 
     this.app.use(express.static(path.join(__dirname, "../../public")));
   }

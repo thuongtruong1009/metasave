@@ -47,9 +47,10 @@ jobs:
 
       - name: Build and push Docker images
         uses: docker/build-push-action@v3
+        working-directory: $GITHUB_WORKSPACE/server
         with:
           context: .
-          file: ./server/docker/Dockerfile
+          file: ./docker/Dockerfile.local
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

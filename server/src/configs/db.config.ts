@@ -11,11 +11,12 @@ function ConnectDB() {
   };
 
   try {
+    mongoose.set("strictQuery", true);
     mongoose.connect(`${process.env.MONGO_URL}`, options);
     // init();
   } catch (err) {
     console.log("• Connect error: ", err);
-    process.exit();
+    process.exit(1);
   }
 }
 

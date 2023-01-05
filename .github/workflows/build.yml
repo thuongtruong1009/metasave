@@ -8,10 +8,10 @@ on:
 
 jobs:
   build-api:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: server
+        working-directory: $GITHUB_WORKSPACE/server
 
     steps:
       - name: Checkout 🛎️

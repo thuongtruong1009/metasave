@@ -1,5 +1,24 @@
 import mongoose from "mongoose";
 
+interface IProjectModel extends mongoose.Document {
+  owner: mongoose.Schema.Types.ObjectId;
+  type: string;
+  name: string;
+  access: string;
+  description: string;
+  categoryId: string;
+  members: mongoose.Schema.Types.ObjectId[];
+  isFavorite: boolean;
+  background: string;
+  customBackground: string;
+  props: {
+    orientation: string;
+  };
+  boards: mongoose.Schema.Types.ObjectId[];
+  startDate: Date;
+  endDate: Date;
+}
+
 const ProjectSchema = new mongoose.Schema({
   owner: {
     type: mongoose.Schema.Types.ObjectId,
@@ -67,6 +86,6 @@ const ProjectSchema = new mongoose.Schema({
   },
 }).set("timestamps", true);
 
-const ProjectModel = mongoose.model("Project", ProjectSchema);
+const ProjectModel = mongoose.model<IProjectModel>("Project", ProjectSchema);
 
 export default ProjectModel;

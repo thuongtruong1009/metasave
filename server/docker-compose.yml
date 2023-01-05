@@ -36,12 +36,13 @@ services:
 
   ngrok:
     container_name: ngrok
-    image: ngrok/ngrok:alpine
+    image: wernight/ngrok
     ports:
-      - 4040:4040
+      - "4040:4040"
     volumes:
       - ./docker/ngrok/data:/home/ngrok/.ngrok2/
-    command: http host.docker.internal:${APP_PORT}
+    # command: http host.docker.internal:${APP_PORT}
+    command: ngrok http -authtoken ${NGROK_AUTH} app:${APP_PORT}
     networks:
       - common
     depends_on:
