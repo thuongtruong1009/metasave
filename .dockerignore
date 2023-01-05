@@ -1,0 +1,34 @@
+# ignore .git and .cache folders
+.git
+.gitignore
+.cache
+
+*.md
+!README*.md
+README-secret.md
+
+vscode/
+node_modules/
+npm-debug.log
+
+Dockerfile
+.dockerignore
+
+# code formatter
+.eslintrc
+.eslintignore
+.editorconfig
+.huskyrc
+.lintstagedrc.json
+.prettierrc
+
+# test
+jest.config.js
+
+# build
+rollup.config.js
+rollup.config.prod.js
+
+# docs
+docs/
+client/
