@@ -4,15 +4,12 @@ on:
   push:
     branches: main
     paths-ignore:
-      - "**.md"
+      - "**.md"\
+      - "client"
 
 jobs:
   build-api:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: $GITHUB_WORKSPACE/server
-
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@master

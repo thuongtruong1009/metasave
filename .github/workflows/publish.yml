@@ -51,7 +51,7 @@ jobs:
         # working-directory: $GITHUB_WORKSPACE/server
         with:
           context: .
-          file: ./docker/Dockerfile.local
+          file: ./docker/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
