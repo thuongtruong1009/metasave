@@ -1,10 +1,9 @@
-# docker run -it -e NGROK_AUTHTOKEN=2IDydaTezI8par5UAUanUO5D3IV_6vVGMZNxzgVfbJrTzQAjf -e NGROK_CONFIG=/ngrok.yaml ngrok/ngrok:alpine http --host-header=rewrite 4040
+# docker run -it -e NGROK_AUTHTOKEN=2IDydaTezI8par5UAUanUO5D3IV_6vVGMZNxzgVfbJrTzQAjf -e NGROK_CONFIG=/ngrok.yaml wernight/ngrok http --host-header=rewrite 4040
 
-authtoken: 2IDydaTezI8par5UAUanUO5D3IV_6vVGMZNxzgVfbJrTzQAjf
+authtoken: ${NGROK_AUTHTOKEN}
 log: stdout
 region: jp
-version: 2
-web_addr: 127.0.0.1:4040
+web_addr: 0.0.0.0:4040
 tunnels:
   app:
     addr: app:3000

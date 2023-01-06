@@ -1,10 +1,16 @@
-version: "3.7"
+version: "3.8"
 
 services:
   app:
     build:
       target: production
+    entrypoint:
+      - /bin/sh
+    ports:
+      - 3000:${APP_PORT}
     environment:
       MONGO_URL: ${ATLAS_URL}
       NODE_ENV: production
-    command: yarn start
+    command:
+      - -c
+      - yarn start:prod

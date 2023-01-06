@@ -1,0 +1,7 @@
+{
+  "recommendations": [
+    "roerohan.mongo-snippets-for-node-js",
+    "chris-noring.node-snippets",
+    "waderyan.nodejs-extension-pack"
+  ]
+}

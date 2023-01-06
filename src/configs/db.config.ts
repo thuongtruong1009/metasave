@@ -10,22 +10,37 @@ function ConnectDB() {
     useUnifiedTopology: true,
   };
 
-  try {
-    mongoose.set("strictQuery", true);
-    mongoose.connect(`${process.env.MONGO_URL}`, options);
-    // init();
-  } catch (err) {
-    console.log("• Connect error: ", err);
-    process.exit(1);
-  }
+  mongoose.set("strictQuery", true);
+  mongoose.connect(`${process.env.MONGO_URL}`, options);
+  // init();
 }
 
 const connect = mongoose.connection;
-connect.on("error", (): void => {
-  console.error.bind(console, "MongoDB connection error:");
+
+connect.on("error", (err): void => {
+  console.error.bind(console, "• MongoDB::: connection error ");
+  connect.close().catch(() => {
+    console.log(
+      `• MongoDB::: failed to closed connection  ${JSON.stringify(err)}`
+    );
+  });
 });
+
 connect.on("open", (): void => {
   console.log("• Database connected");
 });
 
+connect.on("connected", (): void => {
+  mongoose.set("debug", (col: string, method: string, query, doc) => {
+    console.log(
+      `• MongoDB::: Query executed ${col} - ${method} - ${JSON.stringify(
+        query
+      )} - ${JSON.stringify(doc)})`
+    );
+  });
+});
+
+connect.on("disconnected", (err): void => {
+  console.log(`• Database disconnected ${JSON.stringify(err)}`);
+});
 export default ConnectDB;

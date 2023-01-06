@@ -1,19 +1,18 @@
 version: "3.8"
 
 services:
-  app:
-    container_name: metasave
+  app: &app
     image: ghcr.io/thuongtruong1009/metasave:main
     build:
       context: .
       dockerfile: ./docker/Dockerfile
       target: development
-    ports:
-      - 3000:${APP_PORT}
     volumes:
       - .:/app
     networks:
-      - common
+      - mongo_network
+      - ngrok_network
+      - nginx_network
     depends_on:
       - mongo
     env_file:
@@ -21,7 +20,30 @@ services:
     restart: unless-stopped
     environment:
       MONGO_URL: mongodb://mongo/${DB_NAME}
-    command: yarn dev
+    command: yarn start:dev
+
+  app2:
+    <<: *app
+
+  nginx:
+    container_name: nginx
+    image: nginx:1.23.3-alpine
+    ports:
+      - ${APP_PORT}:80
+    environment:
+      - NGINX_HOST=127.0.01,localhost,0.0.0.0
+      - NGINX_PORT=80
+      - APP_HOST_1=app
+      - APP_HOST_2=app2
+      - APP_PORT=${APP_PORT}
+    volumes:
+      - ./docker/nginx/templates:/etc/nginx/templates
+    networks:
+      - nginx_network
+    depends_on:
+      - app
+      - app2
+    restart: unless-stopped
 
   mongo:
     container_name: mongo
@@ -31,23 +53,29 @@ services:
     ports:
       - 27017:27017
     networks:
-      - common
+      - mongo_network
     restart: unless-stopped
 
   ngrok:
     container_name: ngrok
     image: wernight/ngrok
-    ports:
-      - "4040:4040"
+    environment:
+      - NGROK_AUTH=${NGROK_AUTH}
+      - NGROK_CONFIG=/ngrok.yaml
     volumes:
       - ./docker/ngrok/data:/home/ngrok/.ngrok2/
-    # command: http host.docker.internal:${APP_PORT}
-    command: ngrok http -authtoken ${NGROK_AUTH} app:${APP_PORT}
+    # command: /home/ngrok/.ngrok2/ http nginx:80 -config=/app/ngrok.yml
+    # command: http -authtoken ${NGROK_AUTH} host.docker.internal:${APP_PORT}
+    command: ngrok http host.docker.internal:${APP_PORT}
+    ports:
+      - 4040:4040
     networks:
-      - common
+      - ngrok_network
     depends_on:
       - app
     restart: unless-stopped
 
 networks:
-  common:
+  mongo_network:
+  ngrok_network:
+  nginx_network:

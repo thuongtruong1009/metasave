@@ -3,7 +3,7 @@ import { IRouter } from "../../types";
 
 import settingController from "../../controllers/user/setting.controller";
 import verifyAuth from "../../middlewares/authen.middleware";
-import { uploadAvatar, uploadEventImg } from "../../strategies/file";
+import { uploadAvatar, uploadEventImg } from "../../decorators/file";
 
 class SettingRouter implements IRouter {
   public path = "/setting";

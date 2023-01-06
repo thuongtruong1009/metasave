@@ -1,12 +1,14 @@
 {
-    "name": "boarder",
+    "name": "metasave-api",
     "version": "1.0.0",
     "main": "index.js",
     "license": "MIT",
     "scripts": {
-        "start": "node dist/src/index.js",
-        "build": "tsc -p .",
+        "start:dev": "nodemon /app/src/index.ts",
+        "start:prod": "node /app/dist/src/index.js",
         "dev": "nodemon src/index.ts",
+        "prod": "node dist/src/index.js",
+        "build": "tsc -p .",
         "test": "jest src/test/app.test.js"
     },
     "dependencies": {
