@@ -30,7 +30,7 @@ const onFavorite = async (projectId: string, isFavorite: boolean) => {
 
 <template>
   <div
-    class="project_box_container rounded-3xl shadow-md hover:shadow-lg group"
+    class="project_box_container rounded-xl shadow-md hover:shadow-lg group"
     :class="`bg-[${bgColor}]`"
   >
     <div class="p-4 border-b border-b-white">

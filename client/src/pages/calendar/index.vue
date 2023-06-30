@@ -65,7 +65,7 @@ const handleGetAllEvents = async () => {
 };
 
 const getAllDaysWeek = computed(
-  () => getListDaysOfWeek(getWeekNo(new Date(payload.start)), 2022).days
+  () => getListDaysOfWeek(getWeekNo(new Date(payload.start)), 2023).days
 );
 watchEffect(() => {
   handleGetAllEvents();
@@ -197,7 +197,7 @@ const calculatePositionToolTip = (
             </td>
           </tr>
           <div
-            class="absolute p-1 z-1 dark:text-gray-300"
+            class="absolute p-1 z-10 dark:text-gray-300"
             v-for="event in events"
             :key="event._id"
             :style="{
@@ -207,11 +207,16 @@ const calculatePositionToolTip = (
                   personalHours.length +
                 'px',
               right:
-                ((getCalendarSize.bodyWidth - getCalendarSize.headWidth) *
-                  (getDiffPeriod(event.time.date, getAllDaysWeek[6].iso)
-                    .diffDays -
-                    1)) /
-                  daysOfWeek.length +
+                (Math.floor(
+                  getCalendarSize.bodyWidth - getCalendarSize.headWidth
+                ) /
+                  daysOfWeek.length) *
+                  Math.floor(
+                    (getDiffPeriod(event.time.date, getAllDaysWeek[6].iso)
+                      .diffDays -
+                      1) /
+                      daysOfWeek.length
+                  ) +
                 'px',
               width:
                 (getCalendarSize.bodyWidth - getCalendarSize.headWidth) /

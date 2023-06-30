@@ -24,7 +24,7 @@ const toggleFavorite = async () => {
 
 <template>
   <div class="flex justify-between items-center gap-5">
-    <div class="flex items-end gap-5">
+    <div class="flex items-end gap-2">
       <BoardMenu />
       <button
         type="button"
@@ -47,9 +47,7 @@ const toggleFavorite = async () => {
           <span>Process</span>
           <span>{{ props.progress }}%</span>
         </div>
-        <div
-          class="w-full bg-gray-200 dark:bg-gray-500 rounded-full h-1 dark:bg-gray-700"
-        >
+        <div class="w-full bg-gray-200 rounded-full h-1 dark:bg-gray-700">
           <div
             class="bg-purple-500 h-1 rounded-full"
             :style="`width: ${props.progress}%`"
@@ -57,7 +55,7 @@ const toggleFavorite = async () => {
         </div>
       </div>
     </div>
-    <div class="flex items-center gap-5">
+    <div class="flex items-center gap-2">
       <ViewInfo />
       <BackgroundMenu />
     </div>

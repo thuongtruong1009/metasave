@@ -62,6 +62,7 @@ class App {
       ],
       credentials: true,
       methods: "GET,PUT,PATCH,POST,DELETE",
+      optionsSuccessStatus: 200,
     };
     return options;
   }
@@ -70,13 +71,28 @@ class App {
     this.app.use(cors<Request>(this.corsOptions()));
     this.app.use(hpp());
     this.app.use(helmet());
-    this.app.use(compression());
+    this.app.use(helmet.noSniff());
+    this.app.use(helmet.frameguard());
+    this.app.use(helmet.xssFilter());
+    this.app.use(
+      compression({
+        level: 6,
+        threshold: 50 * 1024,
+        filter: (req, res) => {
+          if (req.headers["x-no-compression"]) {
+            return false;
+          }
+          return compression.filter(req, res);
+        },
+      })
+    );
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(cookieParser());
     this.app.use(rateLimiterMiddleware);
     this.app.use(morgan("combined", { stream: this.writeLogs("access") }));
     this.app.disable("x-powered-by");
+    this.app.disable("etag");
 
     this.app.use(express.static(path.join(__dirname, "../../public")));
   }

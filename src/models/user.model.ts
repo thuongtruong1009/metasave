@@ -55,9 +55,13 @@ const UserSchema: mongoose.Schema = new mongoose.Schema(
         ref: "Event",
       },
     ],
-  }
+  },
+  { toJSON: { virtuals: true } }
   // { timestamps: true }
 ).set("timestamps", true);
+
+UserSchema.set("toObject", { virtuals: true });
+UserSchema.set("toJSON", { virtuals: true });
 
 const UserModel = mongoose.model<IUserModel>("User", UserSchema);
 

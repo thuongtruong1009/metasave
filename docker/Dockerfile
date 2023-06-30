@@ -4,9 +4,9 @@ WORKDIR /app
 
 COPY . .
 
-RUN yarn install
+RUN npm install
 
-RUN yarn build
+RUN npm run build
 
 FROM development as production
 
@@ -21,7 +21,7 @@ COPY --chown=node:node ./package.json ./yarn.lock ./
 
 COPY --chown=node:node --from=development /app/dist /app/dist
 
-RUN npx yarn install --production
+RUN npx npm install --production
 
 LABEL "maintainer"="thuongtruong1009 <thuongtruongofficial@gmail.com>"
 LABEL "org.opencontainers.image.authors"="Thuong Truong <"

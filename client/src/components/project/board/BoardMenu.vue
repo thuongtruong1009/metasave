@@ -76,36 +76,38 @@ const changeBoard = (boardId) => {
               as="template"
               @click="changeBoard(board._id)"
             >
-              <li
-                :class="[
-                  active ? 'bg-purple-100' : '',
-                  'relative py-2 pl-10 pr-4 cursor-pointer',
-                ]"
-              >
-                <span
-                  v-if="isMatchedBoard(board._id)"
-                  class="absolute inset-y-0 left-0 flex items-center pl-3 text-purple-600"
-                >
-                  <Icon
-                    icon="material-symbols:check-small-rounded"
-                    width="20"
-                  />
-                </span>
-                <span
+              <li class="p-1">
+                <div
                   :class="[
-                    isMatchedBoard(board._id)
-                      ? 'font-semibold text-purple-900'
-                      : 'font-normal',
-                    'block truncate',
+                    active ? 'bg-purple-100' : '',
+                    'relative py-2 pl-10 pr-4 cursor-pointer',
                   ]"
-                  >{{ board.name }}</span
                 >
+                  <span
+                    v-if="isMatchedBoard(board._id)"
+                    class="absolute inset-y-0 left-0 flex items-center pl-3 text-purple-600"
+                  >
+                    <Icon
+                      icon="material-symbols:check-small-rounded"
+                      width="20"
+                    />
+                  </span>
+                  <span
+                    :class="[
+                      isMatchedBoard(board._id)
+                        ? 'font-semibold text-purple-900'
+                        : 'font-normal',
+                      'block truncate',
+                    ]"
+                    >{{ board.name }}</span
+                  >
+                </div>
               </li>
             </ListboxOption>
 
             <li class="p-1">
               <button
-                class="hover:bg-purple-100 border border-dashed border-2 text-amber-900 p-2 flex justify-center items-start gap-1 w-full rounded-lg"
+                class="hover:text-gray-500 font-normal border-dashed border-2 text-gray-400 p-2 flex justify-center items-start gap-1 w-full rounded"
               >
                 <Icon icon="gridicons:create" width="18" />
                 <span>New board</span>

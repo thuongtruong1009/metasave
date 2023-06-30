@@ -35,7 +35,7 @@ const isPlaceholder = computed(() => query.value === "");
 <template>
   <button
     aria-label="Open search"
-    class="relative flex justify-between items-center max-w-96 w-96 h-10 w-full text-gray-400 py-2 px-5 bg-gradient-to-b from-white to-gray-200 outline-none group shadow-input focus:outline-none hover:shadow-md hover:bg-white focus:shadow-md rounded-full transition-all duration-200 ease-in-out z-10"
+    class="relative flex justify-between items-center max-w-96 w-96 h-10 text-gray-400 py-2 px-5 bg-gradient-to-b from-white to-gray-200 outline-none group shadow-input focus:outline-none hover:shadow-md hover:bg-white focus:shadow-md rounded-full transition-all duration-200 ease-in-out z-10"
     title="Open search"
     type="button"
   >

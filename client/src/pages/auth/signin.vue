@@ -4,7 +4,6 @@ import { useRouter } from "vue-router";
 import { Icon } from "@iconify/vue";
 
 import AuthService from "@/services/auth.service";
-import { testEmail, testPassword } from "@/utils/regrex";
 import useAuthStore from "@/store/auth";
 
 const router = useRouter();
@@ -24,7 +23,7 @@ const handleSignin = async () => {
     const res = await AuthService.signin(payload);
     if (res.data) {
       await authStore.login(res.data);
-      router.push({ path: "/home" });
+      router.push({ path: "/" });
     }
   }
 };

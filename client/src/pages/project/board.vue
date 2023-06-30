@@ -12,10 +12,12 @@ import { fixedPercent } from "@/utils/format";
 import Setting from "@/components/project/board/Setting.vue";
 import { onScrolToBottom } from "@/helpers/scroll";
 import useTagStore from "@/store/tag";
-import CardLoading from "@/components/project/board/card/CardLoading.vue";
+import CardEmpty from "@/components/project/board/card/CardEmpty.vue";
 import { kanbanTypes } from "@/shared/kanban";
 import UpdateCard from "@/components/project/board/card/UpdateCard.vue";
 import useCardStore from "@/store/card";
+import CardService from "@/services/card.service";
+import { on } from "events";
 
 const router = useRouter();
 const tagStore = useTagStore();
@@ -51,7 +53,12 @@ const getBoardById = async () => {
   onScrolToBottom("#scrollBottom", "down");
 };
 
-watchEffect(() => {
+onMounted(() => {
+  getBoardById();
+  tagStore.getTags();
+});
+
+watch(router.currentRoute.value.params, () => {
   getBoardById();
   tagStore.getTags();
 });
@@ -89,7 +96,7 @@ const onColumnDrop = (dropResult: any) => {
   payload.groups = applyDrag(view.groups, dropResult);
 };
 
-const onCardDrop = (dropResult: any, columnId: number) => {
+const onCardDrop = async (dropResult: any, columnId: number) => {
   if (dropResult.removedIndex !== null || dropResult.addedIndex !== null) {
     const view = Object.assign({}, payload);
     const column = view.groups.filter((p: IColumn) => p._id === columnId)[0];
@@ -98,9 +105,14 @@ const onCardDrop = (dropResult: any, columnId: number) => {
 
     if (dropResult.removedIndex == null && dropResult.addedIndex >= 0) {
       dropResult.payload.loading = true;
-      setTimeout(() => {
-        dropResult.payload.loading = false;
-      }, 1000);
+
+      // the item that have just drop down
+      const { payload: newPayload } = dropResult;
+      await CardService.updateCard(newPayload._id, {
+        status: columnId,
+      });
+
+      dropResult.payload.loading = false;
     }
 
     newColumn.children = applyDrag(newColumn.children, dropResult);
@@ -112,7 +124,7 @@ const onCardDrop = (dropResult: any, columnId: number) => {
 
 <template>
   <section
-    class="flex flex-col w-full overflow-y-hidden bg-cover bg-center bg-no-repeat rounded-xl p-5 shadow-md dark:bg-gray-700"
+    class="flex flex-col min-h-screen w-full overflow-y-hidden bg-cover bg-center bg-no-repeat rounded-xl p-5 shadow-md dark:bg-gray-700"
     :style="getBackground"
   >
     <Navigation :progress="showProcess" :isFavorite="payload.isFavorite" />
@@ -129,9 +141,9 @@ const onCardDrop = (dropResult: any, columnId: number) => {
         v-for="column in payload.groups"
         :key="column._id"
       >
-        <div class="h-128 flex flex-col">
+        <div class="max-h-128 flex flex-col">
           <div
-            class="cursor-move rounded-t-xl p-4 space-x-4 shadow-lg bg-primary dark:bg-purple-700 text-white flex justify-between space-x-2"
+            class="cursor-move rounded-t-xl px-4 py-2 shadow-lg bg-primary dark:bg-purple-700 text-white flex justify-between space-x-2"
           >
             <div class="flex item-center">
               <img
@@ -187,7 +199,7 @@ const onCardDrop = (dropResult: any, columnId: number) => {
               :item="item"
               @delete-card="getBoardById"
             ></Card>
-            <CardLoading v-if="getCardLengthByColumnId(column._id) <= 0" />
+            <CardEmpty v-if="getCardLengthByColumnId(column._id) <= 0" />
             <CreateCard
               :card="{ boardId: payload._id, columnId: column._id }"
               @create-card="getBoardById"
