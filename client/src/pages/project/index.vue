@@ -5,7 +5,7 @@ import ModeView from "@/components/project/ModeView.vue";
 import ProjectBox from "@/components/project/ProjectBox.vue";
 import { projectBoxColors } from "@/shared/color";
 import Sort from "@/components/Sort.vue";
-import ProjectService from "@/services/project.service";
+import ProjectService from "@/services/project";
 import useAuthStore from "@/store/auth";
 import { getIndex } from "@/utils/array";
 import { getCurrentDate } from "@/helpers/date";

@@ -29,7 +29,7 @@ const handleDate = (dataModel: any) => {
     dataModel[1].getMonth() + 1,
     dataModel[1].getDate()
   );
-  console.log(dataModel);
+
   emits("query-date", { startDate, endDate });
 };
 </script>

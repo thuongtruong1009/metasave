@@ -1,4 +1,4 @@
-import axiosConfig from "./axios.service";
+import axiosConfig from "./axios";
 
 const BOARD = "/board";
 

@@ -3,7 +3,7 @@ import { reactive, computed } from "vue";
 import { useRouter } from "vue-router";
 import { Icon } from "@iconify/vue";
 
-import AuthService from "@/services/auth.service";
+import AuthService from "@/services/auth";
 import { testEmail, testPassword } from "@/utils/regrex";
 
 const router = useRouter();

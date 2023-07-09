@@ -22,6 +22,9 @@ const useAuthStore = defineStore({
     getRefreshToken() {
       return document.cookie.split("=")[1];
     },
+    isAdmin(): boolean {
+      return this.getUser.roles[0].name === "admin";
+    },
   },
 
   actions: {

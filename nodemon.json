@@ -7,7 +7,10 @@
     ],
     "ignore": [
         "logs/*",
-        "src/**/*.{spec,test}.ts"
+        "src/**/*.{spec,test}.ts",
+        "client/*",
+        "node_modules/*",
+        "dist/*"
     ],
     "execMap": {
         "ts": "node --inspect=0.0.0.0:9229 --nolazy -r ts-node/register"

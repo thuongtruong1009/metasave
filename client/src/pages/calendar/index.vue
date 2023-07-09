@@ -10,6 +10,7 @@ import {
   getListDaysOfWeek,
   getISOFormat,
   getWeekNo,
+  formatTimeWithPrefixZero,
 } from "@/helpers/date";
 import { truncateString, sliceString } from "@/utils/format";
 import TimeBar from "@/components/calendar/TimeBar.vue";
@@ -65,8 +66,13 @@ const handleGetAllEvents = async () => {
 };
 
 const getAllDaysWeek = computed(
-  () => getListDaysOfWeek(getWeekNo(new Date(payload.start)), 2023).days
+  () =>
+    getListDaysOfWeek(
+      getWeekNo(new Date(payload.start)),
+      new Date().getFullYear()
+    ).days
 );
+
 watchEffect(() => {
   handleGetAllEvents();
 });
@@ -153,7 +159,8 @@ const calculatePositionToolTip = (
               <div
                 class="absolute top-2 left-1/3 w-min h-min rounded-lg pb-2.5 px-3 flex flex-col justify-center items-center"
                 :class="[
-                  getCurrentDate(new Date()).day === item.day
+                  formatTimeWithPrefixZero(getCurrentDate(new Date()).day) ===
+                  item.day
                     ? 'bg-purple-500 text-white shadow-lg shadow-gray-400/50 dark:shadow-gray-600'
                     : 'text-black',
                 ]"
@@ -164,7 +171,9 @@ const calculatePositionToolTip = (
                 <span
                   :class="{
                     'text-gray-400':
-                      getCurrentDate(new Date()).day !== item.day,
+                      formatTimeWithPrefixZero(
+                        getCurrentDate(new Date()).day
+                      ) !== item.day,
                   }"
                   >{{ sliceString(item.name, 3) }}</span
                 >
@@ -207,16 +216,11 @@ const calculatePositionToolTip = (
                   personalHours.length +
                 'px',
               right:
-                (Math.floor(
-                  getCalendarSize.bodyWidth - getCalendarSize.headWidth
-                ) /
-                  daysOfWeek.length) *
-                  Math.floor(
-                    (getDiffPeriod(event.time.date, getAllDaysWeek[6].iso)
-                      .diffDays -
-                      1) /
-                      daysOfWeek.length
-                  ) +
+                ((getCalendarSize.bodyWidth - getCalendarSize.headWidth) *
+                  (getDiffPeriod(event.time.date, getAllDaysWeek[6].iso)
+                    .diffDays -
+                    1)) /
+                  daysOfWeek.length +
                 'px',
               width:
                 (getCalendarSize.bodyWidth - getCalendarSize.headWidth) /

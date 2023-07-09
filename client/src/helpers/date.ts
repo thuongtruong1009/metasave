@@ -129,3 +129,13 @@ export const getISOFormat = (date: string, hour: string | number): Date => {
   let formated = `${date}T${hour}:00`;
   return formated ? new Date(formated) : new Date();
 };
+
+export const formatTimeWithPrefixZero = (time: string | number): string => {
+  let timeString = time.toString();
+
+  if (timeString.length === 1) {
+    timeString = timeString.padStart(2, "0");
+  }
+
+  return timeString;
+};

@@ -52,7 +52,7 @@ axiosConfig.interceptors.response.use(
       localStorage.setItem("refreshToken", newToken.data.refreshToken);
       return axiosConfig(preRequest);
     }
-    error.response && Promise.reject(error.response.data);
+    error.response && Promise.reject(error.response);
 
     error.request && Promise.reject(error.request);
 

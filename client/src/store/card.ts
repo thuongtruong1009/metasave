@@ -1,5 +1,5 @@
 import { defineStore, acceptHMRUpdate } from "pinia";
-import CardService from "@/services/card.service";
+import CardService from "@/services/card";
 
 type IResponseCard = {
   _id: string;

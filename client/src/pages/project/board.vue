@@ -6,7 +6,7 @@ import { applyDrag, getRandomEmoji } from "@/helpers/kanban";
 import Navigation from "@/components/project/board/Navigation.vue";
 import Card from "@/components/project/board/card/Card.vue";
 import type { IColumn, IBoardPayload } from "@/types";
-import BoardService from "@/services/board.service";
+import BoardService from "@/services/board";
 import CreateCard from "@/components/project/board/card/CreateCard.vue";
 import { fixedPercent } from "@/utils/format";
 import Setting from "@/components/project/board/Setting.vue";
@@ -16,7 +16,7 @@ import CardEmpty from "@/components/project/board/card/CardEmpty.vue";
 import { kanbanTypes } from "@/shared/kanban";
 import UpdateCard from "@/components/project/board/card/UpdateCard.vue";
 import useCardStore from "@/store/card";
-import CardService from "@/services/card.service";
+import CardService from "@/services/card";
 import { on } from "events";
 
 const router = useRouter();

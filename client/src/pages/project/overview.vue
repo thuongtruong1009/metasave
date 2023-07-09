@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { reactive, computed, watchEffect } from "vue";
 import { useRouter } from "vue-router";
-import BoardService from "@/services/board.service";
+import BoardService from "@/services/board";
 import CreateBoard from "@/components/project/board/CreateBoard.vue";
 import CreateTable from "@/components/project/table/CreateTable.vue";
 

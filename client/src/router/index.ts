@@ -1,11 +1,12 @@
 import VueRouter, { createRouter, createWebHistory } from "vue-router";
 import NProgress from "nprogress";
 import useAuthStore from "../store/auth";
-import CommonRouter from "./common.router";
-import AuthRouter from "./auth.router";
-import Mainrouter from "./main.router";
+import commonRouter from "./common";
+import authRouter from "./auth";
+import mainrouter from "./main";
+import cdminrouter from "./admin";
 
-const routes = [...CommonRouter, ...AuthRouter, ...Mainrouter];
+const routes = [...commonRouter, ...authRouter, ...mainrouter, ...cdminrouter];
 
 const router = createRouter({
   history: createWebHistory(),
@@ -17,6 +18,10 @@ router.beforeEach(async (to, from) => {
   if (!authStore.isAuthenticated && to.name !== "signin") {
     return { name: "signin" };
   }
+
+  // if (!authStore.isAdmin && to.name === "admin") {
+  //   return { name: "404" };
+  // }
 });
 
 router.beforeResolve(
