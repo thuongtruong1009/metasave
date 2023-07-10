@@ -45,7 +45,7 @@ const onSubmit = () => {
     :disabled="isDisabled ?? false"
     :class="`${
       props.class
-    } ${classOptions()} flex items-center rounded-md px-2.5 py-1.5 font-medium`"
+    } ${classOptions()} flex items-center rounded-md px-2.5 py-1.5 font-medium dark:text-white`"
   >
     <slot name="leftIcon" />
     <span>{{ props.text }}</span>

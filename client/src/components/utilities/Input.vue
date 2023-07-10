@@ -3,7 +3,9 @@ const props = defineProps<{
   value: string;
   type?: string;
   required?: boolean;
+  placeholder?: string;
   class?: string;
+  disabled?: boolean;
 }>();
 
 const emits = defineEmits(["update:value"]);
@@ -14,12 +16,24 @@ const updateValue = (value: string) => {
 </script>
 
 <template>
-  <input
-    :type="props.type || 'text'"
-    :value="props.value"
-    @input="updateValue($event.target.value)"
-    :required="props.required || false"
-    :autocomplete="props.value ? 'on' : 'off'"
-    class="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-purple-600 sm:text-sm sm:leading-6"
-  />
+  <div
+    class="flex items-center rounded-md shadow-sm dark:ring-transparent ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-purple-600 sm:text-sm sm:leading-6 dark:bg-white/10 text-gray-900 dark:text-gray-200"
+    :class="`${props.class} ${
+      props.disabled ? 'cursor-none pointer-events-none' : ''
+    }`"
+  >
+    <slot name="leftIcon" />
+    <input
+      :type="props.type || 'text'"
+      :value="props.value"
+      @input="(e: any) => updateValue(e.target?.value)"
+      :required="props.required || false"
+      :autocomplete="props.value ? 'on' : 'off'"
+      :disabled="props.disabled || false"
+      :placeholder="props.placeholder || ''"
+      autofocus
+      class="w-full border-0 bg-transparent placeholder:text-gray-400 focus:ring-0"
+    />
+    <slot name="rightIcon" />
+  </div>
 </template>

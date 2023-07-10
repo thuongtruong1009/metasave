@@ -4,9 +4,9 @@ import { RouterView } from "vue-router";
 
 <template>
   <div
-    class="dark:bg-gray-900 h-screen max-h-screen min-h-screen flex flex-col relative bg-white overflow-hidden"
+    class="dark:bg-transparent h-screen max-h-screen min-h-screen flex flex-col relative bg-white overflow-hidden"
   >
-    <div class="relative isolate px-6 pt-14 lg:px-8">
+    <div class="relative isolate">
       <div
         class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
         aria-hidden="true"
@@ -35,7 +35,7 @@ import { RouterView } from "vue-router";
           "
         ></div>
       </div>
-      <RouterView class="flex-grow" />
+      <RouterView />
       <div
         class="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]"
         aria-hidden="true"

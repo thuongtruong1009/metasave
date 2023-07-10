@@ -52,7 +52,7 @@ import DarkMode from "@/components/header/DarkMode.vue";
       </div>
       <div class="hidden lg:flex items-center lg:flex-1 lg:justify-end">
         <DarkMode />
-        <Button text="Logout" variant="primary" :isHoverEffect="true">
+        <Button text="Logout" variant="info" :isHoverEffect="true">
           <template #rightIcon>
             <Icon icon="ant-design:logout-outlined" class="ml-2" />
           </template>
