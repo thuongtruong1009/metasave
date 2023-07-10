@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import SettingService from "@/services/setting.service";
+import SettingService from "@/services/setting";
 
 const colors = ref<Array<any>>([]);
 

@@ -1,3 +1,9 @@
+<script setup>
+import { Icon } from "@iconify/vue";
+import Button from "@/components/utilities/Button.vue";
+import DarkMode from "@/components/header/DarkMode.vue";
+</script>
+
 <template>
   <header class="absolute inset-x-0 top-0 z-50">
     <nav
@@ -44,10 +50,13 @@
           >Colors</a
         >
       </div>
-      <div class="hidden lg:flex lg:flex-1 lg:justify-end">
-        <a href="#" class="text-sm font-semibold leading-6 text-gray-900"
-          >Logout <span aria-hidden="true">&rarr;</span></a
-        >
+      <div class="hidden lg:flex items-center lg:flex-1 lg:justify-end">
+        <DarkMode />
+        <Button text="Logout" variant="primary" :isHoverEffect="true">
+          <template #rightIcon>
+            <Icon icon="ant-design:logout-outlined" class="ml-2" />
+          </template>
+        </Button>
       </div>
     </nav>
     <div class="lg:hidden" role="dialog" aria-modal="true">
@@ -82,7 +91,7 @@
             </svg>
           </button>
         </div>
-        <div class="mt-6 flow-root">
+        <div class="mt-6">
           <div class="-my-6 divide-y divide-gray-500/10">
             <div class="space-y-2 py-6">
               <a
@@ -107,6 +116,7 @@
               >
             </div>
             <div class="py-6">
+              <!-- <DarkMode /> -->
               <a
                 href="#"
                 class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"

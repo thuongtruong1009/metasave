@@ -1,14 +1,14 @@
 import axiosConfig from "@/services/axios";
 
-const PREFIX = "/admin/colors";
+const PREFIX = "/admin";
 
 class AdminColorsService {
-  async getAllUsers(): Promise<any> {
-    return await axiosConfig.get(`${PREFIX}/users`);
+  async getColors(): Promise<any> {
+    return await axiosConfig.get(`${PREFIX}/colors`);
   }
 
-  async getUserById(id: string): Promise<any> {
-    return await axiosConfig.get(`${PREFIX}/users/${id}`);
+  async updateColorById(id: string, payload: any): Promise<any> {
+    return await axiosConfig.put(`${PREFIX}/colors/${id}`, payload);
   }
 }
 
