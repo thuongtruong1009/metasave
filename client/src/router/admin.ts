@@ -14,6 +14,11 @@ export default [
         name: "overview",
         component: () => import("@/pages/admin/index.vue"),
       },
+      {
+        path: "colors",
+        name: "colors",
+        component: () => import("@/pages/admin/colors.vue"),
+      },
     ],
   },
 ];

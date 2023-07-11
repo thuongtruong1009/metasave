@@ -9,7 +9,7 @@ import useAuthStore from "@/store/auth";
 const authStore = useAuthStore();
 
 const axiosConfig: AxiosInstance = axios.create({
-  baseURL: `${import.meta.env.VITE_BASE_URL}`,
+  baseURL: `${import.meta.env.VITE_BASE_API}`,
   headers: {
     "Content-Type": "application/json; charset=utf-8",
     Accept: "application/json",
